@@ -4,7 +4,7 @@
 {% block content %}
 {% include "partials/tutorial_nav.html" %}
 <h1 class="h2">10. Put the page in the address bar</h1>
-<p>Lessons 2–9 stay on one address. You cannot send someone “page 2, sorted by author,” and Back does not return to it. These links still swap a fragment, and they also update the address.</p>
+<p>This lesson puts the shelf in the browser history. The page number and the sort are the query string, so the address is the state of the list and can be sent to someone else. A click still swaps only the shelf. Opening that address, reloading, or pressing Back restores the whole lesson. HTMX marks a Back/Forward refetch with <code>HX-History-Restore-Request</code>.</p>
 
 <h2 class="h5">Try it</h2>
 <div id="shelf" class="mb-3">
