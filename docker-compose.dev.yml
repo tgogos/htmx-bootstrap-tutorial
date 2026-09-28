@@ -1,6 +1,7 @@
 services:
   fastapi-htmx-bootstrap:
     image: ${DOCKER_REG:-}${DOCKER_REPO:-}${APP_NAME:-fastapi-htmx-bootstrap}:${DOCKER_TAG:-latest}
+    pull_policy: build
     container_name: ${APP_NAME:-fastapi-htmx-bootstrap}
     build:
       context: .
