@@ -1,0 +1,29 @@
+services:
+  fastapi-htmx-bootstrap:
+    image: ${DOCKER_REG:-}${DOCKER_REPO:-}${APP_NAME:-fastapi-htmx-bootstrap}:${DOCKER_TAG:-latest}
+    container_name: ${APP_NAME:-fastapi-htmx-bootstrap}
+    build:
+      context: .
+    ports:
+      - "${PUBLISH_PORT:-8000}:8000"
+    depends_on:
+      - mongodb
+    env_file:
+      - .env
+    volumes:
+      - sqlite_data:/code/data
+
+  mongodb:
+    image: mongo:7.0
+    container_name: ${APP_NAME:-fastapi-htmx-bootstrap}-mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER:-root}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASS:-pass}
+    volumes:
+      - mongodb_data:/data/db
+
+volumes:
+  sqlite_data:
+  mongodb_data:

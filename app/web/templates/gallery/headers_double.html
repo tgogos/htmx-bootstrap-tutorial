@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="csrf-token" content="{{ csrf_token }}" />
+    <meta name="description" content="Bootstrap 5 admin starter — Double header" />
+    <meta name="theme-color" content="#712cf9" />
+    <title>Double header · Admin</title>
+    {% include "partials/head_assets.html" %}
+  </head>
+  <body class="admin-header-demo">
+    
+    <a class="visually-hidden-focusable btn btn-primary admin-skip-link position-absolute m-2" href="#main">Skip to main content</a>
+    <div class="bg-body">
+      <nav class="py-2 bg-body-tertiary border-bottom">
+        <div class="container d-flex flex-wrap align-items-center">
+        <button
+          class="btn btn-outline-secondary d-lg-none me-2"
+          type="button"
+          data-bs-toggle="offcanvas"
+          data-bs-target="#sidebar"
+          aria-controls="sidebar"
+          aria-label="Open navigation"
+        >
+          <i class="bi bi-list" aria-hidden="true"></i>
+        </button>
+          <ul class="nav me-auto">
+            <li class="nav-item"><a href="/ui/dashboard" class="nav-link link-body-emphasis px-2 active" aria-current="page">Home</a></li>
+            <li class="nav-item"><a href="#" class="nav-link link-body-emphasis px-2">Features</a></li>
+            <li class="nav-item"><a href="#" class="nav-link link-body-emphasis px-2">Pricing</a></li>
+            <li class="nav-item"><a href="#" class="nav-link link-body-emphasis px-2">FAQs</a></li>
+            <li class="nav-item"><a href="#" class="nav-link link-body-emphasis px-2">About</a></li>
+          </ul>
+          <ul class="nav">
+            <li class="nav-item"><a href="/auth/login" class="nav-link link-body-emphasis px-2">Login</a></li>
+            <li class="nav-item"><a href="/auth/login" class="nav-link link-body-emphasis px-2">Sign up</a></li>
+          </ul>
+        </div>
+      </nav>
+      <header class="py-3 border-bottom">
+        <div class="container d-flex flex-wrap justify-content-center">
+          <a href="/ui/dashboard" class="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto link-body-emphasis text-decoration-none">
+            <i class="bi bi-bootstrap-fill admin-brand-mark text-primary me-2" aria-hidden="true"></i>
+            <span class="fs-4">Double header</span>
+          </a>
+          <form class="col-12 col-lg-auto mb-3 mb-lg-0" role="search" action="/ui/users" method="get">
+            <input class="form-control" type="search" placeholder="Search..." aria-label="Search" name="q" />
+          </form>
+        </div>
+      </header>
+    </div>
+    <div class="admin-shell-row">
+    {% include "partials/sidebar.html" %}
+
+      <div class="admin-main">
+        <main id="main" class="admin-content px-3 px-md-4 py-4" tabindex="-1">
+          <h1 class="visually-hidden">Double header</h1>
+        </main>
+      </div>
+    </div>
+    
+    {% include "partials/scripts.html" %}
+  </body>
+</html>

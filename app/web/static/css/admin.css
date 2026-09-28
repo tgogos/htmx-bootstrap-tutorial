@@ -1,0 +1,280 @@
+/*
+ * Application shell for this Bootstrap 5 admin starter.
+ * Layout, sidebar, and a handful of helpers only — not a component theme.
+ */
+
+:root {
+  --admin-sidebar-width: 17.5rem; /* 280px, same as Bootstrap’s sidebars example */
+  --admin-navbar-height: 3.625rem;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  min-height: 100%;
+}
+
+/* Keep in-page anchors (sidebar component links) clear of the sticky navbar. */
+:target {
+  scroll-margin-top: calc(var(--admin-navbar-height) + 1rem);
+}
+
+/* -------------------------------------------------------------------------
+ * Skip link
+ * ------------------------------------------------------------------------- */
+
+.admin-skip-link:focus {
+  z-index: 1080;
+}
+
+/* -------------------------------------------------------------------------
+ * Navbar
+ * ------------------------------------------------------------------------- */
+
+.admin-navbar {
+  min-height: var(--admin-navbar-height);
+}
+
+.admin-brand-mark {
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
+/* Limit the global search so it does not dominate wide screens. */
+.admin-search {
+  max-inline-size: 28rem;
+}
+
+.admin-notifications {
+  min-inline-size: 18rem;
+  max-inline-size: min(22rem, calc(100vw - 2rem));
+}
+
+/*
+ * This shell does not use navbar-expand-*, so that .navbar-toggler can still
+ * open the sidebar on small screens. Bootstrap then keeps
+ * .navbar-nav .dropdown-menu at position: static, which inserts the menu
+ * into the flex row and grows the header. Restore overlay dropdowns.
+ */
+.admin-navbar .navbar-nav {
+  flex-wrap: nowrap;
+}
+
+.admin-navbar .navbar-nav .dropdown-menu {
+  position: absolute;
+}
+
+/* -------------------------------------------------------------------------
+ * Sidebar + responsive offcanvas
+ *
+ * One navigation tree: Bootstrap’s .offcanvas-lg shows it in flow from
+ * the lg breakpoint up, and as an offcanvas drawer below that.
+ * ------------------------------------------------------------------------- */
+
+.admin-sidebar .offcanvas-lg {
+  --bs-offcanvas-width: min(var(--admin-sidebar-width), 100%);
+}
+
+/*
+ * Above lg, Bootstrap’s .offcanvas-lg zeroes .offcanvas-body padding.
+ * Sidebar inset spacing therefore lives on the inner <nav>, not here.
+ */
+
+.admin-sidebar .admin-nav-label {
+  margin: 0;
+  padding-inline: 1rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  color: var(--bs-secondary-color);
+}
+
+.admin-nav-label + hr {
+  margin: 0.35rem 0.75rem 0;
+  opacity: 0.25;
+}
+
+.admin-sidebar .nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.admin-sidebar .nav-link .bi {
+  font-size: 1.05rem;
+  line-height: 1;
+}
+
+/* Disclosure control for the Components submenu (not a page link). */
+.admin-sidebar .admin-nav-toggle {
+  width: 100%;
+  text-align: start;
+}
+
+.admin-nav-chevron {
+  margin-inline-start: auto;
+  transition: transform 0.2s ease;
+}
+
+.admin-nav-toggle[aria-expanded="true"] .admin-nav-chevron {
+  transform: rotate(180deg);
+}
+
+.admin-subnav .nav-link {
+  padding-inline-start: 2.25rem;
+}
+
+@media (min-width: 992px) {
+  .admin-sidebar {
+    position: fixed;
+    inset-block: var(--admin-navbar-height) 0;
+    inset-inline-start: 0;
+    inline-size: var(--admin-sidebar-width);
+    overflow-y: auto;
+  }
+
+  /*
+   * Responsive offcanvas becomes position:static above lg. Keep it filling
+   * the fixed sidebar so the nav can scroll independently of the page.
+   */
+  .admin-sidebar .offcanvas-lg {
+    position: static;
+    visibility: visible;
+    transform: none;
+    border: 0;
+    height: 100%;
+  }
+
+  .admin-main {
+    margin-inline-start: var(--admin-sidebar-width);
+  }
+}
+
+/* -------------------------------------------------------------------------
+ * Main column
+ * ------------------------------------------------------------------------- */
+
+.admin-main {
+  min-height: calc(100vh - var(--admin-navbar-height));
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-content {
+  flex: 1 0 auto;
+}
+
+.admin-footer {
+  flex-shrink: 0;
+}
+
+/* Dashboard chart canvas should shrink with the card, not overflow. */
+.admin-chart {
+  inline-size: 100%;
+  block-size: 16rem;
+}
+
+/* -------------------------------------------------------------------------
+ * Sign-in (from Bootstrap’s official sign-in example)
+ * ------------------------------------------------------------------------- */
+
+body.admin-signin {
+  display: flex;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* -------------------------------------------------------------------------
+ * Header example pages
+ *
+ * The specimen header is full-width. The admin sidebar sits in normal flow
+ * under it so variable header heights do not need a fixed offset.
+ * ------------------------------------------------------------------------- */
+
+body.admin-header-demo {
+  min-height: 100vh;
+}
+
+body.admin-header-demo .admin-shell-row {
+  display: block;
+}
+
+@media (min-width: 992px) {
+  body.admin-header-demo .admin-shell-row {
+    display: flex;
+    align-items: stretch;
+    min-height: 0;
+  }
+
+  body.admin-header-demo .admin-sidebar {
+    position: relative;
+    inset: auto;
+    block-size: auto;
+    min-block-size: calc(100vh - 6rem);
+  }
+
+  body.admin-header-demo .admin-main {
+    margin-inline-start: 0;
+    flex: 1 1 auto;
+    min-inline-size: 0;
+  }
+}
+
+.admin-header-product-grid {
+  grid-template-columns: 1fr 2fr;
+}
+
+/* Icon-only and list-group official sidebar widths. */
+body.admin-sidebar-icon {
+  --admin-sidebar-width: 4.5rem;
+}
+
+body.admin-sidebar-list {
+  --admin-sidebar-width: 23.75rem; /* 380px */
+}
+
+.form-signin {
+  max-width: 330px;
+  padding: 1rem;
+}
+
+.form-signin .form-floating:focus-within {
+  z-index: 2;
+}
+
+.form-signin input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.form-signin input[type="password"] {
+  margin-bottom: 0.625rem;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+/* -------------------------------------------------------------------------
+ * Reduced motion
+ * ------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .admin-nav-chevron {
+    transition: none;
+  }
+}
+
+/* Profile menu: switch row, not a command item */
+[data-admin-profile-row].dropdown-item {
+  cursor: default;
+}
+
+[data-admin-profile-row].dropdown-item:hover,
+[data-admin-profile-row].dropdown-item:focus {
+  color: var(--bs-dropdown-link-color);
+  background-color: transparent;
+}

@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="csrf-token" content="{{ csrf_token }}" />
+    <meta name="description" content="Bootstrap 5 admin starter — Header with buttons" />
+    <meta name="theme-color" content="#712cf9" />
+    <title>Header with buttons · Admin</title>
+    {% include "partials/head_assets.html" %}
+  </head>
+  <body class="admin-header-demo">
+    
+    <a class="visually-hidden-focusable btn btn-primary admin-skip-link position-absolute m-2" href="#main">Skip to main content</a>
+    <header class="py-3 mb-0 border-bottom bg-body">
+      <div class="container d-flex flex-wrap align-items-center justify-content-center justify-content-md-between">
+        <div class="col-md-3 mb-2 mb-md-0 d-flex align-items-center">
+        <button
+          class="btn btn-outline-secondary d-lg-none me-2"
+          type="button"
+          data-bs-toggle="offcanvas"
+          data-bs-target="#sidebar"
+          aria-controls="sidebar"
+          aria-label="Open navigation"
+        >
+          <i class="bi bi-list" aria-hidden="true"></i>
+        </button>
+          <a href="/ui/dashboard" class="d-inline-flex link-body-emphasis text-decoration-none">
+            <i class="bi bi-bootstrap-fill admin-brand-mark text-primary" aria-hidden="true"></i>
+            <span class="visually-hidden">Admin</span>
+          </a>
+        </div>
+        <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+          <li><a href="/ui/dashboard" class="nav-link px-2 link-secondary">Home</a></li>
+          <li><a href="#" class="nav-link px-2">Features</a></li>
+          <li><a href="#" class="nav-link px-2">Pricing</a></li>
+          <li><a href="#" class="nav-link px-2">FAQs</a></li>
+          <li><a href="#" class="nav-link px-2">About</a></li>
+        </ul>
+        <div class="col-md-3 text-end">
+          <a class="btn btn-outline-primary me-2" href="/auth/login">Login</a>
+          <a class="btn btn-primary" href="/auth/login">Sign-up</a>
+        </div>
+      </div>
+    </header>
+    <div class="admin-shell-row">
+    {% include "partials/sidebar.html" %}
+
+      <div class="admin-main">
+        <main id="main" class="admin-content px-3 px-md-4 py-4" tabindex="-1">
+          <h1 class="visually-hidden">Header with buttons</h1>
+        </main>
+      </div>
+    </div>
+    
+    {% include "partials/scripts.html" %}
+  </body>
+</html>

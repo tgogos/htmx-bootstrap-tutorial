@@ -1,0 +1,176 @@
+{% extends "layout.html" %}
+{% block title %}Dashboard · Admin{% endblock %}
+{% block description %}Bootstrap 5 admin starter — Dashboard{% endblock %}
+{% block content %}
+          <nav aria-label="Breadcrumb">
+            <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/ui/dashboard">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+            </ol>
+          </nav>
+          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom gap-2">
+            <div>
+              <h1 class="h2">Dashboard</h1>
+              <p class="text-body-secondary mb-0">Operator activity and service health for this environment.</p>
+            </div>
+            <div class="btn-toolbar mb-2 mb-md-0">
+              <div class="btn-group">
+                <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary">Refresh</button>
+              </div>
+            </div>
+          </div>
+          <section class="mb-4" aria-labelledby="summary-heading">
+            <h2 id="summary-heading" class="visually-hidden">Summary</h2>
+            <div class="row g-3">
+              <div class="col-sm-6 col-xl-3">
+                <div class="card">
+                  <div class="card-body">
+                    <h3 class="h6 text-body-secondary">Active operators</h3>
+                    <p class="fs-3 mb-1">24</p>
+                    <p class="small text-body-secondary mb-0">3 signed in now</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6 col-xl-3">
+                <div class="card">
+                  <div class="card-body">
+                    <h3 class="h6 text-body-secondary">Pending approvals</h3>
+                    <p class="fs-3 mb-1">6</p>
+                    <p class="small text-body-secondary mb-0">2 older than 24 hours</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6 col-xl-3">
+                <div class="card">
+                  <div class="card-body">
+                    <h3 class="h6 text-body-secondary">Open tickets</h3>
+                    <p class="fs-3 mb-1">11</p>
+                    <p class="small text-body-secondary mb-0">4 marked urgent</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6 col-xl-3">
+                <div class="card">
+                  <div class="card-body">
+                    <h3 class="h6 text-body-secondary">Failed jobs</h3>
+                    <p class="fs-3 mb-1">1</p>
+                    <p class="small text-success mb-0">Scheduler retrying</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <div class="row g-3 mb-4">
+            <div class="col-lg-6">
+              <section class="card h-100" aria-labelledby="activity-heading">
+                <div class="card-header">Recent activity</div>
+                <div class="card-body p-0">
+                  <h2 id="activity-heading" class="visually-hidden">Recent activity</h2>
+                  <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                      <div class="d-flex justify-content-between gap-3">
+                        <div>
+                          <div class="fw-semibold">Operator invited</div>
+                          <div class="small text-body-secondary">Maya Chen invited Jordan Blake.</div>
+                        </div>
+                        <small class="text-body-secondary text-nowrap">12 min</small>
+                      </div>
+                    </li>
+                    <li class="list-group-item">
+                      <div class="d-flex justify-content-between gap-3">
+                        <div>
+                          <div class="fw-semibold">Role changed</div>
+                          <div class="small text-body-secondary">Sam Okonkwo moved from Viewer to Operator.</div>
+                        </div>
+                        <small class="text-body-secondary text-nowrap">1 hr</small>
+                      </div>
+                    </li>
+                    <li class="list-group-item">
+                      <div class="d-flex justify-content-between gap-3">
+                        <div>
+                          <div class="fw-semibold">Password reset</div>
+                          <div class="small text-body-secondary">Priya Shah completed a reset from the sign-in page.</div>
+                        </div>
+                        <small class="text-body-secondary text-nowrap">3 hr</small>
+                      </div>
+                    </li>
+                    <li class="list-group-item">
+                      <div class="d-flex justify-content-between gap-3">
+                        <div>
+                          <div class="fw-semibold">Maintenance window</div>
+                          <div class="small text-body-secondary">Mail delivery marked degraded during a queue drain.</div>
+                        </div>
+                        <small class="text-body-secondary text-nowrap">Yesterday</small>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </section>
+            </div>
+            <div class="col-lg-6">
+              <section class="card h-100" aria-labelledby="chart-heading">
+                <div class="card-header">Sign-ins this week</div>
+                <div class="card-body">
+                  <h2 id="chart-heading" class="h6">Operator sign-ins</h2>
+                  <div class="admin-chart">
+                    <canvas id="signins-chart" aria-label="Operator sign-ins for the last seven days"></canvas>
+                  </div>
+                  <p class="small text-body-secondary mb-0 mt-2">Counts update when the colour mode changes. The rest of the dashboard does not depend on Chart.js.</p>
+                </div>
+              </section>
+            </div>
+          </div>
+          <section class="card" aria-labelledby="status-heading">
+            <div class="card-header">
+              <h2 id="status-heading" class="h5 mb-0">Service status</h2>
+            </div>
+            <div class="card-body p-0">
+              <div class="table-responsive">
+                <table class="table table-striped table-hover mb-0">
+                  <thead>
+                    <tr>
+                      <th scope="col">Service</th>
+                      <th scope="col">Status</th>
+                      <th scope="col">Latency</th>
+                      <th scope="col">Note</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th scope="row">API gateway</th>
+                      <td><span class="badge text-bg-success">Operational</span></td>
+                      <td>42 ms</td>
+                      <td>All regions in range</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Authentication</th>
+                      <td><span class="badge text-bg-success">Operational</span></td>
+                      <td>18 ms</td>
+                      <td>Last incident 12 days ago</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Mail delivery</th>
+                      <td><span class="badge text-bg-warning">Degraded</span></td>
+                      <td>1.2 s</td>
+                      <td>Queue drain in progress</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Object storage</th>
+                      <td><span class="badge text-bg-success">Operational</span></td>
+                      <td>9 ms</td>
+                      <td>Replication healthy</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Scheduler</th>
+                      <td><span class="badge text-bg-secondary">Recovering</span></td>
+                      <td>—</td>
+                      <td>Missed run retried at 09:14</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+      
+{% endblock %}

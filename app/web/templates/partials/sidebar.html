@@ -1,0 +1,242 @@
+<aside class="admin-sidebar bg-body-tertiary border-end">
+      <!-- Single navigation: in-flow sidebar on lg+, Bootstrap Offcanvas below that. -->
+      <div
+        class="offcanvas-lg offcanvas-start bg-body-tertiary"
+        tabindex="-1"
+        id="sidebar"
+        aria-labelledby="sidebarLabel"
+      >
+        <div class="offcanvas-header border-bottom d-lg-none">
+          <h2 class="offcanvas-title h5" id="sidebarLabel">Navigation</h2>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="offcanvas"
+            data-bs-target="#sidebar"
+            aria-label="Close navigation"
+          ></button>
+        </div>
+        <div class="offcanvas-body d-flex flex-column overflow-y-auto">
+          <div class="px-3 py-3 d-flex flex-column gap-4">
+          <nav aria-label="App">
+            <p class="admin-nav-label">App</p>
+            <hr>
+            <ul class="nav nav-pills flex-column gap-1 mb-0">
+                <li class="nav-item">
+                  <a class="nav-link{% if active == 'dashboard' %} active{% endif %}" {% if active == 'dashboard' %}aria-current="page"{% endif %} href="/ui/dashboard">
+                    <i class="bi bi-speedometer2" aria-hidden="true"></i>
+                    Dashboard
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link{% if active == 'books' %} active{% endif %}" {% if active == 'books' %}aria-current="page"{% endif %} href="/ui/books">
+                    <i class="bi bi-book" aria-hidden="true"></i>
+                    Books
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link{% if active == 'books-search' %} active{% endif %}" {% if active == 'books-search' %}aria-current="page"{% endif %} href="/ui/books/search">
+                    <i class="bi bi-search" aria-hidden="true"></i>
+                    Search books
+                  </a>
+                </li>
+                {% if is_admin %}
+                <li class="nav-item">
+                  <a class="nav-link{% if active == 'staff' %} active{% endif %}" {% if active == 'staff' %}aria-current="page"{% endif %} href="/ui/admin/users">
+                    <i class="bi bi-person-gear" aria-hidden="true"></i>
+                    Staff
+                  </a>
+                </li>
+                {% endif %}
+            </ul>
+          </nav>
+          <nav aria-label="Samples">
+            <p class="admin-nav-label">Samples</p>
+            <hr>
+            <ul class="nav nav-pills flex-column gap-1 mb-0">
+                <li class="nav-item">
+                  <a class="nav-link{% if active == 'users' %} active{% endif %}" {% if active == 'users' %}aria-current="page"{% endif %} href="/ui/users">
+                    <i class="bi bi-people" aria-hidden="true"></i>
+                    Users
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link{% if active == 'forms' %} active{% endif %}" {% if active == 'forms' %}aria-current="page"{% endif %} href="/ui/forms">
+                    <i class="bi bi-input-cursor-text" aria-hidden="true"></i>
+                    Forms
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link{% if active == 'tables' %} active{% endif %}" {% if active == 'tables' %}aria-current="page"{% endif %} href="/ui/tables">
+                    <i class="bi bi-table" aria-hidden="true"></i>
+                    Tables
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link{% if active == 'palette-lab' %} active{% endif %}" {% if active == 'palette-lab' %}aria-current="page"{% endif %} href="/ui/palette-lab">
+                    <i class="bi bi-eyedropper" aria-hidden="true"></i>
+                    Palette lab
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <button
+                    class="nav-link admin-nav-toggle"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#nav-components"
+                    aria-expanded="{% if nav_group == 'components' %}true{% else %}false{% endif %}"
+                    aria-controls="nav-components"
+                  >
+                    <i class="bi bi-puzzle" aria-hidden="true"></i>
+                    Components
+                    <i class="bi bi-chevron-down admin-nav-chevron" aria-hidden="true"></i>
+                  </button>
+                  <div class="collapse{% if nav_group == 'components' %} show{% endif %}" id="nav-components">
+                    <ul class="nav nav-pills flex-column admin-subnav mt-1">
+                      <li class="nav-item">
+                        <a class="nav-link{% if active == 'components' %} active{% endif %}" {% if active == 'components' %}aria-current="page"{% endif %} href="/ui/components">Overview</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="/ui/components#alerts">Alerts</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="/ui/components#buttons">Buttons</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="/ui/components#cards">Cards</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="/ui/components#modals">Modals</a>
+                      </li>
+                    </ul>
+                  </div>
+                </li>
+                <li class="nav-item">
+                  <button
+                    class="nav-link admin-nav-toggle"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#nav-cheatsheet"
+                    aria-expanded="{% if nav_group == 'cheatsheet' %}true{% else %}false{% endif %}"
+                    aria-controls="nav-cheatsheet"
+                  >
+                    <i class="bi bi-journal-code" aria-hidden="true"></i>
+                    Cheatsheet
+                    <i class="bi bi-chevron-down admin-nav-chevron" aria-hidden="true"></i>
+                  </button>
+                  <div class="collapse{% if nav_group == 'cheatsheet' %} show{% endif %}" id="nav-cheatsheet">
+                    <ul class="nav nav-pills flex-column admin-subnav mt-1">
+                      <li class="nav-item">
+                        <a class="nav-link" href="/ui/cheatsheet#typography">Typography</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="/ui/cheatsheet#images">Images</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="/ui/cheatsheet#tables">Tables</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="/ui/cheatsheet#figures">Figures</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="/ui/cheatsheet#forms">Forms</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="/ui/cheatsheet#components">Components</a>
+                      </li>
+                    </ul>
+                  </div>
+                </li>
+                <li class="nav-item">
+                  <button
+                    class="nav-link admin-nav-toggle"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#nav-headers"
+                    aria-expanded="{% if nav_group == 'headers' %}true{% else %}false{% endif %}"
+                    aria-controls="nav-headers"
+                  >
+                    <i class="bi bi-window" aria-hidden="true"></i>
+                    Headers
+                    <i class="bi bi-chevron-down admin-nav-chevron" aria-hidden="true"></i>
+                  </button>
+                  <div class="collapse{% if nav_group == 'headers' %} show{% endif %}" id="nav-headers">
+                    <ul class="nav nav-pills flex-column admin-subnav mt-1">
+                      <li class="nav-item">
+                        <a class="nav-link{% if active == 'headers-simple' %} active{% endif %}" {% if active == 'headers-simple' %}aria-current="page"{% endif %} href="/ui/headers/simple">Simple</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link{% if active == 'headers-centered' %} active{% endif %}" {% if active == 'headers-centered' %}aria-current="page"{% endif %} href="/ui/headers/centered">Centered</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link{% if active == 'headers-buttons' %} active{% endif %}" {% if active == 'headers-buttons' %}aria-current="page"{% endif %} href="/ui/headers/buttons">With buttons</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link{% if active == 'headers-dark' %} active{% endif %}" {% if active == 'headers-dark' %}aria-current="page"{% endif %} href="/ui/headers/dark">Dark</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link{% if active == 'headers-account' %} active{% endif %}" {% if active == 'headers-account' %}aria-current="page"{% endif %} href="/ui/headers/account">With account</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link{% if active == 'headers-product' %} active{% endif %}" {% if active == 'headers-product' %}aria-current="page"{% endif %} href="/ui/headers/product">Product</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link{% if active == 'headers-double' %} active{% endif %}" {% if active == 'headers-double' %}aria-current="page"{% endif %} href="/ui/headers/double">Double</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link{% if active == 'headers-icons' %} active{% endif %}" {% if active == 'headers-icons' %}aria-current="page"{% endif %} href="/ui/headers/icons">Icons</a>
+                      </li>
+                    </ul>
+                  </div>
+                </li>
+                <li class="nav-item">
+                  <button
+                    class="nav-link admin-nav-toggle"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#nav-sidebars"
+                    aria-expanded="{% if nav_group == 'sidebars' %}true{% else %}false{% endif %}"
+                    aria-controls="nav-sidebars"
+                  >
+                    <i class="bi bi-layout-sidebar" aria-hidden="true"></i>
+                    Sidebars
+                    <i class="bi bi-chevron-down admin-nav-chevron" aria-hidden="true"></i>
+                  </button>
+                  <div class="collapse{% if nav_group == 'sidebars' %} show{% endif %}" id="nav-sidebars">
+                    <ul class="nav nav-pills flex-column admin-subnav mt-1">
+                      <li class="nav-item">
+                        <a class="nav-link{% if active == 'sidebars-dark' %} active{% endif %}" {% if active == 'sidebars-dark' %}aria-current="page"{% endif %} href="/ui/sidebars/dark">Dark</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link{% if active == 'sidebars-light' %} active{% endif %}" {% if active == 'sidebars-light' %}aria-current="page"{% endif %} href="/ui/sidebars/light">Light</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link{% if active == 'sidebars-icons' %} active{% endif %}" {% if active == 'sidebars-icons' %}aria-current="page"{% endif %} href="/ui/sidebars/icons">Icon-only</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link{% if active == 'sidebars-collapsible' %} active{% endif %}" {% if active == 'sidebars-collapsible' %}aria-current="page"{% endif %} href="/ui/sidebars/collapsible">Collapsible</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link{% if active == 'sidebars-list-group' %} active{% endif %}" {% if active == 'sidebars-list-group' %}aria-current="page"{% endif %} href="/ui/sidebars/list-group">List group</a>
+                      </li>
+                    </ul>
+                  </div>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link{% if active == 'settings' %} active{% endif %}" {% if active == 'settings' %}aria-current="page"{% endif %} href="/ui/settings">
+                    <i class="bi bi-gear" aria-hidden="true"></i>
+                    Settings
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/ui/settings#help">
+                    <i class="bi bi-question-circle" aria-hidden="true"></i>
+                    Help
+                  </a>
+                </li>
+            </ul>
+          </nav>
+          </div>
+        </div>
+      </div>
+    </aside>

@@ -1,0 +1,151 @@
+{% extends "layout.html" %}
+{% block title %}Settings · Admin{% endblock %}
+{% block description %}Bootstrap 5 admin starter — Settings{% endblock %}
+{% block content %}
+          <nav aria-label="Breadcrumb">
+            <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/ui/dashboard">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Settings</li>
+            </ol>
+          </nav>
+          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom gap-2">
+            <div>
+              <h1 class="h2">Settings</h1>
+              <p class="text-body-secondary mb-0">Account preferences and application configuration for this environment.</p>
+            </div>
+          </div>
+          <form class="needs-validation" novalidate>
+            <div class="row g-4">
+              <div class="col-lg-8">
+                <section class="card mb-4" aria-labelledby="profile-heading">
+                  <div class="card-header">
+                    <h2 id="profile-heading" class="h5 mb-0">Profile</h2>
+                  </div>
+                  <div class="card-body">
+                    <div class="row g-3">
+                      <div class="col-md-6">
+                        <label class="form-label" for="display-name">Display name</label>
+                        <input class="form-control" id="display-name" type="text" value="Alex Rivera" required />
+                        <div class="invalid-feedback">Enter a display name.</div>
+                      </div>
+                      <div class="col-md-6">
+                        <label class="form-label" for="profile-email">Email</label>
+                        <input class="form-control" id="profile-email" type="email" value="alex.rivera@example.com" required />
+                      </div>
+                      <div class="col-md-6">
+                        <label class="form-label" for="profile-timezone">Timezone</label>
+                        <select class="form-select" id="profile-timezone">
+                          <option>UTC</option>
+                          <option selected>Europe/Athens</option>
+                          <option>America/New_York</option>
+                        </select>
+                      </div>
+                      <div class="col-md-6">
+                        <label class="form-label" for="profile-language">Language</label>
+                        <select class="form-select" id="profile-language">
+                          <option selected>English</option>
+                          <option>Greek</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+                <section class="card mb-4" aria-labelledby="password-heading">
+                  <div class="card-header">
+                    <h2 id="password-heading" class="h5 mb-0">Password</h2>
+                  </div>
+                  <div class="card-body">
+                    <div class="mb-3">
+                      <label class="form-label" for="current-password">Current password</label>
+                      <input class="form-control" id="current-password" type="password" autocomplete="current-password" />
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label" for="new-password">New password</label>
+                      <input class="form-control" id="new-password" type="password" autocomplete="new-password" />
+                      <div class="form-text">At least 12 characters, with a number and a symbol.</div>
+                    </div>
+                    <div>
+                      <label class="form-label" for="confirm-password">Confirm password</label>
+                      <input class="form-control" id="confirm-password" type="password" autocomplete="new-password" />
+                    </div>
+                  </div>
+                </section>
+                <section class="card mb-4" aria-labelledby="notify-heading">
+                  <div class="card-header">
+                    <h2 id="notify-heading" class="h5 mb-0">Notifications</h2>
+                  </div>
+                  <div class="card-body">
+                    <div class="form-check form-switch mb-2">
+                      <input class="form-check-input" type="checkbox" role="switch" id="notify-access" checked />
+                      <label class="form-check-label" for="notify-access">Access requests</label>
+                    </div>
+                    <div class="form-check form-switch mb-2">
+                      <input class="form-check-input" type="checkbox" role="switch" id="notify-jobs" checked />
+                      <label class="form-check-label" for="notify-jobs">Failed jobs</label>
+                    </div>
+                    <div class="form-check form-switch">
+                      <input class="form-check-input" type="checkbox" role="switch" id="notify-digest" />
+                      <label class="form-check-label" for="notify-digest">Daily digest</label>
+                    </div>
+                  </div>
+                </section>
+                <section class="card mb-4" aria-labelledby="app-heading">
+                  <div class="card-header">
+                    <h2 id="app-heading" class="h5 mb-0">Application</h2>
+                  </div>
+                  <div class="card-body">
+                    <div class="mb-3">
+                      <label class="form-label" for="org-name">Organisation name</label>
+                      <input class="form-control" id="org-name" type="text" value="Operations" required />
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label" for="support-email">Support email</label>
+                      <input class="form-control" id="support-email" type="email" value="ops@example.com" />
+                    </div>
+                    <div class="form-check form-switch">
+                      <input class="form-check-input" type="checkbox" role="switch" id="maintenance-mode" />
+                      <label class="form-check-label" for="maintenance-mode">Show maintenance banner</label>
+                    </div>
+                  </div>
+                </section>
+                <div class="d-flex flex-wrap gap-2">
+                  <button type="submit" class="btn btn-primary">Save changes</button>
+                  <a class="btn btn-outline-secondary" href="/ui/dashboard">Cancel</a>
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <section class="card" id="help" aria-labelledby="help-heading">
+                  <div class="card-header">
+                    <h2 id="help-heading" class="h5 mb-0">Help &amp; support</h2>
+                  </div>
+                  <div class="card-body">
+                    <p>This starter is a static shell. Wire these forms to your own backend.</p>
+                    <div class="accordion" id="helpAccordion">
+                      <div class="accordion-item">
+                        <h3 class="accordion-header">
+                          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#help-shell" aria-expanded="true" aria-controls="help-shell">
+                            Where is the page shell?
+                          </button>
+                        </h3>
+                        <div id="help-shell" class="accordion-collapse collapse show" data-bs-parent="#helpAccordion">
+                          <div class="accordion-body">Copy <code>blank.html</code>. It is the canonical layout for navbar, sidebar, and footer.</div>
+                        </div>
+                      </div>
+                      <div class="accordion-item">
+                        <h3 class="accordion-header">
+                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#help-theme" aria-expanded="false" aria-controls="help-theme">
+                            How is colour mode stored?
+                          </button>
+                        </h3>
+                        <div id="help-theme" class="accordion-collapse collapse" data-bs-parent="#helpAccordion">
+                          <div class="accordion-body">The selected mode is saved in <code>localStorage</code> as <code>theme</code>: light, dark, or auto.</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+              </div>
+            </div>
+          </form>
+      
+{% endblock %}

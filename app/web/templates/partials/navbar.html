@@ -1,0 +1,280 @@
+<a class="visually-hidden-focusable btn btn-primary admin-skip-link position-absolute m-2" href="#main">Skip to main content</a>
+    <header class="navbar admin-navbar sticky-top bg-body border-bottom">
+      <nav class="container-fluid flex-wrap flex-lg-nowrap gap-2" aria-label="Primary">
+        <button
+          class="navbar-toggler d-lg-none"
+          type="button"
+          data-bs-toggle="offcanvas"
+          data-bs-target="#sidebar"
+          aria-controls="sidebar"
+          aria-label="Open navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <a class="navbar-brand d-flex align-items-center gap-2 me-0" href="/ui/dashboard">
+          <i class="bi bi-bootstrap-fill admin-brand-mark text-primary" aria-hidden="true"></i>
+          <span>Admin</span>
+        </a>
+        <form class="admin-search d-none d-md-block flex-grow-1 mx-md-3" role="search" action="/ui/users" method="get">
+          <div class="input-group">
+            <span class="input-group-text bg-body-secondary border-end-0">
+              <i class="bi bi-search" aria-hidden="true"></i>
+            </span>
+            <input
+              class="form-control border-start-0"
+              type="search"
+              name="q"
+              placeholder="Search operators"
+              aria-label="Search operators"
+            />
+          </div>
+        </form>
+        <ul class="navbar-nav flex-row flex-wrap align-items-center ms-auto gap-1">
+          <li class="nav-item d-md-none">
+            <button
+              class="btn btn-link nav-link py-2 px-2"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#navbarSearch"
+              aria-controls="navbarSearch"
+              aria-expanded="false"
+              aria-label="Toggle search"
+            >
+              <i class="bi bi-search" aria-hidden="true"></i>
+            </button>
+          </li>
+          <li class="nav-item dropdown">
+            <button
+              class="btn btn-link nav-link py-2 px-2 position-relative"
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+              aria-label="Notifications, 3 unread"
+            >
+              <i class="bi bi-bell" aria-hidden="true"></i>
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                3
+                <span class="visually-hidden">unread notifications</span>
+              </span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end admin-notifications">
+              <li><h6 class="dropdown-header">Notifications</h6></li>
+              <li>
+                <a class="dropdown-item py-2" href="/ui/users">
+                  <div class="fw-semibold">Access request</div>
+                  <div class="small text-body-secondary">Jordan Blake requested operator access.</div>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item py-2" href="/ui/dashboard">
+                  <div class="fw-semibold">Mail queue delay</div>
+                  <div class="small text-body-secondary">Delivery latency is above the usual range.</div>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item py-2" href="/ui/settings">
+                  <div class="fw-semibold">Password expiry</div>
+                  <div class="small text-body-secondary">Your password expires in 5 days.</div>
+                </a>
+              </li>
+              <li><hr class="dropdown-divider" /></li>
+              <li><a class="dropdown-item" href="/ui/dashboard">View recent activity</a></li>
+            </ul>
+          </li>
+                    <li class="nav-item">
+            <div class="dropdown">
+              <button
+                class="btn btn-link nav-link py-2 px-2 dropdown-toggle d-flex align-items-center"
+                id="admin-profile"
+                type="button"
+                data-bs-toggle="dropdown"
+                data-bs-auto-close="outside"
+                aria-expanded="false"
+                aria-label="Profile (Off)"
+              >
+                <i class="bi bi-sliders" aria-hidden="true"></i>
+                <span class="visually-hidden">Profile</span>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                  <div class="dropdown-item d-flex align-items-center gap-3" data-admin-profile-row>
+                    <label class="mb-0 flex-grow-1" for="admin-profile-switch">MIL-STD density</label>
+                    <div class="form-check form-switch mb-0">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        role="switch"
+                        id="admin-profile-switch"
+                        data-admin-profile-switch
+                        aria-label="MIL-STD density"
+                      />
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </li>
+<li class="nav-item">
+            <div class="dropdown">
+              <button
+                class="btn btn-link nav-link py-2 px-2 dropdown-toggle d-flex align-items-center"
+                id="admin-palette"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                aria-label="Palette (default)"
+              >
+                <i class="bi bi-palette" aria-hidden="true"></i>
+                <span class="visually-hidden">Palette</span>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                  <button
+                    type="button"
+                    class="dropdown-item d-flex align-items-center"
+                    data-admin-palette-value="default"
+                    aria-pressed="false"
+                  >
+                    Default
+                    <i class="bi bi-check2 ms-auto d-none" data-admin-palette-check aria-hidden="true"></i>
+                  </button>
+                </li>
+                <li>
+                  <button
+                    type="button"
+                    class="dropdown-item d-flex align-items-center"
+                    data-admin-palette-value="teal"
+                    aria-pressed="false"
+                  >
+                    Teal
+                    <i class="bi bi-check2 ms-auto d-none" data-admin-palette-check aria-hidden="true"></i>
+                  </button>
+                </li>
+                <li>
+                  <button
+                    type="button"
+                    class="dropdown-item d-flex align-items-center"
+                    data-admin-palette-value="grey"
+                    aria-pressed="false"
+                  >
+                    Grey
+                    <i class="bi bi-check2 ms-auto d-none" data-admin-palette-check aria-hidden="true"></i>
+                  </button>
+                </li>
+                <li>
+                  <button
+                    type="button"
+                    class="dropdown-item d-flex align-items-center"
+                    data-admin-palette-value="mil-std"
+                    aria-pressed="false"
+                  >
+                    MIL-STD
+                    <i class="bi bi-check2 ms-auto d-none" data-admin-palette-check aria-hidden="true"></i>
+                  </button>
+                </li>
+                <li>
+                  <button
+                    type="button"
+                    class="dropdown-item d-flex align-items-center"
+                    data-admin-palette-value="night"
+                    aria-pressed="false"
+                  >
+                    Night
+                    <i class="bi bi-check2 ms-auto d-none" data-admin-palette-check aria-hidden="true"></i>
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </li>
+          <li class="nav-item">
+            <div class="dropdown">
+              <button
+                class="btn btn-link nav-link py-2 px-2 dropdown-toggle d-flex align-items-center"
+                id="bd-theme"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                aria-label="Toggle theme (auto)"
+              >
+                <i class="bi bi-circle-half theme-icon-active" aria-hidden="true"></i>
+                <span class="visually-hidden" id="bd-theme-text">Toggle theme</span>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="bd-theme-text">
+                <li>
+                  <button
+                    type="button"
+                    class="dropdown-item d-flex align-items-center"
+                    data-bs-theme-value="light"
+                    data-admin-theme-icon="bi-sun-fill"
+                    aria-pressed="false"
+                  >
+                    <i class="bi bi-sun-fill me-2 opacity-50" aria-hidden="true"></i>
+                    Light
+                    <i class="bi bi-check2 ms-auto d-none" data-admin-theme-check aria-hidden="true"></i>
+                  </button>
+                </li>
+                <li>
+                  <button
+                    type="button"
+                    class="dropdown-item d-flex align-items-center"
+                    data-bs-theme-value="dark"
+                    data-admin-theme-icon="bi-moon-stars-fill"
+                    aria-pressed="false"
+                  >
+                    <i class="bi bi-moon-stars-fill me-2 opacity-50" aria-hidden="true"></i>
+                    Dark
+                    <i class="bi bi-check2 ms-auto d-none" data-admin-theme-check aria-hidden="true"></i>
+                  </button>
+                </li>
+                <li>
+                  <button
+                    type="button"
+                    class="dropdown-item d-flex align-items-center"
+                    data-bs-theme-value="auto"
+                    data-admin-theme-icon="bi-circle-half"
+                    aria-pressed="false"
+                  >
+                    <i class="bi bi-circle-half me-2 opacity-50" aria-hidden="true"></i>
+                    Auto
+                    <i class="bi bi-check2 ms-auto d-none" data-admin-theme-check aria-hidden="true"></i>
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <button
+              class="btn btn-link nav-link py-2 px-2 d-flex align-items-center gap-2"
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+              aria-label="{% if user %}{{ user.username }} account menu{% else %}Account menu{% endif %}">
+              <i class="bi bi-person-circle fs-5" aria-hidden="true"></i>
+              <span class="d-none d-sm-inline">{% if user %}{{ user.username }}{% else %}Account{% endif %}</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              {% if user %}
+              <li><h6 class="dropdown-header">{{ user.username }} · {{ user.role }}</h6></li>
+              <li><a class="dropdown-item" href="/ui/settings">Profile</a></li>
+              <li><a class="dropdown-item" href="/ui/settings">Settings</a></li>
+              <li><hr class="dropdown-divider" /></li>
+              <li>
+                <form action="/auth/logout" method="post">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                  <button type="submit" class="dropdown-item">Sign out</button>
+                </form>
+              </li>
+              {% else %}
+              <li><a class="dropdown-item" href="/auth/login">Log in</a></li>
+              {% endif %}
+            </ul>
+          </li>
+        </ul>
+        <div class="collapse w-100 d-md-none" id="navbarSearch">
+          <form class="py-2" role="search" action="/ui/users" method="get">
+            <label class="form-label visually-hidden" for="mobile-search">Search operators</label>
+            <input class="form-control" id="mobile-search" type="search" name="q" placeholder="Search operators" />
+          </form>
+        </div>
+      </nav>
+    </header>

@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "../fastapi-htmx-starter"
+		},
+		{
+			"path": "../pure-bootstrap-5-admin"
+		},
+		{
+			"path": "."
+		},
+		{
+			"path": "../../alvo-ir/omnia-lab"
+		}
+	],
+	"settings": {}
+}

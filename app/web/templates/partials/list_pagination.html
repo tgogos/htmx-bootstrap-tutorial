@@ -1,0 +1,33 @@
+{# Expects count_summary, list_panel_target, list_indicator, list_pagination_label,
+   list_page_size_id, page_sizes, size, size_urls, first_url, prev_url, next_url, last_url. #}
+{% macro page_btn(url, label, icon) %}
+{% if url %}
+<a class="btn btn-sm btn-outline-secondary" href="{{ url }}" aria-label="{{ label }}" hx-get="{{ url }}" hx-target="{{ list_panel_target }}" hx-swap="innerHTML" hx-push-url="true" hx-indicator="{{ list_indicator }}"><i class="bi {{ icon }}" aria-hidden="true"></i></a>
+{% else %}
+<button type="button" class="btn btn-sm btn-outline-secondary" disabled aria-label="{{ label }}"><i class="bi {{ icon }}" aria-hidden="true"></i></button>
+{% endif %}
+{% endmacro %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mt-2">
+  <p class="text-body-secondary small mb-0">{{ count_summary }}</p>
+  <div class="d-flex flex-wrap align-items-center gap-2">
+    <label class="visually-hidden" for="{{ list_page_size_id }}">Rows per page</label>
+    <select
+      id="{{ list_page_size_id }}"
+      class="form-select form-select-sm w-auto"
+      data-list-page-size
+      data-panel-target="{{ list_panel_target }}"
+      data-indicator="{{ list_indicator }}"
+      aria-label="Rows per page"
+    >
+      {% for n in page_sizes %}
+      <option value="{{ n }}" data-url="{{ size_urls[n] }}" {% if n == size %}selected{% endif %}>{{ n }}</option>
+      {% endfor %}
+    </select>
+    <nav class="d-flex gap-1" aria-label="{{ list_pagination_label }}">
+      {{ page_btn(first_url, "First page", "bi-chevron-bar-left") }}
+      {{ page_btn(prev_url, "Previous page", "bi-chevron-left") }}
+      {{ page_btn(next_url, "Next page", "bi-chevron-right") }}
+      {{ page_btn(last_url, "Last page", "bi-chevron-bar-right") }}
+    </nav>
+  </div>
+</div>

@@ -1,0 +1,34 @@
+services:
+  fastapi-htmx-bootstrap:
+    image: ${DOCKER_REG:-}${DOCKER_REPO:-}${APP_NAME:-fastapi-htmx-bootstrap}:${DOCKER_TAG:-latest}
+    container_name: ${APP_NAME:-fastapi-htmx-bootstrap}
+    build:
+      context: .
+    command: ["fastapi", "dev", "app/main.py", "--port", "8000",  "--host", "0.0.0.0"]
+    ports:
+      - "${PUBLISH_PORT:-8000}:8000"
+    depends_on:
+      - mongodb
+    volumes:
+      - ./app:/code/app  # Mount app directory for hot reload
+      - ./tests:/code/tests  # Mount tests directory for pytest
+      - ./data:/code/data  # SQLite database file
+    environment:
+      - RELOAD=1  # Enable hot reload
+    env_file:
+      - .env
+    working_dir: /code
+
+  mongodb:
+    image: mongo:7.0
+    container_name: ${APP_NAME:-fastapi-htmx-bootstrap}-mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER:-root}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASS:-pass}
+    volumes:
+      - mongodb_data:/data/db
+
+volumes:
+  mongodb_data:

@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="csrf-token" content="{{ csrf_token }}" />
+    <meta name="description" content="Sign in to Admin" />
+    <meta name="theme-color" content="#712cf9" />
+    <title>Sign in · Admin</title>
+    <script>
+      (() => {
+        const storedPalette = localStorage.getItem("admin-palette");
+        const palette =
+          storedPalette === "teal" ||
+          storedPalette === "grey" ||
+          storedPalette === "mil-std" ||
+          storedPalette === "night"
+            ? storedPalette
+            : "default";
+        document.documentElement.setAttribute("data-admin-palette", palette);
+        const storedProfile = localStorage.getItem("admin-profile");
+        if (storedProfile === "mil-std") {
+          document.documentElement.setAttribute("data-admin-profile", "mil-std");
+        }
+        const stored = localStorage.getItem("theme");
+        const theme =
+          palette === "night"
+            ? "dark"
+            : stored === "light" || stored === "dark"
+              ? stored
+              : window.matchMedia("(prefers-color-scheme: dark)").matches
+                ? "dark"
+                : "light";
+        document.documentElement.setAttribute("data-bs-theme", theme);
+      })();
+    </script>
+    <link rel="stylesheet" href="/static/vendor/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/static/vendor/bootstrap-icons/bootstrap-icons.css" />
+    <link rel="stylesheet" href="/static/css/admin.css" />
+    <link rel="stylesheet" href="/static/css/palettes.css" />
+    <link rel="stylesheet" href="/static/css/profile.css" />
+  </head>
+  <body class="admin-signin bg-body-tertiary py-4">
+    <div class="position-fixed top-0 end-0 m-3 d-flex gap-2">
+            <div class="dropdown">
+              <button
+                class="btn btn-outline-secondary dropdown-toggle d-flex align-items-center"
+                id="admin-profile"
+                type="button"
+                data-bs-toggle="dropdown"
+                data-bs-auto-close="outside"
+                aria-expanded="false"
+                aria-label="Profile (Off)"
+              >
+                <i class="bi bi-sliders" aria-hidden="true"></i>
+                <span class="visually-hidden">Profile</span>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                  <div class="dropdown-item d-flex align-items-center gap-3" data-admin-profile-row>
+                    <label class="mb-0 flex-grow-1" for="admin-profile-switch">MIL-STD density</label>
+                    <div class="form-check form-switch mb-0">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        role="switch"
+                        id="admin-profile-switch"
+                        data-admin-profile-switch
+                        aria-label="MIL-STD density"
+                      />
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+            <div class="dropdown">
+              <button
+                class="btn btn-outline-secondary dropdown-toggle d-flex align-items-center"
+                id="admin-palette"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                aria-label="Palette (default)"
+              >
+                <i class="bi bi-palette" aria-hidden="true"></i>
+                <span class="visually-hidden">Palette</span>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                  <button
+                    type="button"
+                    class="dropdown-item d-flex align-items-center"
+                    data-admin-palette-value="default"
+                    aria-pressed="false"
+                  >
+                    Default
+                    <i class="bi bi-check2 ms-auto d-none" data-admin-palette-check aria-hidden="true"></i>
+                  </button>
+                </li>
+                <li>
+                  <button
+                    type="button"
+                    class="dropdown-item d-flex align-items-center"
+                    data-admin-palette-value="teal"
+                    aria-pressed="false"
+                  >
+                    Teal
+                    <i class="bi bi-check2 ms-auto d-none" data-admin-palette-check aria-hidden="true"></i>
+                  </button>
+                </li>
+                <li>
+                  <button
+                    type="button"
+                    class="dropdown-item d-flex align-items-center"
+                    data-admin-palette-value="grey"
+                    aria-pressed="false"
+                  >
+                    Grey
+                    <i class="bi bi-check2 ms-auto d-none" data-admin-palette-check aria-hidden="true"></i>
+                  </button>
+                </li>
+                <li>
+                  <button
+                    type="button"
+                    class="dropdown-item d-flex align-items-center"
+                    data-admin-palette-value="mil-std"
+                    aria-pressed="false"
+                  >
+                    MIL-STD
+                    <i class="bi bi-check2 ms-auto d-none" data-admin-palette-check aria-hidden="true"></i>
+                  </button>
+                </li>
+                <li>
+                  <button
+                    type="button"
+                    class="dropdown-item d-flex align-items-center"
+                    data-admin-palette-value="night"
+                    aria-pressed="false"
+                  >
+                    Night
+                    <i class="bi bi-check2 ms-auto d-none" data-admin-palette-check aria-hidden="true"></i>
+                  </button>
+                </li>
+              </ul>
+            </div>
+            <div class="dropdown">
+              <button
+                class="btn btn-outline-secondary dropdown-toggle d-flex align-items-center"
+                id="bd-theme"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                aria-label="Toggle theme (auto)"
+              >
+                <i class="bi bi-circle-half theme-icon-active" aria-hidden="true"></i>
+                <span class="visually-hidden" id="bd-theme-text">Toggle theme</span>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="bd-theme-text">
+                <li>
+                  <button
+                    type="button"
+                    class="dropdown-item d-flex align-items-center"
+                    data-bs-theme-value="light"
+                    data-admin-theme-icon="bi-sun-fill"
+                    aria-pressed="false"
+                  >
+                    <i class="bi bi-sun-fill me-2 opacity-50" aria-hidden="true"></i>
+                    Light
+                    <i class="bi bi-check2 ms-auto d-none" data-admin-theme-check aria-hidden="true"></i>
+                  </button>
+                </li>
+                <li>
+                  <button
+                    type="button"
+                    class="dropdown-item d-flex align-items-center"
+                    data-bs-theme-value="dark"
+                    data-admin-theme-icon="bi-moon-stars-fill"
+                    aria-pressed="false"
+                  >
+                    <i class="bi bi-moon-stars-fill me-2 opacity-50" aria-hidden="true"></i>
+                    Dark
+                    <i class="bi bi-check2 ms-auto d-none" data-admin-theme-check aria-hidden="true"></i>
+                  </button>
+                </li>
+                <li>
+                  <button
+                    type="button"
+                    class="dropdown-item d-flex align-items-center"
+                    data-bs-theme-value="auto"
+                    data-admin-theme-icon="bi-circle-half"
+                    aria-pressed="false"
+                  >
+                    <i class="bi bi-circle-half me-2 opacity-50" aria-hidden="true"></i>
+                    Auto
+                    <i class="bi bi-check2 ms-auto d-none" data-admin-theme-check aria-hidden="true"></i>
+                  </button>
+                </li>
+              </ul>
+            </div>
+    </div>
+    <main class="form-signin w-100 m-auto">
+      <form action="/auth/login" method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <img class="mb-4" src="/static/vendor/bootstrap/bootstrap-logo.svg" alt="" width="72" height="57" />
+        <h1 class="h3 mb-3 fw-normal">Log in</h1>
+        {% if error %}
+        <div class="alert alert-danger" role="alert">{{ error }}</div>
+        {% endif %}
+        <div class="form-floating">
+          <input type="text" class="form-control" id="signin-username" name="username" placeholder="Username" autocomplete="username" required />
+          <label for="signin-username">Username</label>
+        </div>
+        <div class="form-floating">
+          <input type="password" class="form-control" id="signin-password" name="password" placeholder="Password" autocomplete="current-password" required />
+          <label for="signin-password">Password</label>
+        </div>
+        <button class="btn btn-primary w-100 py-2" type="submit">Log in</button>
+        <p class="mt-4 mb-3 text-body-secondary small">Use the demo user from <code>DEMO_USERNAME</code> / <code>DEMO_PASSWORD</code> (default <code>admin</code> / <code>admin123</code>).</p>
+        <p class="mt-5 mb-3 text-body-secondary">&copy; 2026 Admin</p>
+      </form>
+    </main>
+    {% include "partials/scripts.html" %}
+  </body>
+</html>

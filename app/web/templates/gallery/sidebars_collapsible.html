@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="csrf-token" content="{{ csrf_token }}" />
+    <meta name="description" content="Bootstrap 5 admin starter — Collapsible sidebar" />
+    <meta name="theme-color" content="#712cf9" />
+    <title>Collapsible sidebar · Admin</title>
+    {% include "partials/head_assets.html" %}
+  </head>
+  <body>
+    {% include "partials/navbar.html" %}
+<aside class="admin-sidebar border-end">
+      <div class="offcanvas-lg offcanvas-start" tabindex="-1" id="sidebar" aria-labelledby="sidebarLabel">
+        <div class="offcanvas-header border-bottom d-lg-none">
+          <h2 class="offcanvas-title h5" id="sidebarLabel">Navigation</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebar" aria-label="Close navigation"></button>
+        </div>
+        <div class="offcanvas-body d-flex flex-column p-0 overflow-y-auto">
+        <div class="flex-shrink-0 p-3 h-100">
+          <a href="/ui/dashboard" class="d-flex align-items-center pb-3 mb-3 link-body-emphasis text-decoration-none border-bottom">
+            <i class="bi bi-bootstrap-fill admin-brand-mark me-2" aria-hidden="true"></i>
+            <span class="fs-5 fw-semibold">Collapsible</span>
+          </a>
+          <ul class="list-unstyled ps-0">
+            <li class="mb-1">
+              <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0" data-bs-toggle="collapse" data-bs-target="#examples-collapse" aria-expanded="true">
+                Examples
+              </button>
+              <div class="collapse show" id="examples-collapse">
+                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                  <li><a href="/ui/sidebars/dark" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Dark</a></li>
+                  <li><a href="/ui/sidebars/light" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Light</a></li>
+                  <li><a href="/ui/sidebars/icons" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Icon-only</a></li>
+                  <li><a href="/ui/sidebars/collapsible" class="link-body-emphasis d-inline-flex text-decoration-none rounded fw-semibold" aria-current="page">Collapsible</a></li>
+                  <li><a href="/ui/sidebars/list-group" class="link-body-emphasis d-inline-flex text-decoration-none rounded">List group</a></li>
+                </ul>
+              </div>
+            </li>
+            <li class="mb-1">
+              <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="false">
+                Home
+              </button>
+              <div class="collapse" id="home-collapse">
+                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                  <li><a href="/ui/dashboard" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Overview</a></li>
+                  <li><a href="/ui/dashboard" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Updates</a></li>
+                  <li><a href="/ui/tables" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Reports</a></li>
+                </ul>
+              </div>
+            </li>
+            <li class="mb-1">
+              <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">
+                Account
+              </button>
+              <div class="collapse" id="account-collapse">
+                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                  <li><a href="/ui/settings" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Profile</a></li>
+                  <li><a href="/ui/settings" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Settings</a></li>
+                  <li><a href="/auth/login" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Sign out</a></li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="admin-main">
+        <main id="main" class="admin-content px-3 px-md-4 py-4" tabindex="-1">
+          <h1 class="visually-hidden">Collapsible sidebar</h1>
+        </main>
+    </div>
+    
+    {% include "partials/scripts.html" %}
+  </body>
+</html>

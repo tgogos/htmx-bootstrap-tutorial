@@ -1,0 +1,44 @@
+[project]
+name = "fastapi-htmx-bootstrap"
+version = "0.1.0"
+description = "FastAPI + HTMX app with a Bootstrap admin shell, SQLite auth, and a JSON API"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "fastapi[standard]==0.141.1",
+    "pydantic-settings==2.15.0",
+    "motor==3.7.1",
+    "pymongo==4.17.0",
+    "aiosqlite==0.22.1",
+    "bcrypt==5.0.0",
+    "itsdangerous==2.2.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest==9.1.1",
+    "pytest-asyncio==1.4.0",
+    "httpx==0.28.1",
+]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+asyncio_mode = "auto"
+addopts = [
+    "-v",
+    "--tb=short",
+    "--strict-markers",
+    "--disable-warnings",
+]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+    "unit: marks tests as unit tests",
+    "no_client: skip app TestClient / Mongo+SQLite lifespan",
+]

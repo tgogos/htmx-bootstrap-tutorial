@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="csrf-token" content="{{ csrf_token }}" />
+    <meta name="description" content="Bootstrap 5 admin starter — Icons header" />
+    <meta name="theme-color" content="#712cf9" />
+    <title>Icons header · Admin</title>
+    {% include "partials/head_assets.html" %}
+  </head>
+  <body class="admin-header-demo">
+    
+    <a class="visually-hidden-focusable btn btn-primary admin-skip-link position-absolute m-2" href="#main">Skip to main content</a>
+    <header>
+      <div class="px-3 py-2 text-bg-dark border-bottom">
+        <div class="container">
+          <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+        <button
+          class="btn btn-outline-light d-lg-none me-2"
+          type="button"
+          data-bs-toggle="offcanvas"
+          data-bs-target="#sidebar"
+          aria-controls="sidebar"
+          aria-label="Open navigation"
+        >
+          <i class="bi bi-list" aria-hidden="true"></i>
+        </button>
+            <a href="/ui/dashboard" class="d-flex align-items-center my-2 my-lg-0 me-lg-auto text-white text-decoration-none">
+              <i class="bi bi-bootstrap-fill admin-brand-mark me-2" aria-hidden="true"></i>
+              <span class="visually-hidden">Admin</span>
+            </a>
+            <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
+              <li>
+                <a href="/ui/dashboard" class="nav-link text-secondary">
+                  <i class="bi bi-house-door d-block mx-auto mb-1 fs-5" aria-hidden="true"></i>
+                  Home
+                </a>
+              </li>
+              <li>
+                <a href="/ui/dashboard" class="nav-link text-white">
+                  <i class="bi bi-speedometer2 d-block mx-auto mb-1 fs-5" aria-hidden="true"></i>
+                  Dashboard
+                </a>
+              </li>
+              <li>
+                <a href="/ui/tables" class="nav-link text-white">
+                  <i class="bi bi-table d-block mx-auto mb-1 fs-5" aria-hidden="true"></i>
+                  Orders
+                </a>
+              </li>
+              <li>
+                <a href="/ui/users" class="nav-link text-white">
+                  <i class="bi bi-grid d-block mx-auto mb-1 fs-5" aria-hidden="true"></i>
+                  Products
+                </a>
+              </li>
+              <li>
+                <a href="/ui/users" class="nav-link text-white">
+                  <i class="bi bi-people d-block mx-auto mb-1 fs-5" aria-hidden="true"></i>
+                  Customers
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="px-3 py-2 border-bottom bg-body">
+        <div class="container d-flex flex-wrap justify-content-center">
+          <form class="col-12 col-lg-auto mb-2 mb-lg-0 me-lg-auto" role="search" action="/ui/users" method="get">
+            <input class="form-control" type="search" placeholder="Search..." aria-label="Search" name="q" />
+          </form>
+          <div class="text-end">
+            <a class="btn btn-light text-dark me-2" href="/auth/login">Login</a>
+            <a class="btn btn-primary" href="/auth/login">Sign-up</a>
+          </div>
+        </div>
+      </div>
+    </header>
+    <div class="admin-shell-row">
+    {% include "partials/sidebar.html" %}
+
+      <div class="admin-main">
+        <main id="main" class="admin-content px-3 px-md-4 py-4" tabindex="-1">
+          <h1 class="visually-hidden">Icons header</h1>
+        </main>
+      </div>
+    </div>
+    
+    {% include "partials/scripts.html" %}
+  </body>
+</html>

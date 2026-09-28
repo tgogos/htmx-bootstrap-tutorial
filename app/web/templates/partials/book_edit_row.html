@@ -1,0 +1,60 @@
+<tr id="book-row-{{ book.id }}">
+  <td colspan="{% if can_edit %}8{% else %}7{% endif %}">
+    <form
+      class="row g-2 py-2"
+      hx-put="/ui/books/{{ book.id }}"
+      hx-target="#book-row-{{ book.id }}"
+      hx-swap="outerHTML"
+    >
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <div class="col-md-6">
+        <label class="form-label" for="edit-title-{{ book.id }}">Title</label>
+        <input class="form-control" id="edit-title-{{ book.id }}" type="text" name="title" value="{{ book.title }}" required maxlength="200">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label" for="edit-author-{{ book.id }}">Author</label>
+        <input class="form-control" id="edit-author-{{ book.id }}" type="text" name="author" value="{{ book.author }}" required maxlength="200">
+      </div>
+      <div class="col-md-4">
+        <label class="form-label" for="edit-category-{{ book.id }}">Category</label>
+        <select class="form-select" id="edit-category-{{ book.id }}" name="category">
+          {% for value, label in categories %}
+          <option value="{{ value }}" {% if book.category == value %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label" for="edit-year-{{ book.id }}">Year</label>
+        <input class="form-control" id="edit-year-{{ book.id }}" type="number" name="year" value="{{ book.year if book.year is not none else '' }}" min="0" max="9999">
+      </div>
+      <div class="col-md-4">
+        <label class="form-label" for="edit-pages-{{ book.id }}">Pages</label>
+        <input class="form-control" id="edit-pages-{{ book.id }}" type="number" name="page_count" value="{{ book.page_count if book.page_count is not none else '' }}" min="1" max="100000">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label" for="edit-isbn-{{ book.id }}">ISBN</label>
+        <input class="form-control" id="edit-isbn-{{ book.id }}" type="text" name="isbn" value="{{ book.isbn or '' }}" maxlength="32">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label" for="edit-notes-{{ book.id }}">Notes</label>
+        <input class="form-control" id="edit-notes-{{ book.id }}" type="text" name="notes" value="{{ book.notes or '' }}" maxlength="2000">
+      </div>
+      <div class="col-12">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="edit-available-{{ book.id }}" name="available" value="1" {% if book.available %}checked{% endif %}>
+          <label class="form-check-label" for="edit-available-{{ book.id }}">Available</label>
+        </div>
+      </div>
+      <div class="col-12 d-flex gap-2">
+        <button class="btn btn-sm btn-primary" type="submit">Save</button>
+        <button
+          type="button"
+          class="btn btn-sm btn-outline-secondary"
+          hx-get="/ui/books/{{ book.id }}/row"
+          hx-target="#book-row-{{ book.id }}"
+          hx-swap="outerHTML"
+        >Cancel</button>
+      </div>
+    </form>
+  </td>
+</tr>

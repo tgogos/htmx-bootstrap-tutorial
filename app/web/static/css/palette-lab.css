@@ -1,0 +1,51 @@
+/* Palette lab page — sticky controls + preview layout */
+
+.palette-lab-layout {
+  display: grid;
+  gap: 1.5rem;
+}
+
+@media (min-width: 992px) {
+  .palette-lab-layout {
+    grid-template-columns: minmax(16rem, 20rem) minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .palette-lab-panel {
+    position: sticky;
+    top: calc(var(--admin-navbar-height) + 1rem);
+    max-height: calc(100vh - var(--admin-navbar-height) - 2rem);
+    overflow: auto;
+  }
+}
+
+.palette-lab-row {
+  display: grid;
+  grid-template-columns: 1fr auto minmax(5.5rem, 1fr);
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.palette-lab-label {
+  margin: 0;
+  font-size: 0.75rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.palette-lab-swatch {
+  width: 2.5rem;
+  height: 2.25rem;
+  padding: 0.2rem;
+}
+
+.palette-lab-export {
+  min-height: 10rem;
+  font-size: 0.75rem;
+}
+
+.palette-lab-preview .card + .card {
+  margin-top: 1rem;
+}

@@ -1,0 +1,138 @@
+{% extends "layout.html" %}
+{% block title %}Components · Admin{% endblock %}
+{% block description %}Bootstrap 5 admin starter — Components{% endblock %}
+{% block content %}
+          <nav aria-label="Breadcrumb">
+            <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/ui/dashboard">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Components</li>
+            </ol>
+          </nav>
+          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom gap-2">
+            <div>
+              <h1 class="h2">Components</h1>
+              <p class="text-body-secondary mb-0">A short reference of standard Bootstrap components used in this starter. These are not restyled.</p>
+            </div>
+          </div>
+          <section class="mb-4" id="alerts" aria-labelledby="alerts-heading">
+            <h2 id="alerts-heading" class="h5">Alerts</h2>
+            <div class="alert alert-info" role="alert">Mail delivery is degraded. Outgoing messages may be delayed.</div>
+            <div class="alert alert-warning" role="alert">Priya Shah’s account is suspended pending a review.</div>
+          </section>
+          <section class="mb-4" aria-labelledby="badges-heading">
+            <h2 id="badges-heading" class="h5">Badges</h2>
+            <span class="badge text-bg-success">Active</span>
+            <span class="badge text-bg-warning">Invited</span>
+            <span class="badge text-bg-secondary">Suspended</span>
+            <span class="badge text-bg-danger">Urgent</span>
+          </section>
+          <section class="mb-4" id="buttons" aria-labelledby="buttons-heading">
+            <h2 id="buttons-heading" class="h5">Buttons</h2>
+            <div class="d-flex flex-wrap gap-2">
+              <button type="button" class="btn btn-primary">Primary</button>
+              <button type="button" class="btn btn-secondary">Secondary</button>
+              <button type="button" class="btn btn-outline-secondary">Outline</button>
+              <button type="button" class="btn btn-danger">Danger</button>
+              <button type="button" class="btn btn-primary" disabled>Disabled</button>
+            </div>
+          </section>
+          <section class="mb-4" id="cards" aria-labelledby="cards-heading">
+            <h2 id="cards-heading" class="h5">Cards</h2>
+            <div class="row">
+              <div class="col-md-6 col-xl-4">
+                <div class="card">
+                  <div class="card-header">Maintenance</div>
+                  <div class="card-body">
+                    <h3 class="card-title h5">Queue drain</h3>
+                    <p class="card-text">Mail workers are catching up on a backlog from last night’s retry window.</p>
+                    <a class="btn btn-primary" href="/ui/dashboard">View status</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section class="mb-4" aria-labelledby="dropdowns-heading">
+            <h2 id="dropdowns-heading" class="h5">Dropdowns</h2>
+            <div class="dropdown">
+              <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Export
+              </button>
+              <ul class="dropdown-menu">
+                <li><button class="dropdown-item" type="button">CSV</button></li>
+                <li><button class="dropdown-item" type="button">JSON</button></li>
+              </ul>
+            </div>
+          </section>
+          <section class="mb-4" aria-labelledby="tabs-heading">
+            <h2 id="tabs-heading" class="h5">Tabs</h2>
+            <ul class="nav nav-tabs" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="details-tab" data-bs-toggle="tab" data-bs-target="#details-panel" type="button" role="tab" aria-controls="details-panel" aria-selected="true">Details</button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history-panel" type="button" role="tab" aria-controls="history-panel" aria-selected="false">History</button>
+              </li>
+            </ul>
+            <div class="tab-content border border-top-0 p-3">
+              <div class="tab-pane fade show active" id="details-panel" role="tabpanel" aria-labelledby="details-tab" tabindex="0">
+                Operator accounts inherit two-factor authentication from organisation settings.
+              </div>
+              <div class="tab-pane fade" id="history-panel" role="tabpanel" aria-labelledby="history-tab" tabindex="0">
+                Last change: Alex Rivera updated the password expiry policy yesterday.
+              </div>
+            </div>
+          </section>
+          <section class="mb-4" aria-labelledby="accordion-heading">
+            <h2 id="accordion-heading" class="h5">Accordion</h2>
+            <div class="accordion" id="componentsAccordion">
+              <div class="accordion-item">
+                <h3 class="accordion-header">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#acc-one" aria-expanded="true" aria-controls="acc-one">
+                    Who can invite operators?
+                  </button>
+                </h3>
+                <div id="acc-one" class="accordion-collapse collapse show" data-bs-parent="#componentsAccordion">
+                  <div class="accordion-body">Administrators can invite operators. Operators can invite viewers.</div>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <h3 class="accordion-header">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#acc-two" aria-expanded="false" aria-controls="acc-two">
+                    How are sessions ended?
+                  </button>
+                </h3>
+                <div id="acc-two" class="accordion-collapse collapse" data-bs-parent="#componentsAccordion">
+                  <div class="accordion-body">Use Sign out in the account menu, or revoke a session from Settings.</div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section class="mb-4" aria-labelledby="progress-heading">
+            <h2 id="progress-heading" class="h5">Progress</h2>
+            <p class="form-label" id="mail-progress-label">Mail queue drain</p>
+            <div class="progress" role="progressbar" aria-labelledby="mail-progress-label" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100">
+              <div class="progress-bar" style="width: 72%">72%</div>
+            </div>
+          </section>
+          <section class="mb-4" aria-labelledby="toasts-heading">
+            <h2 id="toasts-heading" class="h5">Toasts</h2>
+            <button type="button" class="btn btn-outline-secondary" id="show-toast">Show toast</button>
+            <div class="toast-container position-fixed bottom-0 end-0 p-3">
+              <div id="live-toast" class="toast" role="status" aria-live="polite" aria-atomic="true">
+                <div class="toast-header">
+                  <strong class="me-auto">Admin</strong>
+                  <small>Just now</small>
+                  <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">Invite sent to Jordan Blake.</div>
+              </div>
+            </div>
+          </section>
+          <section id="modals" aria-labelledby="modals-heading">
+            <h2 id="modals-heading" class="h5">Modals</h2>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+              Open modal
+            </button>
+          </section>
+      
+{% endblock %}

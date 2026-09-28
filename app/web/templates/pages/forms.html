@@ -1,0 +1,140 @@
+{% extends "layout.html" %}
+{% block title %}Forms · Admin{% endblock %}
+{% block description %}Bootstrap 5 admin starter — Forms{% endblock %}
+{% block content %}
+          <nav aria-label="Breadcrumb">
+            <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/ui/dashboard">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Forms</li>
+            </ol>
+          </nav>
+          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom gap-2">
+            <div>
+              <h1 class="h2">Create operator</h1>
+              <p class="text-body-secondary mb-0">Standard Bootstrap form controls for inviting someone to this environment.</p>
+            </div>
+          </div>
+          <div class="row g-4">
+            <div class="col-lg-8">
+              <form class="needs-validation" novalidate>
+                <fieldset class="mb-4">
+                  <legend class="h5">Account</legend>
+                  <div class="row g-3">
+                    <div class="col-sm-6">
+                      <label class="form-label" for="first-name">First name</label>
+                      <input class="form-control" id="first-name" type="text" required />
+                      <div class="invalid-feedback">Enter a first name.</div>
+                    </div>
+                    <div class="col-sm-6">
+                      <label class="form-label" for="last-name">Last name</label>
+                      <input class="form-control" id="last-name" type="text" required />
+                      <div class="invalid-feedback">Enter a last name.</div>
+                    </div>
+                    <div class="col-12">
+                      <label class="form-label" for="username">Username</label>
+                      <div class="input-group has-validation">
+                        <span class="input-group-text">@</span>
+                        <input class="form-control" id="username" type="text" required />
+                        <div class="invalid-feedback">Choose a username.</div>
+                      </div>
+                      <div class="form-text">Used for audit logs and mentions.</div>
+                    </div>
+                    <div class="col-12">
+                      <label class="form-label" for="email">Work email</label>
+                      <input class="form-control" id="email" type="email" placeholder="name@example.com" required />
+                      <div class="invalid-feedback">Enter a valid email address.</div>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label" for="role">Role</label>
+                      <select class="form-select" id="role" required>
+                        <option value="" selected disabled>Choose…</option>
+                        <option>Viewer</option>
+                        <option>Operator</option>
+                        <option>Administrator</option>
+                      </select>
+                      <div class="invalid-feedback">Select a role.</div>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label" for="team">Team</label>
+                      <select class="form-select" id="team">
+                        <option>Operations</option>
+                        <option>Support</option>
+                        <option>Infrastructure</option>
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label" for="start-date">Start date</label>
+                      <input class="form-control" id="start-date" type="date" />
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label" for="timezone">Timezone</label>
+                      <select class="form-select" id="timezone">
+                        <option>UTC</option>
+                        <option selected>Europe/Athens</option>
+                        <option>America/New_York</option>
+                      </select>
+                    </div>
+                    <div class="col-12">
+                      <label class="form-label" for="notes">Notes</label>
+                      <textarea class="form-control" id="notes" rows="3"></textarea>
+                      <div class="form-text">Visible to administrators only.</div>
+                    </div>
+                  </div>
+                </fieldset>
+                <fieldset class="mb-4">
+                  <legend class="h5">Access</legend>
+                  <p class="mb-2">Seat type</p>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="seat" id="seat-standard" checked />
+                    <label class="form-check-label" for="seat-standard">Standard</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="seat" id="seat-break-glass" />
+                    <label class="form-check-label" for="seat-break-glass">Break-glass</label>
+                  </div>
+                  <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="notify-email" checked />
+                    <label class="form-check-label" for="notify-email">Email the invite</label>
+                  </div>
+                  <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="require-2fa" checked />
+                    <label class="form-check-label" for="require-2fa">Require two-factor authentication</label>
+                  </div>
+                  <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="api-access" />
+                    <label class="form-check-label" for="api-access">Allow personal API tokens</label>
+                  </div>
+                </fieldset>
+                <div class="d-flex flex-wrap gap-2">
+                  <a class="btn btn-outline-secondary" href="/ui/users">Cancel</a>
+                  <button type="button" class="btn btn-outline-secondary">Save draft</button>
+                  <button type="submit" class="btn btn-primary">Create operator</button>
+                </div>
+              </form>
+            </div>
+            <div class="col-lg-4">
+              <section class="card" aria-labelledby="validation-heading">
+                <div class="card-header">
+                  <h2 id="validation-heading" class="h5 mb-0">Validation states</h2>
+                </div>
+                <div class="card-body">
+                  <div class="mb-3">
+                    <label class="form-label" for="valid-example">Valid</label>
+                    <input class="form-control is-valid" id="valid-example" type="text" value="maya.chen" readonly />
+                    <div class="valid-feedback">Username is available.</div>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label" for="invalid-example">Invalid</label>
+                    <input class="form-control is-invalid" id="invalid-example" type="text" value="root" readonly />
+                    <div class="invalid-feedback">Reserved usernames cannot be used.</div>
+                  </div>
+                  <div>
+                    <label class="form-label" for="disabled-example">Disabled</label>
+                    <input class="form-control" id="disabled-example" type="text" value="Assigned after invite" disabled />
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
+      
+{% endblock %}

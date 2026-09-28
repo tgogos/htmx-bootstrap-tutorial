@@ -1,0 +1,126 @@
+{% extends "layout.html" %}
+{% block title %}Books · Admin{% endblock %}
+{% block description %}Books catalog{% endblock %}
+{% block content %}
+<nav aria-label="Breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/ui/dashboard">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Books</li>
+  </ol>
+</nav>
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom gap-2">
+  <div>
+    <h1 class="h2">Books</h1>
+    <p class="text-body-secondary mb-0">SQLite catalog. <a href="/ui/books/search">Advanced search</a> for filters.</p>
+  </div>
+</div>
+
+{% if can_edit %}
+<div class="card mb-4">
+  <div class="card-body">
+    <h2 class="h5 card-title">Add book</h2>
+    <form
+      data-list-filters
+      hx-post="/ui/books"
+      hx-target="#books-panel"
+      hx-swap="innerHTML"
+      hx-indicator="#books-indicator"
+    >
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <input type="hidden" name="page" value="1">
+      <input type="hidden" name="size" value="{{ size }}">
+      <input type="hidden" name="ordering" value="{{ ordering }}">
+      <input type="hidden" name="q" value="{{ q }}">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label" for="book-title">Title</label>
+          <input class="form-control" id="book-title" type="text" name="title" required maxlength="200">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label" for="book-author">Author</label>
+          <input class="form-control" id="book-author" type="text" name="author" required maxlength="200">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label" for="book-category">Category</label>
+          <select class="form-select" id="book-category" name="category">
+            {% for value, label in categories %}
+            <option value="{{ value }}" {% if value == 'fiction' %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label" for="book-year">Year</label>
+          <input class="form-control" id="book-year" type="number" name="year" min="0" max="9999">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label" for="book-pages">Pages</label>
+          <input class="form-control" id="book-pages" type="number" name="page_count" min="1" max="100000">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label" for="book-isbn">ISBN</label>
+          <input class="form-control" id="book-isbn" type="text" name="isbn" maxlength="32">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label" for="book-notes">Notes</label>
+          <input class="form-control" id="book-notes" type="text" name="notes" maxlength="2000">
+        </div>
+        <div class="col-12">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="book-available" name="available" value="1" checked>
+            <label class="form-check-label" for="book-available">Available</label>
+          </div>
+        </div>
+        <div class="col-12 d-flex align-items-center gap-3">
+          <button class="btn btn-primary" type="submit">Create</button>
+          <div id="books-indicator" class="htmx-indicator spinner-border spinner-border-sm text-secondary" role="status" aria-live="polite" aria-label="Loading">
+            <span class="visually-hidden">Loading</span>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+{% else %}
+<div id="books-indicator" class="htmx-indicator spinner-border spinner-border-sm text-secondary mb-3" role="status" aria-live="polite" aria-label="Loading">
+  <span class="visually-hidden">Loading</span>
+</div>
+{% endif %}
+
+<form
+  id="books-filters"
+  data-list-filters
+  class="row g-2 align-items-end mb-3"
+  method="get"
+  action="/ui/books"
+  hx-get="/ui/books"
+  hx-target="#books-panel"
+  hx-swap="innerHTML"
+  hx-trigger="keyup changed delay:300ms from:input[name='q'], search from:input[name='q']"
+  hx-push-url="true"
+  hx-indicator="#books-indicator"
+>
+  <input type="hidden" name="page" value="1">
+  <input type="hidden" name="size" value="{{ size }}">
+  <input type="hidden" name="ordering" value="{{ ordering }}">
+  <div class="col-md-6">
+    <label class="form-label" for="books-q">Search</label>
+    <input
+      class="form-control"
+      id="books-q"
+      type="search"
+      name="q"
+      value="{{ q }}"
+      placeholder="Title, author, or ISBN"
+      aria-label="Search books"
+      autocomplete="off"
+    >
+  </div>
+  <div class="col-auto">
+    <noscript><button class="btn btn-outline-secondary" type="submit">Search</button></noscript>
+  </div>
+</form>
+
+<div id="books-panel">
+  {% include "partials/books_table.html" %}
+</div>
+{% endblock %}

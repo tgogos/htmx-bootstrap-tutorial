@@ -1,0 +1,457 @@
+/*
+ * Optional colour palettes. Colour mode (light / dark / auto) stays on
+ * data-bs-theme. Palettes are a second axis: data-admin-palette.
+ *
+ * Default is compiled Bootstrap and needs no overrides.
+ * Teal reuses Bootstrap’s --bs-teal as primary.
+ * Grey uses Bootstrap’s gray-700 so it stays distinct from secondary.
+ * MIL-STD follows MIL-STD-1472H colour meanings (KIWI practical digest):
+ *   navy  = advisory / non-critical chrome (Table XL blue/navy)
+ *   green = safe / ready / proceed
+ *   red   = alarm / critical (not used as chrome)
+ *   yellow/amber = caution
+ *   cyan  = advisory / friendly
+ *   gray  = inactive (leave Bootstrap secondary)
+ * Day: dark on light [5.18.2.2.1]. Night: light on dark [5.18.2.2.2].
+ * Primary navy is 10:1 on white; status colours meet the 6:1 floor [5.2.2.7].
+ *
+ * Night is dark-adaptation only (no light set). Inspired by MIL-STD-1472
+ * low-luminance red for max dark adaptation — not MIL-STD-3009 / NVIS.
+ * Near-black surfaces; dim red chrome; alarms recoded orange-yellow because
+ * red is used for the UI itself. Not a luminance guarantee on real monitors.
+ */
+
+[data-admin-palette="teal"] {
+  --bs-primary: #20c997;
+  --bs-primary-rgb: 32, 201, 151;
+  --bs-primary-text-emphasis: #0a5248;
+  --bs-primary-bg-subtle: #d2f4ea;
+  --bs-primary-border-subtle: #8ee6cf;
+  --bs-link-color: #20c997;
+  --bs-link-color-rgb: 32, 201, 151;
+  --bs-link-hover-color: #198754;
+  --bs-link-hover-color-rgb: 25, 135, 84;
+  --bs-focus-ring-color: rgba(32, 201, 151, 0.25);
+  --admin-on-primary: #000;
+}
+
+[data-admin-palette="teal"][data-bs-theme="dark"] {
+  --bs-primary-text-emphasis: #7ee8d0;
+  --bs-primary-bg-subtle: #0a3329;
+  --bs-primary-border-subtle: #14785f;
+  --bs-link-color: #7ee8d0;
+  --bs-link-color-rgb: 126, 232, 208;
+  --bs-link-hover-color: #a6f0de;
+  --bs-link-hover-color-rgb: 166, 240, 222;
+  --bs-focus-ring-color: rgba(126, 232, 208, 0.4);
+}
+
+[data-admin-palette="grey"] {
+  --bs-primary: #495057;
+  --bs-primary-rgb: 73, 80, 87;
+  --bs-primary-text-emphasis: #212529;
+  --bs-primary-bg-subtle: #e9ecef;
+  --bs-primary-border-subtle: #adb5bd;
+  --bs-link-color: #495057;
+  --bs-link-color-rgb: 73, 80, 87;
+  --bs-link-hover-color: #343a40;
+  --bs-link-hover-color-rgb: 52, 58, 64;
+  --bs-focus-ring-color: rgba(73, 80, 87, 0.25);
+  --admin-on-primary: #fff;
+}
+
+[data-admin-palette="grey"][data-bs-theme="dark"] {
+  --bs-primary-text-emphasis: #ced4da;
+  --bs-primary-bg-subtle: #1a1d20;
+  --bs-primary-border-subtle: #495057;
+  --bs-link-color: #adb5bd;
+  --bs-link-color-rgb: 173, 181, 189;
+  --bs-link-hover-color: #ced4da;
+  --bs-link-hover-color-rgb: 206, 212, 218;
+  --bs-focus-ring-color: rgba(173, 181, 189, 0.4);
+}
+
+[data-admin-palette="mil-std"] {
+  --bs-primary: #0a3a5c;
+  --bs-primary-rgb: 10, 58, 92;
+  --bs-primary-text-emphasis: #052536;
+  --bs-primary-bg-subtle: #e4edf3;
+  --bs-primary-border-subtle: #a3bdd0;
+  --bs-link-color: #0a3a5c;
+  --bs-link-color-rgb: 10, 58, 92;
+  --bs-link-hover-color: #052536;
+  --bs-link-hover-color-rgb: 5, 37, 54;
+  --bs-focus-ring-color: rgba(10, 58, 92, 0.25);
+  --admin-on-primary: #fff;
+  --bs-success: #0f6b3e;
+  --bs-success-rgb: 15, 107, 62;
+  --bs-success-text-emphasis: #083d24;
+  --bs-success-bg-subtle: #d8eee4;
+  --bs-success-border-subtle: #8fc9a8;
+  --admin-on-success: #fff;
+  --bs-danger: #b42318;
+  --bs-danger-rgb: 180, 35, 24;
+  --bs-danger-text-emphasis: #7a160f;
+  --bs-danger-bg-subtle: #f8d7d4;
+  --bs-danger-border-subtle: #e39a94;
+  --admin-on-danger: #fff;
+  --bs-warning: #e6b800;
+  --bs-warning-rgb: 230, 184, 0;
+  --bs-warning-text-emphasis: #7a4f00;
+  --bs-warning-bg-subtle: #fff3cc;
+  --bs-warning-border-subtle: #e8d48a;
+  --admin-on-warning: #000;
+  --bs-info: #0e6674;
+  --bs-info-rgb: 14, 102, 116;
+  --bs-info-text-emphasis: #083d45;
+  --bs-info-bg-subtle: #d4ebee;
+  --bs-info-border-subtle: #8fc4cc;
+  --admin-on-info: #fff;
+}
+
+[data-admin-palette="mil-std"][data-bs-theme="dark"] {
+  --bs-primary: #7eadc8;
+  --bs-primary-rgb: 126, 173, 200;
+  --bs-primary-text-emphasis: #a8c9dc;
+  --bs-primary-bg-subtle: #0a1c28;
+  --bs-primary-border-subtle: #2a5570;
+  --bs-link-color: #7eadc8;
+  --bs-link-color-rgb: 126, 173, 200;
+  --bs-link-hover-color: #a8c9dc;
+  --bs-link-hover-color-rgb: 168, 201, 220;
+  --bs-focus-ring-color: rgba(126, 173, 200, 0.4);
+  --admin-on-primary: #000;
+  --bs-success: #7bc49a;
+  --bs-success-rgb: 123, 196, 154;
+  --bs-success-text-emphasis: #b3e0c6;
+  --bs-success-bg-subtle: #0a2418;
+  --bs-success-border-subtle: #2d6b4a;
+  --admin-on-success: #000;
+  --bs-danger: #e88880;
+  --bs-danger-rgb: 232, 136, 128;
+  --bs-danger-text-emphasis: #f5c2be;
+  --bs-danger-bg-subtle: #2a1210;
+  --bs-danger-border-subtle: #7a3a36;
+  --admin-on-danger: #000;
+  --bs-warning: #e0b15a;
+  --bs-warning-rgb: 224, 177, 90;
+  --bs-warning-text-emphasis: #f0d9a0;
+  --bs-warning-bg-subtle: #2a220e;
+  --bs-warning-border-subtle: #8a7030;
+  --admin-on-warning: #000;
+  --bs-info: #4ecdc4;
+  --bs-info-rgb: 78, 205, 196;
+  --bs-info-text-emphasis: #b3e8e3;
+  --bs-info-bg-subtle: #0a2422;
+  --bs-info-border-subtle: #2d6b66;
+  --admin-on-info: #000;
+}
+
+/* Dark-adaptation palette: always near-black, regardless of stored theme. */
+[data-admin-palette="night"] {
+  color-scheme: dark;
+  --bs-body-color: #d4a898;
+  --bs-body-color-rgb: 212, 168, 152;
+  --bs-body-bg: #050505;
+  --bs-body-bg-rgb: 5, 5, 5;
+  --bs-emphasis-color: #e8d0c4;
+  --bs-emphasis-color-rgb: 232, 208, 196;
+  --bs-secondary-color: rgba(212, 168, 152, 0.75);
+  --bs-secondary-color-rgb: 212, 168, 152;
+  --bs-secondary-bg: #120e0e;
+  --bs-secondary-bg-rgb: 18, 14, 14;
+  --bs-tertiary-color: rgba(212, 168, 152, 0.5);
+  --bs-tertiary-color-rgb: 212, 168, 152;
+  --bs-tertiary-bg: #0c0a0a;
+  --bs-tertiary-bg-rgb: 12, 10, 10;
+  --bs-border-color: #3a2420;
+  --bs-border-color-translucent: rgba(212, 168, 152, 0.12);
+  --bs-primary: #c47868;
+  --bs-primary-rgb: 196, 120, 104;
+  --bs-primary-text-emphasis: #e0b0a0;
+  --bs-primary-bg-subtle: #1a0e0c;
+  --bs-primary-border-subtle: #5a3028;
+  --bs-link-color: #d08070;
+  --bs-link-color-rgb: 208, 128, 112;
+  --bs-link-hover-color: #e0a090;
+  --bs-link-hover-color-rgb: 224, 160, 144;
+  --bs-focus-ring-color: rgba(196, 120, 104, 0.35);
+  --admin-on-primary: #0a0505;
+  --bs-success: #6b8f71;
+  --bs-success-rgb: 107, 143, 113;
+  --bs-success-text-emphasis: #9ab89e;
+  --bs-success-bg-subtle: #0c140e;
+  --bs-success-border-subtle: #3a5040;
+  --admin-on-success: #0a0505;
+  /* Alarms: orange-yellow (red lighting recoding), not saturated red. */
+  --bs-danger: #e0a848;
+  --bs-danger-rgb: 224, 168, 72;
+  --bs-danger-text-emphasis: #f0d9a0;
+  --bs-danger-bg-subtle: #1a1408;
+  --bs-danger-border-subtle: #6a5020;
+  --admin-on-danger: #0a0505;
+  --bs-warning: #e8b84a;
+  --bs-warning-rgb: 232, 184, 74;
+  --bs-warning-text-emphasis: #f5d98a;
+  --bs-warning-bg-subtle: #1a1608;
+  --bs-warning-border-subtle: #6a5820;
+  --admin-on-warning: #0a0505;
+  --bs-info: #b8a898;
+  --bs-info-rgb: 184, 168, 152;
+  --bs-info-text-emphasis: #d4c8b8;
+  --bs-info-bg-subtle: #141210;
+  --bs-info-border-subtle: #4a4038;
+  --admin-on-info: #0a0505;
+}
+
+[data-admin-palette]:not([data-admin-palette="default"]) .btn-primary {
+  --bs-btn-color: var(--admin-on-primary);
+  --bs-btn-bg: var(--bs-primary);
+  --bs-btn-border-color: var(--bs-primary);
+  --bs-btn-hover-color: var(--admin-on-primary);
+  --bs-btn-hover-bg: color-mix(in srgb, var(--bs-primary) 85%, #000);
+  --bs-btn-hover-border-color: color-mix(in srgb, var(--bs-primary) 80%, #000);
+  --bs-btn-focus-shadow-rgb: var(--bs-primary-rgb);
+  --bs-btn-active-color: var(--admin-on-primary);
+  --bs-btn-active-bg: color-mix(in srgb, var(--bs-primary) 75%, #000);
+  --bs-btn-active-border-color: color-mix(in srgb, var(--bs-primary) 70%, #000);
+  --bs-btn-disabled-color: var(--admin-on-primary);
+  --bs-btn-disabled-bg: var(--bs-primary);
+  --bs-btn-disabled-border-color: var(--bs-primary);
+}
+
+[data-admin-palette]:not([data-admin-palette="default"]) .btn-outline-primary {
+  --bs-btn-color: var(--bs-primary);
+  --bs-btn-border-color: var(--bs-primary);
+  --bs-btn-hover-color: var(--admin-on-primary);
+  --bs-btn-hover-bg: var(--bs-primary);
+  --bs-btn-hover-border-color: var(--bs-primary);
+  --bs-btn-focus-shadow-rgb: var(--bs-primary-rgb);
+  --bs-btn-active-color: var(--admin-on-primary);
+  --bs-btn-active-bg: var(--bs-primary);
+  --bs-btn-active-border-color: var(--bs-primary);
+  --bs-btn-disabled-color: var(--bs-primary);
+}
+
+[data-admin-palette]:not([data-admin-palette="default"]) .nav-pills {
+  --bs-nav-pills-link-active-color: var(--admin-on-primary);
+  --bs-nav-pills-link-active-bg: var(--bs-primary);
+}
+
+[data-admin-palette]:not([data-admin-palette="default"]) .pagination {
+  --bs-pagination-active-color: var(--admin-on-primary);
+  --bs-pagination-active-bg: var(--bs-primary);
+  --bs-pagination-active-border-color: var(--bs-primary);
+  --bs-pagination-focus-box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25);
+}
+
+[data-admin-palette]:not([data-admin-palette="default"]) .accordion {
+  --bs-accordion-btn-focus-box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25);
+}
+
+/* Accordion chevrons are baked SVG fills; paint them from the palette instead. */
+[data-admin-palette]:not([data-admin-palette="default"]) .accordion-button::after {
+  background-image: none;
+  background-color: var(--bs-body-color);
+  -webkit-mask: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708'/%3e%3c/svg%3e")
+    center / 100% no-repeat;
+  mask: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708'/%3e%3c/svg%3e")
+    center / 100% no-repeat;
+}
+
+[data-admin-palette]:not([data-admin-palette="default"]) .accordion-button:not(.collapsed)::after {
+  background-image: none;
+  background-color: var(--bs-primary);
+}
+
+[data-admin-palette]:not([data-admin-palette="default"]) .btn-close {
+  --bs-btn-close-focus-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25);
+}
+
+[data-admin-palette]:not([data-admin-palette="default"]) .dropdown-menu {
+  --bs-dropdown-link-active-color: var(--admin-on-primary);
+  --bs-dropdown-link-active-bg: var(--bs-primary);
+}
+
+[data-admin-palette]:not([data-admin-palette="default"]) .form-control:focus,
+[data-admin-palette]:not([data-admin-palette="default"]) .form-select:focus,
+[data-admin-palette]:not([data-admin-palette="default"]) .form-check-input:focus {
+  border-color: color-mix(in srgb, var(--bs-primary) 55%, #fff);
+  box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25);
+}
+
+[data-admin-palette]:not([data-admin-palette="default"]) .nav-link:focus-visible {
+  box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25);
+}
+
+[data-admin-palette]:not([data-admin-palette="default"]) .progress {
+  --bs-progress-bar-color: var(--admin-on-primary);
+  --bs-progress-bar-bg: var(--bs-primary);
+}
+
+[data-admin-palette]:not([data-admin-palette="default"]) .list-group {
+  --bs-list-group-active-color: var(--admin-on-primary);
+  --bs-list-group-active-bg: var(--bs-primary);
+  --bs-list-group-active-border-color: var(--bs-primary);
+}
+
+[data-admin-palette]:not([data-admin-palette="default"]) .text-bg-primary {
+  color: var(--admin-on-primary) !important;
+}
+
+[data-admin-palette]:not([data-admin-palette="default"]) .form-check-input:checked {
+  background-color: var(--bs-primary);
+  border-color: var(--bs-primary);
+}
+
+[data-admin-palette]:not([data-admin-palette="default"]) .form-range::-webkit-slider-thumb {
+  background-color: var(--bs-primary);
+}
+
+[data-admin-palette]:not([data-admin-palette="default"]) .form-range::-moz-range-thumb {
+  background-color: var(--bs-primary);
+}
+
+[data-admin-palette="mil-std"] .btn-success,
+[data-admin-palette="night"] .btn-success {
+  --bs-btn-color: var(--admin-on-success);
+  --bs-btn-bg: var(--bs-success);
+  --bs-btn-border-color: var(--bs-success);
+  --bs-btn-hover-color: var(--admin-on-success);
+  --bs-btn-hover-bg: color-mix(in srgb, var(--bs-success) 85%, #000);
+  --bs-btn-hover-border-color: color-mix(in srgb, var(--bs-success) 80%, #000);
+  --bs-btn-focus-shadow-rgb: var(--bs-success-rgb);
+  --bs-btn-active-color: var(--admin-on-success);
+  --bs-btn-active-bg: color-mix(in srgb, var(--bs-success) 75%, #000);
+  --bs-btn-active-border-color: color-mix(in srgb, var(--bs-success) 70%, #000);
+  --bs-btn-disabled-color: var(--admin-on-success);
+  --bs-btn-disabled-bg: var(--bs-success);
+  --bs-btn-disabled-border-color: var(--bs-success);
+}
+
+[data-admin-palette="mil-std"] .btn-outline-success,
+[data-admin-palette="night"] .btn-outline-success {
+  --bs-btn-color: var(--bs-success);
+  --bs-btn-border-color: var(--bs-success);
+  --bs-btn-hover-color: var(--admin-on-success);
+  --bs-btn-hover-bg: var(--bs-success);
+  --bs-btn-hover-border-color: var(--bs-success);
+  --bs-btn-focus-shadow-rgb: var(--bs-success-rgb);
+  --bs-btn-active-color: var(--admin-on-success);
+  --bs-btn-active-bg: var(--bs-success);
+  --bs-btn-active-border-color: var(--bs-success);
+  --bs-btn-disabled-color: var(--bs-success);
+}
+
+[data-admin-palette="mil-std"] .btn-danger,
+[data-admin-palette="night"] .btn-danger {
+  --bs-btn-color: var(--admin-on-danger);
+  --bs-btn-bg: var(--bs-danger);
+  --bs-btn-border-color: var(--bs-danger);
+  --bs-btn-hover-color: var(--admin-on-danger);
+  --bs-btn-hover-bg: color-mix(in srgb, var(--bs-danger) 85%, #000);
+  --bs-btn-hover-border-color: color-mix(in srgb, var(--bs-danger) 80%, #000);
+  --bs-btn-focus-shadow-rgb: var(--bs-danger-rgb);
+  --bs-btn-active-color: var(--admin-on-danger);
+  --bs-btn-active-bg: color-mix(in srgb, var(--bs-danger) 75%, #000);
+  --bs-btn-active-border-color: color-mix(in srgb, var(--bs-danger) 70%, #000);
+  --bs-btn-disabled-color: var(--admin-on-danger);
+  --bs-btn-disabled-bg: var(--bs-danger);
+  --bs-btn-disabled-border-color: var(--bs-danger);
+}
+
+[data-admin-palette="mil-std"] .btn-outline-danger,
+[data-admin-palette="night"] .btn-outline-danger {
+  --bs-btn-color: var(--bs-danger);
+  --bs-btn-border-color: var(--bs-danger);
+  --bs-btn-hover-color: var(--admin-on-danger);
+  --bs-btn-hover-bg: var(--bs-danger);
+  --bs-btn-hover-border-color: var(--bs-danger);
+  --bs-btn-focus-shadow-rgb: var(--bs-danger-rgb);
+  --bs-btn-active-color: var(--admin-on-danger);
+  --bs-btn-active-bg: var(--bs-danger);
+  --bs-btn-active-border-color: var(--bs-danger);
+  --bs-btn-disabled-color: var(--bs-danger);
+}
+
+[data-admin-palette="mil-std"] .btn-warning,
+[data-admin-palette="night"] .btn-warning {
+  --bs-btn-color: var(--admin-on-warning);
+  --bs-btn-bg: var(--bs-warning);
+  --bs-btn-border-color: var(--bs-warning);
+  --bs-btn-hover-color: var(--admin-on-warning);
+  --bs-btn-hover-bg: color-mix(in srgb, var(--bs-warning) 85%, #000);
+  --bs-btn-hover-border-color: color-mix(in srgb, var(--bs-warning) 80%, #000);
+  --bs-btn-focus-shadow-rgb: var(--bs-warning-rgb);
+  --bs-btn-active-color: var(--admin-on-warning);
+  --bs-btn-active-bg: color-mix(in srgb, var(--bs-warning) 75%, #000);
+  --bs-btn-active-border-color: color-mix(in srgb, var(--bs-warning) 70%, #000);
+  --bs-btn-disabled-color: var(--admin-on-warning);
+  --bs-btn-disabled-bg: var(--bs-warning);
+  --bs-btn-disabled-border-color: var(--bs-warning);
+}
+
+[data-admin-palette="mil-std"] .btn-outline-warning,
+[data-admin-palette="night"] .btn-outline-warning {
+  --bs-btn-color: var(--bs-warning-text-emphasis);
+  --bs-btn-border-color: var(--bs-warning);
+  --bs-btn-hover-color: var(--admin-on-warning);
+  --bs-btn-hover-bg: var(--bs-warning);
+  --bs-btn-hover-border-color: var(--bs-warning);
+  --bs-btn-focus-shadow-rgb: var(--bs-warning-rgb);
+  --bs-btn-active-color: var(--admin-on-warning);
+  --bs-btn-active-bg: var(--bs-warning);
+  --bs-btn-active-border-color: var(--bs-warning);
+  --bs-btn-disabled-color: var(--bs-warning-text-emphasis);
+}
+
+[data-admin-palette="mil-std"] .btn-info,
+[data-admin-palette="night"] .btn-info {
+  --bs-btn-color: var(--admin-on-info);
+  --bs-btn-bg: var(--bs-info);
+  --bs-btn-border-color: var(--bs-info);
+  --bs-btn-hover-color: var(--admin-on-info);
+  --bs-btn-hover-bg: color-mix(in srgb, var(--bs-info) 85%, #000);
+  --bs-btn-hover-border-color: color-mix(in srgb, var(--bs-info) 80%, #000);
+  --bs-btn-focus-shadow-rgb: var(--bs-info-rgb);
+  --bs-btn-active-color: var(--admin-on-info);
+  --bs-btn-active-bg: color-mix(in srgb, var(--bs-info) 75%, #000);
+  --bs-btn-active-border-color: color-mix(in srgb, var(--bs-info) 70%, #000);
+  --bs-btn-disabled-color: var(--admin-on-info);
+  --bs-btn-disabled-bg: var(--bs-info);
+  --bs-btn-disabled-border-color: var(--bs-info);
+}
+
+[data-admin-palette="mil-std"] .btn-outline-info,
+[data-admin-palette="night"] .btn-outline-info {
+  --bs-btn-color: var(--bs-info);
+  --bs-btn-border-color: var(--bs-info);
+  --bs-btn-hover-color: var(--admin-on-info);
+  --bs-btn-hover-bg: var(--bs-info);
+  --bs-btn-hover-border-color: var(--bs-info);
+  --bs-btn-focus-shadow-rgb: var(--bs-info-rgb);
+  --bs-btn-active-color: var(--admin-on-info);
+  --bs-btn-active-bg: var(--bs-info);
+  --bs-btn-active-border-color: var(--bs-info);
+  --bs-btn-disabled-color: var(--bs-info);
+}
+
+[data-admin-palette="mil-std"] .text-bg-success,
+[data-admin-palette="night"] .text-bg-success {
+  color: var(--admin-on-success) !important;
+}
+
+[data-admin-palette="mil-std"] .text-bg-danger,
+[data-admin-palette="night"] .text-bg-danger {
+  color: var(--admin-on-danger) !important;
+}
+
+[data-admin-palette="mil-std"] .text-bg-warning,
+[data-admin-palette="night"] .text-bg-warning {
+  color: var(--admin-on-warning) !important;
+}
+
+[data-admin-palette="mil-std"] .text-bg-info,
+[data-admin-palette="night"] .text-bg-info {
+  color: var(--admin-on-info) !important;
+}

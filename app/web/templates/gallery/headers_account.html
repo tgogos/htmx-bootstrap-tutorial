@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="csrf-token" content="{{ csrf_token }}" />
+    <meta name="description" content="Bootstrap 5 admin starter — Header with account" />
+    <meta name="theme-color" content="#712cf9" />
+    <title>Header with account · Admin</title>
+    {% include "partials/head_assets.html" %}
+  </head>
+  <body class="admin-header-demo">
+    
+    <a class="visually-hidden-focusable btn btn-primary admin-skip-link position-absolute m-2" href="#main">Skip to main content</a>
+    <header class="p-3 border-bottom bg-body">
+      <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+        <button
+          class="btn btn-outline-secondary d-lg-none me-2"
+          type="button"
+          data-bs-toggle="offcanvas"
+          data-bs-target="#sidebar"
+          aria-controls="sidebar"
+          aria-label="Open navigation"
+        >
+          <i class="bi bi-list" aria-hidden="true"></i>
+        </button>
+          <a href="/ui/dashboard" class="d-flex align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none">
+            <i class="bi bi-bootstrap-fill admin-brand-mark text-primary me-2" aria-hidden="true"></i>
+            <span class="visually-hidden">Admin</span>
+          </a>
+          <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+            <li><a href="/ui/dashboard" class="nav-link px-2 link-secondary">Overview</a></li>
+            <li><a href="/ui/users" class="nav-link px-2 link-body-emphasis">Users</a></li>
+            <li><a href="/ui/tables" class="nav-link px-2 link-body-emphasis">Tables</a></li>
+            <li><a href="/ui/settings" class="nav-link px-2 link-body-emphasis">Settings</a></li>
+          </ul>
+          <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search" action="/ui/users" method="get">
+            <input class="form-control" type="search" placeholder="Search..." aria-label="Search" name="q" />
+          </form>
+            <div class="dropdown text-end">
+              <button
+                class="btn btn-link link-body-emphasis text-decoration-none dropdown-toggle p-0"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                aria-label="Alex Rivera account menu"
+              >
+                <i class="bi bi-person-circle fs-3" aria-hidden="true"></i>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end text-small">
+                <li><a class="dropdown-item" href="/ui/settings">Settings</a></li>
+                <li><a class="dropdown-item" href="/ui/settings">Profile</a></li>
+                <li><hr class="dropdown-divider" /></li>
+                <li><a class="dropdown-item" href="/auth/login">Sign out</a></li>
+              </ul>
+            </div>
+        </div>
+      </div>
+    </header>
+    <div class="admin-shell-row">
+    {% include "partials/sidebar.html" %}
+
+      <div class="admin-main">
+        <main id="main" class="admin-content px-3 px-md-4 py-4" tabindex="-1">
+          <h1 class="visually-hidden">Header with account</h1>
+        </main>
+      </div>
+    </div>
+    
+    {% include "partials/scripts.html" %}
+  </body>
+</html>

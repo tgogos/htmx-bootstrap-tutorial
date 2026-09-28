@@ -1,0 +1,185 @@
+{% extends "layout.html" %}
+{% block title %}Tables · Admin{% endblock %}
+{% block description %}Bootstrap 5 admin starter — Tables{% endblock %}
+{% block content %}
+          <nav aria-label="Breadcrumb">
+            <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/ui/dashboard">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Tables</li>
+            </ol>
+          </nav>
+          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom gap-2">
+            <div>
+              <h1 class="h2">Tables</h1>
+              <p class="text-body-secondary mb-0">Standard, striped, hoverable, and responsive tables using Bootstrap’s default classes.</p>
+            </div>
+          </div>
+          <section class="mb-4" aria-labelledby="basic-table-heading">
+            <h2 id="basic-table-heading" class="h5">Basic</h2>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Job</th>
+                  <th scope="col">Queue</th>
+                  <th scope="col">Attempts</th>
+                  <th scope="col">State</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">digest-mail</th>
+                  <td>mail</td>
+                  <td>1</td>
+                  <td>Succeeded</td>
+                </tr>
+                <tr>
+                  <th scope="row">rotate-tokens</th>
+                  <td>security</td>
+                  <td>1</td>
+                  <td>Succeeded</td>
+                </tr>
+                <tr>
+                  <th scope="row">sync-directory</th>
+                  <td>directory</td>
+                  <td>2</td>
+                  <td>Running</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+          <section class="mb-4" aria-labelledby="striped-table-heading">
+            <h2 id="striped-table-heading" class="h5">Striped</h2>
+            <table class="table table-striped mil-row-groups">
+              <thead>
+                <tr>
+                  <th scope="col">Audit event</th>
+                  <th scope="col">Actor</th>
+                  <th scope="col">Target</th>
+                  <th scope="col">When</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">role.update</th>
+                  <td>Alex Rivera</td>
+                  <td>Sam Okonkwo</td>
+                  <td>Today, 09:18</td>
+                </tr>
+                <tr>
+                  <th scope="row">invite.create</th>
+                  <td>Maya Chen</td>
+                  <td>Jordan Blake</td>
+                  <td>Today, 08:41</td>
+                </tr>
+                <tr>
+                  <th scope="row">session.revoke</th>
+                  <td>Priya Shah</td>
+                  <td>Priya Shah</td>
+                  <td>Yesterday, 21:02</td>
+                </tr>
+                <tr>
+                  <th scope="row">setting.update</th>
+                  <td>Alex Rivera</td>
+                  <td>Maintenance banner</td>
+                  <td>Yesterday, 16:55</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+          <section class="mb-4" aria-labelledby="hover-table-heading">
+            <h2 id="hover-table-heading" class="h5">Hoverable</h2>
+            <table class="table table-hover mil-row-groups">
+              <thead>
+                <tr>
+                  <th scope="col">Ticket</th>
+                  <th scope="col">Requester</th>
+                  <th scope="col">Priority</th>
+                  <th scope="col">Owner</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">OPS-1841</th>
+                  <td>Support</td>
+                  <td>High</td>
+                  <td>Maya Chen</td>
+                </tr>
+                <tr>
+                  <th scope="row">OPS-1838</th>
+                  <td>Infrastructure</td>
+                  <td>Low</td>
+                  <td>Sam Okonkwo</td>
+                </tr>
+                <tr>
+                  <th scope="row">OPS-1833</th>
+                  <td>Operations</td>
+                  <td>Urgent</td>
+                  <td>Alex Rivera</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+          <section aria-labelledby="responsive-table-heading">
+            <h2 id="responsive-table-heading" class="h5">Responsive</h2>
+            <p class="text-body-secondary">This table keeps additional columns and scrolls horizontally on narrow screens instead of breaking the layout.</p>
+            <div class="table-responsive">
+              <table class="table table-striped table-hover">
+                <thead>
+                  <tr>
+                    <th scope="col">Host</th>
+                    <th scope="col">Role</th>
+                    <th scope="col">Region</th>
+                    <th scope="col">Version</th>
+                    <th scope="col">CPU</th>
+                    <th scope="col">Memory</th>
+                    <th scope="col">Disk</th>
+                    <th scope="col">Last check</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">api-a.internal</th>
+                    <td>api</td>
+                    <td>eu-central-1</td>
+                    <td>1.18.4</td>
+                    <td>22%</td>
+                    <td>3.1 / 8 GiB</td>
+                    <td>41%</td>
+                    <td>09:21</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">api-b.internal</th>
+                    <td>api</td>
+                    <td>eu-central-1</td>
+                    <td>1.18.4</td>
+                    <td>19%</td>
+                    <td>2.8 / 8 GiB</td>
+                    <td>38%</td>
+                    <td>09:21</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">worker-1.internal</th>
+                    <td>scheduler</td>
+                    <td>eu-west-1</td>
+                    <td>1.18.2</td>
+                    <td>61%</td>
+                    <td>6.4 / 8 GiB</td>
+                    <td>67%</td>
+                    <td>09:20</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">mail-1.internal</th>
+                    <td>mail</td>
+                    <td>eu-west-1</td>
+                    <td>1.17.9</td>
+                    <td>47%</td>
+                    <td>4.9 / 8 GiB</td>
+                    <td>73%</td>
+                    <td>09:19</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+      
+{% endblock %}

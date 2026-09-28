@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="csrf-token" content="{{ csrf_token }}" />
+    <meta name="description" content="Bootstrap 5 admin starter — List group sidebar" />
+    <meta name="theme-color" content="#712cf9" />
+    <title>List group sidebar · Admin</title>
+    {% include "partials/head_assets.html" %}
+  </head>
+  <body>
+    {% include "partials/navbar.html" %}
+<aside class="admin-sidebar border-end">
+      <div class="offcanvas-lg offcanvas-start" tabindex="-1" id="sidebar" aria-labelledby="sidebarLabel">
+        <div class="offcanvas-header border-bottom d-lg-none">
+          <h2 class="offcanvas-title h5" id="sidebarLabel">Navigation</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebar" aria-label="Close navigation"></button>
+        </div>
+        <div class="offcanvas-body d-flex flex-column p-0 overflow-y-auto">
+        <div class="d-flex flex-column align-items-stretch flex-shrink-0 bg-body-tertiary h-100">
+          <a href="/ui/dashboard" class="d-flex align-items-center flex-shrink-0 p-3 link-body-emphasis text-decoration-none border-bottom">
+            <i class="bi bi-bootstrap-fill admin-brand-mark me-2" aria-hidden="true"></i>
+            <span class="fs-5 fw-semibold">List group</span>
+          </a>
+          <div class="list-group list-group-flush border-bottom scrollarea">
+          <a href="/ui/sidebars/dark" class="list-group-item list-group-item-action py-3 lh-sm">
+            <div class="d-flex w-100 align-items-center justify-content-between">
+              <strong class="mb-1">Dark</strong>
+            </div>
+            <div class="col-10 mb-1 small">Official dark nav-pills sidebar</div>
+          </a>
+          <a href="/ui/sidebars/light" class="list-group-item list-group-item-action py-3 lh-sm">
+            <div class="d-flex w-100 align-items-center justify-content-between">
+              <strong class="mb-1">Light</strong>
+            </div>
+            <div class="col-10 mb-1 small">Light background with pills</div>
+          </a>
+          <a href="/ui/sidebars/icons" class="list-group-item list-group-item-action py-3 lh-sm">
+            <div class="d-flex w-100 align-items-center justify-content-between">
+              <strong class="mb-1">Icon-only</strong>
+            </div>
+            <div class="col-10 mb-1 small">Narrow icon rail with tooltips</div>
+          </a>
+          <a href="/ui/sidebars/collapsible" class="list-group-item list-group-item-action py-3 lh-sm">
+            <div class="d-flex w-100 align-items-center justify-content-between">
+              <strong class="mb-1">Collapsible</strong>
+            </div>
+            <div class="col-10 mb-1 small">Nested disclosure groups</div>
+          </a>
+          <a href="/ui/sidebars/list-group" class="list-group-item list-group-item-action py-3 lh-sm active" aria-current="page">
+            <div class="d-flex w-100 align-items-center justify-content-between">
+              <strong class="mb-1">List group</strong>
+            </div>
+            <div class="col-10 mb-1 small">Flush list used as a sidebar</div>
+          </a>
+          </div>
+        </div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="admin-main">
+        <main id="main" class="admin-content px-3 px-md-4 py-4" tabindex="-1">
+          <h1 class="visually-hidden">List group sidebar</h1>
+        </main>
+    </div>
+    
+    {% include "partials/scripts.html" %}
+  </body>
+</html>

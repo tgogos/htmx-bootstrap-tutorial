@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="csrf-token" content="{{ csrf_token }}" />
+    <meta name="description" content="{% block description %}Bootstrap admin{% endblock %}" />
+    <meta name="theme-color" content="#712cf9" />
+    <title>{% block title %}Admin{% endblock %}</title>
+    {% include "partials/head_assets.html" %}
+  </head>
+  <body>
+    {% include "partials/navbar.html" %}
+    {% include "partials/sidebar.html" %}
+    <div class="admin-main">
+      <main id="main" class="admin-content px-3 px-md-4 py-4 {{ main_class }}" tabindex="-1">
+        {% block content %}{% endblock %}
+      </main>
+      {% include "partials/footer.html" %}
+    </div>
+    {% include "partials/confirm_modal.html" %}
+    {% include "partials/scripts.html" %}
+  </body>
+</html>

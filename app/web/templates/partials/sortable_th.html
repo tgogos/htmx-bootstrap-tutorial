@@ -1,0 +1,14 @@
+{# Sortable header. Expects sort_column, sort_label, sort_href, sort_ordering,
+   sort_panel, sort_indicator. Swap is innerHTML (no Idiomorph). #}
+{% set sort_state = sort_column_state(sort_ordering, sort_column) %}
+<th scope="col" {% if sort_state %}aria-sort="{% if sort_state == 'asc' %}ascending{% else %}descending{% endif %}"{% endif %}>
+  <a
+    class="table-sort-link link-body-emphasis text-decoration-none{% if sort_state %} table-sort-link--active table-sort-link--{{ sort_state }}{% endif %}"
+    href="{{ sort_href }}"
+    hx-get="{{ sort_href }}"
+    hx-target="{{ sort_panel }}"
+    hx-swap="innerHTML"
+    hx-push-url="true"
+    hx-indicator="{{ sort_indicator }}"
+  >{{ sort_label }}</a>
+</th>

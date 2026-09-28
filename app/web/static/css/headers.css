@@ -1,0 +1,21 @@
+/*
+ * From Bootstrap v5.3.8 headers example.
+ * https://getbootstrap.com/docs/5.3/examples/headers/
+ */
+
+.form-control-dark {
+  border-color: var(--bs-gray);
+}
+
+.form-control-dark:focus {
+  border-color: #fff;
+  box-shadow: 0 0 0 0.25rem rgb(255 255 255 / 0.25);
+}
+
+.text-small {
+  font-size: 85%;
+}
+
+.dropdown-toggle:not(:focus) {
+  outline: 0;
+}

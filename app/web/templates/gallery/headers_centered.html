@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="csrf-token" content="{{ csrf_token }}" />
+    <meta name="description" content="Bootstrap 5 admin starter — Centered header" />
+    <meta name="theme-color" content="#712cf9" />
+    <title>Centered header · Admin</title>
+    {% include "partials/head_assets.html" %}
+  </head>
+  <body class="admin-header-demo">
+    
+    <a class="visually-hidden-focusable btn btn-primary admin-skip-link position-absolute m-2" href="#main">Skip to main content</a>
+    <header class="py-3 bg-body border-bottom">
+      <div class="container d-flex justify-content-center align-items-center">
+        <button
+          class="btn btn-outline-secondary d-lg-none me-2"
+          type="button"
+          data-bs-toggle="offcanvas"
+          data-bs-target="#sidebar"
+          aria-controls="sidebar"
+          aria-label="Open navigation"
+        >
+          <i class="bi bi-list" aria-hidden="true"></i>
+        </button>
+        <ul class="nav nav-pills">
+          <li class="nav-item"><a href="/ui/dashboard" class="nav-link">Home</a></li>
+          <li class="nav-item"><a href="#" class="nav-link">Features</a></li>
+          <li class="nav-item"><a href="#" class="nav-link">Pricing</a></li>
+          <li class="nav-item"><a href="#" class="nav-link">FAQs</a></li>
+          <li class="nav-item"><a href="#" class="nav-link">About</a></li>
+        </ul>
+      </div>
+    </header>
+    <div class="admin-shell-row">
+    {% include "partials/sidebar.html" %}
+
+      <div class="admin-main">
+        <main id="main" class="admin-content px-3 px-md-4 py-4" tabindex="-1">
+          <h1 class="visually-hidden">Centered header</h1>
+        </main>
+      </div>
+    </div>
+    
+    {% include "partials/scripts.html" %}
+  </body>
+</html>

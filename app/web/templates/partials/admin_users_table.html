@@ -1,0 +1,49 @@
+{% if form_error %}
+<div class="alert alert-danger flash" role="alert">
+  {{ form_error }}
+  <button type="button" class="btn-close flash-dismiss" aria-label="Dismiss"></button>
+</div>
+{% endif %}
+{% if form_ok %}
+<div class="alert alert-success flash" role="status">
+  {{ form_ok }}
+  <button type="button" class="btn-close flash-dismiss" aria-label="Dismiss"></button>
+</div>
+{% endif %}
+
+<div class="table-responsive">
+  <table class="table table-hover align-middle">
+    <thead>
+      <tr>
+        <th scope="col">Username</th>
+        <th scope="col">Role</th>
+        <th scope="col">Change role</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for u in users %}
+      <tr>
+        <td>{{ u.username }}{% if u.id == user.id %} <small class="text-body-secondary">(you)</small>{% endif %}</td>
+        <td><code>{{ u.role }}</code></td>
+        <td>
+          <form
+            class="d-flex flex-wrap gap-2"
+            hx-post="/ui/admin/users/{{ u.id }}/role"
+            hx-target="#admin-users-panel"
+            hx-swap="innerHTML"
+          >
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <label class="visually-hidden" for="role-{{ u.id }}">Role for {{ u.username }}</label>
+            <select class="form-select form-select-sm w-auto" id="role-{{ u.id }}" name="role">
+              {% for r in roles %}
+              <option value="{{ r }}" {% if r == u.role %}selected{% endif %}>{{ r }}</option>
+              {% endfor %}
+            </select>
+            <button type="submit" class="btn btn-sm btn-outline-secondary">Save</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

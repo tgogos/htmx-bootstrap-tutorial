@@ -1,0 +1,87 @@
+{% extends "layout.html" %}
+{% block title %}Search books · Admin{% endblock %}
+{% block description %}Filter the books catalog{% endblock %}
+{% block content %}
+<nav aria-label="Breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/ui/dashboard">Home</a></li>
+    <li class="breadcrumb-item"><a href="/ui/books">Books</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Search</li>
+  </ol>
+</nav>
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom gap-2">
+  <div>
+    <h1 class="h2">Search books</h1>
+    <p class="text-body-secondary mb-0">Results update as you change filters. <a href="/ui/books">Back to books</a>.</p>
+  </div>
+</div>
+
+<form
+  id="books-filters"
+  data-list-filters
+  class="row g-3 mb-4"
+  method="get"
+  action="/ui/books/search"
+  hx-get="/ui/books/search"
+  hx-target="#books-panel"
+  hx-swap="innerHTML"
+  hx-trigger="change from:select, keyup changed delay:300ms from:input[type='search'], search from:input[type='search'], change from:input[type='number'], submit"
+  hx-push-url="true"
+  hx-indicator="#books-indicator"
+>
+  <input type="hidden" name="page" value="1">
+  <input type="hidden" name="size" value="{{ size }}">
+  <input type="hidden" name="ordering" value="{{ ordering }}">
+
+  <div class="col-md-4">
+    <label class="form-label" for="filter-q">Text</label>
+    <input class="form-control" id="filter-q" type="search" name="q" value="{{ q }}" placeholder="Title, author, or ISBN" autocomplete="off">
+  </div>
+  <div class="col-md-4">
+    <label class="form-label" for="filter-category">Category</label>
+    <select class="form-select" id="filter-category" name="category">
+      <option value="" {% if not category %}selected{% endif %}>Any category</option>
+      {% for value, label in categories %}
+      <option value="{{ value }}" {% if category == value %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-md-4">
+    <label class="form-label" for="filter-available">Availability</label>
+    <select class="form-select" id="filter-available" name="available">
+      <option value="any" {% if available == 'any' or not available %}selected{% endif %}>Any</option>
+      <option value="true" {% if available == 'true' or available == '1' %}selected{% endif %}>Available</option>
+      <option value="false" {% if available == 'false' or available == '0' %}selected{% endif %}>Unavailable</option>
+    </select>
+  </div>
+  <div class="col-md-4">
+    <label class="form-label" for="filter-added-by">Added by</label>
+    <select class="form-select" id="filter-added-by" name="added_by_user_id">
+      <option value="" {% if not added_by_user_id %}selected{% endif %}>Anyone</option>
+      {% for u in filter_users %}
+      <option value="{{ u.id }}" {% if added_by_user_id == u.id %}selected{% endif %}>{{ u.username }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-md-4">
+    <label class="form-label" for="filter-year-min">Year from</label>
+    <input class="form-control" id="filter-year-min" type="number" name="year_min" min="0" max="9999" value="{{ year_min }}" placeholder="e.g. 1950">
+  </div>
+  <div class="col-md-4">
+    <label class="form-label" for="filter-year-max">Year to</label>
+    <input class="form-control" id="filter-year-max" type="number" name="year_max" min="0" max="9999" value="{{ year_max }}" placeholder="e.g. 2000">
+  </div>
+  <div class="col-12 d-flex flex-wrap align-items-center gap-2">
+    <button class="btn btn-outline-secondary" type="submit">Apply years</button>
+    <a class="btn btn-link" href="/ui/books/search">Clear all</a>
+    <div id="books-indicator" class="htmx-indicator spinner-border spinner-border-sm text-secondary" role="status" aria-live="polite" aria-label="Loading">
+      <span class="visually-hidden">Loading</span>
+    </div>
+  </div>
+  <p class="col-12 text-body-secondary small mb-0">Selects and search update live. Year fields update when you leave the field or press Apply years.</p>
+</form>
+
+<div id="books-panel">
+  {% include "partials/books_table.html" %}
+</div>
+{% endblock %}

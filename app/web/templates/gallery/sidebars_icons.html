@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="csrf-token" content="{{ csrf_token }}" />
+    <meta name="description" content="Bootstrap 5 admin starter — Icon-only sidebar" />
+    <meta name="theme-color" content="#712cf9" />
+    <title>Icon-only sidebar · Admin</title>
+    {% include "partials/head_assets.html" %}
+  </head>
+  <body>
+    {% include "partials/navbar.html" %}
+<aside class="admin-sidebar border-end">
+      <div class="offcanvas-lg offcanvas-start" tabindex="-1" id="sidebar" aria-labelledby="sidebarLabel">
+        <div class="offcanvas-header border-bottom d-lg-none">
+          <h2 class="offcanvas-title h5" id="sidebarLabel">Navigation</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebar" aria-label="Close navigation"></button>
+        </div>
+        <div class="offcanvas-body d-flex flex-column p-0 overflow-y-auto">
+        <div class="d-flex flex-column flex-shrink-0 bg-body-tertiary h-100">
+          <a href="/ui/dashboard" class="d-block p-3 link-body-emphasis text-decoration-none" title="Admin" data-bs-toggle="tooltip" data-bs-placement="right">
+            <i class="bi bi-bootstrap-fill admin-brand-mark" aria-hidden="true"></i>
+            <span class="visually-hidden">Admin</span>
+          </a>
+          <ul class="nav nav-pills nav-flush flex-column mb-auto text-center">
+              <li class="nav-item">
+                <a class="nav-link py-3 border-bottom rounded-0" href="/ui/sidebars/dark" title="Dark" data-bs-toggle="tooltip" data-bs-placement="right">
+                  <i class="bi bi-house-door fs-5" aria-hidden="true"></i>
+                  <span class="visually-hidden">Dark</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link py-3 border-bottom rounded-0" href="/ui/sidebars/light" title="Light" data-bs-toggle="tooltip" data-bs-placement="right">
+                  <i class="bi bi-speedometer2 fs-5" aria-hidden="true"></i>
+                  <span class="visually-hidden">Light</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active py-3 border-bottom rounded-0" href="/ui/sidebars/icons" aria-current="page" title="Icon-only" data-bs-toggle="tooltip" data-bs-placement="right">
+                  <i class="bi bi-table fs-5" aria-hidden="true"></i>
+                  <span class="visually-hidden">Icon-only</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link py-3 border-bottom rounded-0" href="/ui/sidebars/collapsible" title="Collapsible" data-bs-toggle="tooltip" data-bs-placement="right">
+                  <i class="bi bi-grid fs-5" aria-hidden="true"></i>
+                  <span class="visually-hidden">Collapsible</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link py-3 border-bottom rounded-0" href="/ui/sidebars/list-group" title="List group" data-bs-toggle="tooltip" data-bs-placement="right">
+                  <i class="bi bi-people fs-5" aria-hidden="true"></i>
+                  <span class="visually-hidden">List group</span>
+                </a>
+              </li>
+          </ul>
+          <div class="dropdown border-top">
+            <button class="btn btn-link d-flex align-items-center justify-content-center p-3 w-100 link-body-emphasis text-decoration-none" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Alex Rivera account menu">
+              <i class="bi bi-person-circle fs-4" aria-hidden="true"></i>
+            </button>
+            <ul class="dropdown-menu text-small shadow">
+              <li><a class="dropdown-item" href="/ui/settings">Settings</a></li>
+              <li><a class="dropdown-item" href="/ui/settings">Profile</a></li>
+              <li><hr class="dropdown-divider" /></li>
+              <li><a class="dropdown-item" href="/auth/login">Sign out</a></li>
+            </ul>
+          </div>
+        </div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="admin-main">
+        <main id="main" class="admin-content px-3 px-md-4 py-4" tabindex="-1">
+          <h1 class="visually-hidden">Icon-only sidebar</h1>
+        </main>
+    </div>
+    
+    {% include "partials/scripts.html" %}
+  </body>
+</html>

@@ -1,0 +1,76 @@
+{% if form_error %}
+<div class="alert alert-danger flash" role="alert">
+  {{ form_error }}
+  <button type="button" class="btn-close flash-dismiss" aria-label="Dismiss"></button>
+</div>
+{% endif %}
+
+{% if show_filter_summary %}
+<div class="mb-3" aria-live="polite">
+  {% if active_filters %}
+  <p class="mb-2"><strong>Active filters</strong></p>
+  <ul class="list-inline mb-0">
+    {% for chip in active_filters %}
+    <li class="list-inline-item"><span class="badge text-bg-secondary">{{ chip }}</span></li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="text-body-secondary mb-0">No filters — showing all books.</p>
+  {% endif %}
+</div>
+{% endif %}
+
+<div class="table-responsive">
+  <table class="table table-hover align-middle">
+    <thead>
+      <tr>
+        {% with sort_column="title", sort_label="Title", sort_href=sort_urls.title, sort_ordering=ordering, sort_panel="#books-panel", sort_indicator="#books-indicator" %}
+        {% include "partials/sortable_th.html" %}
+        {% endwith %}
+        {% with sort_column="author", sort_label="Author", sort_href=sort_urls.author, sort_ordering=ordering, sort_panel="#books-panel", sort_indicator="#books-indicator" %}
+        {% include "partials/sortable_th.html" %}
+        {% endwith %}
+        {% with sort_column="category", sort_label="Category", sort_href=sort_urls.category, sort_ordering=ordering, sort_panel="#books-panel", sort_indicator="#books-indicator" %}
+        {% include "partials/sortable_th.html" %}
+        {% endwith %}
+        {% with sort_column="year", sort_label="Year", sort_href=sort_urls.year, sort_ordering=ordering, sort_panel="#books-panel", sort_indicator="#books-indicator" %}
+        {% include "partials/sortable_th.html" %}
+        {% endwith %}
+        {% with sort_column="page_count", sort_label="Pages", sort_href=sort_urls.page_count, sort_ordering=ordering, sort_panel="#books-panel", sort_indicator="#books-indicator" %}
+        {% include "partials/sortable_th.html" %}
+        {% endwith %}
+        {% with sort_column="available", sort_label="Avail.", sort_href=sort_urls.available, sort_ordering=ordering, sort_panel="#books-panel", sort_indicator="#books-indicator" %}
+        {% include "partials/sortable_th.html" %}
+        {% endwith %}
+        {% with sort_column="added_by", sort_label="Added by", sort_href=sort_urls.added_by, sort_ordering=ordering, sort_panel="#books-panel", sort_indicator="#books-indicator" %}
+        {% include "partials/sortable_th.html" %}
+        {% endwith %}
+        {% if can_edit %}
+        <th scope="col">Actions</th>
+        {% endif %}
+      </tr>
+    </thead>
+    <tbody id="books-tbody">
+      {% if books %}
+        {% for book in books %}
+          {% include "partials/book_row.html" %}
+        {% endfor %}
+      {% else %}
+        <tr>
+          <td colspan="{% if can_edit %}8{% else %}7{% endif %}">
+            <span class="text-body-secondary">{% if active_filters %}No books match these filters.{% else %}No books found.{% endif %}</span>
+          </td>
+        </tr>
+      {% endif %}
+    </tbody>
+  </table>
+</div>
+{% set count_summary = total ~ " book" ~ ("s" if total != 1 else "") %}
+{% if total_pages %}
+{% set count_summary = count_summary ~ " · page " ~ page ~ " of " ~ total_pages %}
+{% endif %}
+{% set list_panel_target = "#books-panel" %}
+{% set list_indicator = "#books-indicator" %}
+{% set list_pagination_label = "Books pagination" %}
+{% set list_page_size_id = "books-page-size" %}
+{% include "partials/list_pagination.html" %}

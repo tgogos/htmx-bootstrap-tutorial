@@ -1,0 +1,35 @@
+/* HTMX request indicator and list-table sort carets. Shell layout stays in admin.css. */
+.htmx-indicator {
+  opacity: 0;
+  transition: opacity 200ms ease-in-out;
+}
+
+.htmx-request .htmx-indicator,
+.htmx-request.htmx-indicator {
+  opacity: 1;
+}
+
+.table-sort-link--active {
+  font-weight: 600;
+}
+
+.table-sort-link--active::after {
+  display: inline-block;
+  margin-left: 0.25rem;
+  font-family: "bootstrap-icons" !important;
+  font-size: 0.75em;
+  line-height: 1;
+  opacity: 0.9;
+  font-style: normal;
+  font-weight: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.table-sort-link--asc::after {
+  content: "\f235";
+}
+
+.table-sort-link--desc::after {
+  content: "\f229";
+}

@@ -1,0 +1,36 @@
+<script>
+      (() => {
+        const storedPalette = localStorage.getItem("admin-palette");
+        const palette =
+          storedPalette === "teal" ||
+          storedPalette === "grey" ||
+          storedPalette === "mil-std" ||
+          storedPalette === "night"
+            ? storedPalette
+            : "default";
+        document.documentElement.setAttribute("data-admin-palette", palette);
+        const storedProfile = localStorage.getItem("admin-profile");
+        if (storedProfile === "mil-std") {
+          document.documentElement.setAttribute("data-admin-profile", "mil-std");
+        }
+        const stored = localStorage.getItem("theme");
+        const theme =
+          palette === "night"
+            ? "dark"
+            : stored === "light" || stored === "dark"
+              ? stored
+              : window.matchMedia("(prefers-color-scheme: dark)").matches
+                ? "dark"
+                : "light";
+        document.documentElement.setAttribute("data-bs-theme", theme);
+      })();
+    </script>
+    <link rel="stylesheet" href="/static/vendor/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/static/vendor/bootstrap-icons/bootstrap-icons.css" />
+    <link rel="stylesheet" href="/static/css/admin.css" />
+    <link rel="stylesheet" href="/static/css/palettes.css" />
+    <link rel="stylesheet" href="/static/css/profile.css" />
+    <link rel="stylesheet" href="/static/css/app.css" />
+    {% for href in extra_css or [] %}
+    <link rel="stylesheet" href="{{ href }}" />
+    {% endfor %}

@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="csrf-token" content="{{ csrf_token }}" />
+    <meta name="description" content="Bootstrap 5 admin starter — Light sidebar" />
+    <meta name="theme-color" content="#712cf9" />
+    <title>Light sidebar · Admin</title>
+    {% include "partials/head_assets.html" %}
+  </head>
+  <body>
+    {% include "partials/navbar.html" %}
+<aside class="admin-sidebar border-end">
+      <div class="offcanvas-lg offcanvas-start" tabindex="-1" id="sidebar" aria-labelledby="sidebarLabel">
+        <div class="offcanvas-header border-bottom d-lg-none">
+          <h2 class="offcanvas-title h5" id="sidebarLabel">Navigation</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebar" aria-label="Close navigation"></button>
+        </div>
+        <div class="offcanvas-body d-flex flex-column p-0 overflow-y-auto">
+        <div class="d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary h-100">
+          <a href="/ui/dashboard" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+            <i class="bi bi-bootstrap-fill admin-brand-mark me-2" aria-hidden="true"></i>
+            <span class="fs-4">Admin</span>
+          </a>
+          <hr />
+          <ul class="nav nav-pills flex-column mb-auto">
+              <li class="nav-item">
+                <a class="nav-link link-body-emphasis d-flex align-items-center gap-2" href="/ui/sidebars/dark">
+                  <i class="bi bi-house-door" aria-hidden="true"></i>
+                  Dark
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active d-flex align-items-center gap-2" href="/ui/sidebars/light" aria-current="page">
+                  <i class="bi bi-speedometer2" aria-hidden="true"></i>
+                  Light
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link link-body-emphasis d-flex align-items-center gap-2" href="/ui/sidebars/icons">
+                  <i class="bi bi-table" aria-hidden="true"></i>
+                  Icon-only
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link link-body-emphasis d-flex align-items-center gap-2" href="/ui/sidebars/collapsible">
+                  <i class="bi bi-layout-sidebar" aria-hidden="true"></i>
+                  Collapsible
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link link-body-emphasis d-flex align-items-center gap-2" href="/ui/sidebars/list-group">
+                  <i class="bi bi-list-ul" aria-hidden="true"></i>
+                  List group
+                </a>
+              </li>
+          </ul>
+          <hr />
+          <div class="dropdown">
+            <button class="btn btn-link link-body-emphasis text-decoration-none dropdown-toggle d-flex align-items-center p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Alex Rivera account menu">
+              <i class="bi bi-person-circle fs-4 me-2" aria-hidden="true"></i>
+              <strong>Alex Rivera</strong>
+            </button>
+            <ul class="dropdown-menu text-small shadow">
+              <li><a class="dropdown-item" href="/ui/settings">Settings</a></li>
+              <li><a class="dropdown-item" href="/ui/settings">Profile</a></li>
+              <li><hr class="dropdown-divider" /></li>
+              <li><a class="dropdown-item" href="/auth/login">Sign out</a></li>
+            </ul>
+          </div>
+        </div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="admin-main">
+        <main id="main" class="admin-content px-3 px-md-4 py-4" tabindex="-1">
+          <h1 class="visually-hidden">Light sidebar</h1>
+        </main>
+    </div>
+    
+    {% include "partials/scripts.html" %}
+  </body>
+</html>
