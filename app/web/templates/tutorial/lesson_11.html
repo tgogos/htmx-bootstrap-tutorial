@@ -13,16 +13,17 @@
     type="button"
     class="btn btn-outline-primary"
     hx-get="/ui/books"
-    hx-target="#books-fragment"
+    hx-target="#books-panel"
     hx-swap="innerHTML"
   >Fetch only the table fragment</button>
 </p>
-<div id="books-fragment" class="mb-3 border-top pt-3">
+<div id="books-panel" class="mb-3 border-top pt-3">
   <p class="text-body-secondary mb-0">The fragment will appear here. It has no sidebar, because it is not a page.</p>
 </div>
 
 <h2 class="h5">What changed</h2>
 <p>Nothing new is invented here. The button is lesson 2: <code>hx-get</code> a URL and swap the response. The link is lesson 1: the same URL, as a full page. <code>app/web/books_routes.py</code> chooses. <code>_wants_books_partial</code> returns the table fragment when <code>HX-Request</code> is set, and <code>books.html</code> when you open the address or when <code>HX-History-Restore-Request</code> is set. That is the lesson 10 rule, on <code>/ui/books</code>.</p>
+<p>The button targets <code>#books-panel</code> because the sort and page links inside the fragment already do. Those links do not know they were fetched onto this lesson. If this box had another id, a page arrow would not find <code>#books-panel</code>, and HTMX would put the next table inside the arrow instead of replacing this box. Those arrows also push the books address, so the bar leaves this lesson.</p>
 
 <h2 class="h5">Where each earlier lesson shows up</h2>
 <ul>
@@ -37,7 +38,7 @@
 <ul>
   <li><strong>Request:</strong> <code>GET /ui/books</code> from the button, or the same URL from the link.</li>
   <li><strong>Response:</strong> <code>partials/books_table.html</code> for the button. <code>books.html</code>, the whole shell, for the link.</li>
-  <li><strong>Target:</strong> <code>#books-fragment</code> on this page. On the books page itself, swaps go to <code>#books-panel</code>.</li>
+  <li><strong>Target:</strong> <code>#books-panel</code> for this button and for the links inside the table. The books page uses that same id.</li>
   <li><strong>Swap:</strong> <code>innerHTML</code>.</li>
 </ul>
 

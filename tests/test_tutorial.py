@@ -285,6 +285,8 @@ class TestTutorial:
         page = auth_client.get("/ui/tutorial/11")
         assert page.status_code == 200
         assert 'hx-get="/ui/books"' in page.text
+        assert 'hx-target="#books-panel"' in page.text
+        assert 'id="books-panel"' in page.text
         assert 'href="/ui/books"' in page.text
         assert "HX-History-Restore-Request" in page.text
 
