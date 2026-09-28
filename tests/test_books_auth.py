@@ -418,7 +418,7 @@ class TestAuthWeb:
         page = client.get("/auth/login")
         csrf = page.text.split('name="csrf_token" value="', 1)[1].split('"', 1)[0]
         secret = "super-secret-password-not-for-logs"
-        with caplog.at_level(logging.WARNING, logger="app.web.auth_routes"):
+        with caplog.at_level(logging.WARNING, logger="app.ui.auth_routes"):
             response = client.post(
                 "/auth/login",
                 data={

@@ -26,8 +26,8 @@ from app.auth.users import (
 )
 from app.db import books as books_repo
 from app.db.books import BOOK_CATEGORIES, normalize_category
-from app.web.pagination import DEFAULT_PAGE_SIZE, PAGE_SIZES, page_size, sort_column_state
-from app.web.paths import TEMPLATES_DIR
+from app.ui.pagination import DEFAULT_PAGE_SIZE, PAGE_SIZES, page_size, sort_column_state
+from app.ui.paths import TEMPLATES_DIR
 
 router = APIRouter()
 templates = Jinja2Templates(directory=str(TEMPLATES_DIR))

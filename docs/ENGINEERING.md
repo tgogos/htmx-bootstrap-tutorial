@@ -12,7 +12,7 @@ Two kinds of decisions live here.
 
 **Inherited from the boilerplate.** Keep these unless a lesson is specifically about replacing them: async request path, no ORM, Pydantic at the HTTP edge, uv, `/api` for JSON and `/ui` for HTML, session + CSRF for browsers, opaque Bearer tokens for machines, roles, and the Bootstrap admin shell. Books stay the domain the lessons read. `/items` and `/db-items` stay removable demos.
 
-**Decided for the tutorial.** HTMX is pinned to **4.0.0** in `app/web/static/js/htmx.min.js`. Teach from [four.htmx.org](https://four.htmx.org/docs), not from HTMX 2 examples. A lesson is one interaction: a thing to click, what changed since the previous lesson, the markup and the route that returns HTML, then request / response / target / swap, then one experiment. Do not add auth, CSRF, or several new `hx-` attributes in a lesson that is not about them. Tutorial endpoints stay off the books table. An artificial delay is allowed only where a lesson has to show waiting: `GET /ui/tutorial/books/{id}/card?delay=` (capped at 5 seconds) and a one-letter search on `GET /ui/tutorial/books?slow=1` (1.2 seconds). The fragment must say the wait is artificial. The books list does not sleep.
+**Decided for the tutorial.** HTMX is pinned to **4.0.0** in `app/ui/static/js/htmx.min.js`. Teach from [four.htmx.org](https://four.htmx.org/docs), not from HTMX 2 examples. A lesson is one interaction: a thing to click, what changed since the previous lesson, the markup and the route that returns HTML, then request / response / target / swap, then one experiment. Do not add auth, CSRF, or several new `hx-` attributes in a lesson that is not about them. Tutorial endpoints stay off the books table. An artificial delay is allowed only where a lesson has to show waiting: `GET /ui/tutorial/books/{id}/card?delay=` (capped at 5 seconds) and a one-letter search on `GET /ui/tutorial/books?slow=1` (1.2 seconds). The fragment must say the wait is artificial. The books list does not sleep.
 
 The books list (`/ui/books`) is lesson material for the end of the sequence. It already uses the boilerplate list contract (`page`, `size`, allowlisted `ordering`, `innerHTML` swaps).
 
@@ -47,14 +47,14 @@ Prefer boring, server-driven UI over client frameworks. Concrete HTMX usage is u
 | **Server owns the truth** | Pages and HTMX fragments are the UI. Do not grow a client-side app store or SPA router. |
 | **HTML first** | First paint and list/filter/mutation flows are server-rendered HTML (Jinja + the Bootstrap admin shell). |
 | **HTMX for interaction** | Search, filters, pagination, and forms use HTMX swaps. |
-| **Small JS islands** | Vanilla JS only where the browser must own a bit of widget state (confirm modal, toasts, CSRF header, page-size select). Prefer one focused script (`app/web/static/js/app.js`). |
+| **Small JS islands** | Vanilla JS only where the browser must own a bit of widget state (confirm modal, toasts, CSRF header, page-size select). Prefer one focused script (`app/ui/static/js/app.js`). |
 | **Progressive enhancement** | Pagination links keep usable `href`s; forms still work without JS where practical. |
 | **Shareable URLs** | List/search use `hx-push-url`. |
 
 ### What not to add by default
 
 - **No Alpine, React, Vue, Svelte, or similar** — local reactivity is not a reason. Add a client library only when a concrete widget cannot be done with HTMX + a small vanilla island, and document why in this file in the same change.
-- **No SPA routing or frontend build step** — no Vite/Webpack app shell; static CSS/JS under `app/web/static/` is enough.
+- **No SPA routing or frontend build step** — no Vite/Webpack app shell; static CSS/JS under `app/ui/static/` is enough.
 - **No client i18n framework** — if i18n lands, prefer server-side templates.
 
 ### Island boundary
@@ -63,15 +63,15 @@ Use an island when interaction is inherently client-side (dialog, toast DOM, att
 
 ### Admin shell
 
-The browser UI is a Bootstrap 5 admin shell (navbar, sidebar, footer, colour mode / palette / profile). Vendored CSS and JS live under `app/web/static/` (`vendor/bootstrap`, `vendor/bootstrap-icons`, `vendor/chart.js`, plus `css/` and `js/`). There is no Sass or npm build.
+The browser UI is a Bootstrap 5 admin shell (navbar, sidebar, footer, colour mode / palette / profile). Vendored CSS and JS live under `app/ui/static/` (`vendor/bootstrap`, `vendor/bootstrap-icons`, `vendor/chart.js`, plus `css/` and `js/`). There is no Sass or npm build.
 
 `templates/layout.html` is the shell. Shared pieces are `partials/navbar.html`, `partials/sidebar.html`, and `partials/footer.html`. Operational pages extend the layout and replace only `{% block content %}`. Header and sidebar specimen pages keep their own chrome (`templates/gallery/`) because that chrome is the specimen; they still include the shared sidebar or navbar.
 
 The sidebar has two groups. **App** is the product: Tutorial (`/ui/tutorial`), Dashboard, Books, Search books, and Staff (`/ui/admin/users`, admin only). **Samples** is the Bootstrap page set kept as UI copy sources (users, forms, tables, components, cheatsheet, settings, blank, headers, sidebars). Sample pages are not the product. The Users sample stays separate from Staff. Move a link from Samples to App when that page starts reading or writing application data.
 
-`app/web/static/css/admin.css` stays the shell layout file. `app/web/static/css/app.css` is the HTMX indicator plus the books table sort caret. `app/web/static/js/admin.js` is the shell (theme, palette, profile, hash nav, form validation), with hash highlighting keyed off the `/ui/...` path instead of `*.html` filenames. `app/web/static/js/app.js` is the HTMX island (Bootstrap confirm modal, toasts, CSRF header, page-size select).
+`app/ui/static/css/admin.css` stays the shell layout file. `app/ui/static/css/app.css` is the HTMX indicator plus the books table sort caret. `app/ui/static/js/admin.js` is the shell (theme, palette, profile, hash nav, form validation), with hash highlighting keyed off the `/ui/...` path instead of `*.html` filenames. `app/ui/static/js/app.js` is the HTMX island (Bootstrap confirm modal, toasts, CSRF header, page-size select).
 
-To add a page: copy `templates/pages/blank.html`, add a row to `SHELL_PAGES` in `app/web/pages_routes.py`, and add a sidebar link in `partials/sidebar.html` under App or Samples with an `active` key. Do not introduce a client-side HTML include loader.
+To add a page: copy `templates/pages/blank.html`, add a row to `SHELL_PAGES` in `app/ui/pages_routes.py`, and add a sidebar link in `partials/sidebar.html` under App or Samples with an `active` key. Do not introduce a client-side HTML include loader.
 
 ## Product shape
 
@@ -83,7 +83,7 @@ To add a page: copy `templates/pages/blank.html`, add a row to `SHELL_PAGES` in 
 
 Do not add auth, HTMX, or shared abstractions to the memory/Mongo demos unless the point is to teach that idea. Keep demos thin on purpose. `/items` and `/db-items` teach storage. Delete them when a fork does not need them.
 
-Books is the reference domain in this repo, not a requirement of every fork. Copy `app/routes/books.py`, `app/db/books.py`, and `app/web/books_routes.py` for the next entity, then replace books. Keep the URL split (`/api`, `/auth`, `/ui`), session/CSRF, Bearer tokens, roles, and the list contract (`page`, `size`, allowlisted `ordering`, `innerHTML` swaps). Demo routes keep the thin **Item** naming so they are not a second product.
+Books is the reference domain in this repo, not a requirement of every fork. Copy `app/routes/books.py`, `app/db/books.py`, and `app/ui/books_routes.py` for the next entity, then replace books. Keep the URL split (`/api`, `/auth`, `/ui`), session/CSRF, Bearer tokens, roles, and the list contract (`page`, `size`, allowlisted `ordering`, `innerHTML` swaps). Demo routes keep the thin **Item** naming so they are not a second product.
 
 ## Roles
 
@@ -111,7 +111,7 @@ Write primary-path code like the SQL and web layers:
 - Pydantic models are request/response schemas only, not persistence objects.
 - Prefer FastAPI dependencies for auth over ad-hoc checks in every handler.
 
-Reference implementations: `app/routes/books.py`, `app/db/books.py`, `app/web/books_routes.py`.
+Reference implementations: `app/routes/books.py`, `app/db/books.py`, `app/ui/books_routes.py`.
 
 The in-memory and Mongo routes may stay more verbose (logic in the handler, broad try/except). That style is for demos only — do not copy it into the primary path.
 
@@ -159,7 +159,7 @@ See **UI architecture** for the HTML-first contract. Patterns below are what thi
 - **Pagination and sort** — URL is the source of truth: `page`, `size` (`10`, `25`, `50`, `100`; default 10), and `ordering` (allowlisted column, prefix `-` for descending; default `title`). Sort links and the page-size control swap `#books-panel` with `innerHTML` and `hx-push-url`. Filter forms keep a hidden `ordering` so a search does not drop the sort. Unknown `ordering` values fall back to the default. Same contract on `/api/books`. Swaps stay `innerHTML`; do not add Idiomorph for this.
 - **Indicator** — shared `#books-indicator` via `hx-indicator` (search, pagination, sort, create). CSS-only spinner; HTMX toggles `.htmx-request` / opacity. Keep the indicator outside the swap target.
 - Progressive enhancement: pagination links keep usable `href`s.
-- **Confirm modal** — Bootstrap modal + small JS (`app/web/static/js/app.js`); delete buttons use `hx-trigger="confirmed-delete"` after the user confirms (no `window.confirm`).
+- **Confirm modal** — Bootstrap modal + small JS (`app/ui/static/js/app.js`); delete buttons use `hx-trigger="confirmed-delete"` after the user confirms (no `window.confirm`).
 - **Toasts** — Bootstrap toasts; server sets `HX-Trigger: {"showToast": {...}}` (e.g. after delete).
 
 ## Authentication
@@ -212,7 +212,7 @@ Do not log passwords, session cookies, Bearer tokens, or CSRF secrets. Examples:
 - Opaque API tokens hashed (SHA-256) in `api_tokens`; plaintext returned once from `POST /api/auth/token`.
 - Settings via Pydantic Settings (`app/core/config.py`).
 - Stdlib logging to stdout (`app/core/logging.py`); `LOG_LEVEL` env; JSON when `ENVIRONMENT=production`.
-- Shared identity helpers in `app/auth/` (passwords, users, tokens, deps). HTTP routes live in `app/routes/` (JSON) and `app/web/` (HTML).
+- Shared identity helpers in `app/auth/` (passwords, users, tokens, deps). HTTP routes live in `app/routes/` (JSON) and `app/ui/` (HTML).
 - **uv** for Python deps: `pyproject.toml` + committed `uv.lock`; Docker installs with `uv sync --frozen`. Do not reintroduce `requirements.txt` as a second source of truth. Target CPython **3.14** (`.python-version`, `requires-python`).
 
 ## Out of scope

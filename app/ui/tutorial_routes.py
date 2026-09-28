@@ -12,8 +12,8 @@ from fastapi.responses import HTMLResponse
 from app.auth.deps import require_editor_html, require_user_html, verify_csrf
 from app.db import books as books_repo
 from app.db.books import BOOK_CATEGORIES
-from app.web.books_routes import CATEGORY_LABELS
-from app.web.pages_routes import shell_ctx, templates
+from app.ui.books_routes import CATEGORY_LABELS
+from app.ui.pages_routes import shell_ctx, templates
 
 router = APIRouter()
 

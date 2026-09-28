@@ -16,7 +16,7 @@ from app.auth.deps import (
 )
 from app.auth.passwords import verify_password
 from app.auth.users import get_user_by_username
-from app.web.paths import TEMPLATES_DIR
+from app.ui.paths import TEMPLATES_DIR
 
 router = APIRouter()
 templates = Jinja2Templates(directory=str(TEMPLATES_DIR))

@@ -19,7 +19,7 @@
 
 <h2 class="h5">What changed</h2>
 <p>The button posts, and <code>hx-swap="none"</code> tells HTMX to leave the page as it is. The response body is empty. The server also sends a header, <code>HX-Trigger</code>, whose value names an event, <code>showToast</code>, and a message. HTMX fires that event. It does not know how to draw a toast.</p>
-<p>The drawing lives in <code>app/web/static/js/app.js</code>. That file is the small JavaScript island: confirm dialogs, toasts, and copying the token onto requests. The toast part listens for <code>showToast</code> and asks Bootstrap to show one. HTMX stays in charge of the request. The island only handles a widget the swap cannot express.</p>
+<p>The drawing lives in <code>app/ui/static/js/app.js</code>. That file is the small JavaScript island: confirm dialogs, toasts, and copying the token onto requests. The toast part listens for <code>showToast</code> and asks Bootstrap to show one. HTMX stays in charge of the request. The island only handles a widget the swap cannot express.</p>
 
 <h2 class="h5">The markup and the header</h2>
 <pre class="bg-body-tertiary border rounded p-3 small mb-3"><code>&lt;button

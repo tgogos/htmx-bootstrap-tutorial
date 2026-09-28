@@ -15,8 +15,8 @@ from app.auth.exceptions import LoginRequired
 from app.core import config
 from app.core.logging import setup_logging
 from app.routes import root, items, db_items, books, api_auth
-from app.web import auth_routes, books_routes, pages_routes, tutorial_routes
-from app.web.paths import STATIC_DIR
+from app.ui import auth_routes, books_routes, pages_routes, tutorial_routes
+from app.ui.paths import STATIC_DIR
 
 logger = logging.getLogger(__name__)
 
@@ -117,7 +117,7 @@ app.include_router(db_items.router, prefix="/db-items", tags=["database-items"])
 app.include_router(api_auth.router, prefix="/api/auth", tags=["auth-api"])
 app.include_router(books.router, prefix="/api/books", tags=["books"])
 
-# HTML / HTMX (removable with app/web/; omitted from OpenAPI — browser session, not Bearer)
+# HTML / HTMX (removable with app/ui/; omitted from OpenAPI — browser session, not Bearer)
 app.include_router(
     auth_routes.router, prefix="/auth", tags=["auth-web"], include_in_schema=False
 )

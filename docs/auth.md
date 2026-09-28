@@ -112,4 +112,4 @@ GET    /api/auth/me           Current user + role (Bearer or session)
 /items, /db-items             Demos — no auth
 ```
 
-Relevant code: `app/auth/deps.py`, `app/auth/tokens.py`, `app/auth/users.py`, `app/web/auth_routes.py`, `app/routes/api_auth.py`.
+Relevant code: `app/auth/deps.py`, `app/auth/tokens.py`, `app/auth/users.py`, `app/ui/auth_routes.py`, `app/routes/api_auth.py`.

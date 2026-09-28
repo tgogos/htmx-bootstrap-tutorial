@@ -8,7 +8,7 @@ from fastapi.templating import Jinja2Templates
 
 from app.auth.deps import get_or_create_csrf_token, get_session_user, require_user_html
 from app.auth.users import role_at_least
-from app.web.paths import TEMPLATES_DIR
+from app.ui.paths import TEMPLATES_DIR
 
 router = APIRouter()
 templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
