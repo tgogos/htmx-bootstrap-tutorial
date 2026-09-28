@@ -50,6 +50,7 @@
 
 <h2 class="h5">What changed</h2>
 <p>The new piece on both boxes is <code>hx-trigger</code>. <code>keyup changed delay:300ms</code> waits until you pause, and it skips the request when the text did not change (arrow keys, for example). The <code>search</code> event covers the clear button on a search field. The second box adds one attribute: <code>hx-sync="this:replace"</code>. That aborts the request already running on this input and starts the new one. Without it, both requests finish, and whichever response arrives last is what you see — even if that response is for an older, shorter query.</p>
+<p>For this search box, use the right-hand version. <code>hx-sync="this:replace"</code> throws away the search still in flight and keeps the one for the text you see now. Leave it off only when you are willing to show an older answer. Use <code>queue</code> or <code>drop</code> when each request must be kept or extra clicks should be ignored.</p>
 
 <h2 class="h5">The markup</h2>
 <pre class="bg-body-tertiary border rounded p-3 small mb-3"><code>&lt;input
