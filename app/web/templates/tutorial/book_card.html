@@ -1,0 +1,14 @@
+<div class="card">
+  <div class="card-body">
+    {% if book %}
+    <h2 class="h5 card-title">{{ book.title }}</h2>
+    <p class="card-text mb-1">{{ book.author }}</p>
+    <p class="card-text text-body-secondary mb-0">{{ book.year if book.year is not none else "Year unknown" }}</p>
+    {% if delay %}
+    <p class="card-text small text-body-secondary mt-3 mb-0">Artificial wait: this fragment was held for {{ delay }} seconds. The books list does not do this.</p>
+    {% endif %}
+    {% else %}
+    <p class="mb-0">That book is not in the catalog.</p>
+    {% endif %}
+  </div>
+</div>

@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block title %}{{ book.title if book else "Book" }} · Tutorial{% endblock %}
+{% block description %}A book page reached by an ordinary link{% endblock %}
+{% block content %}
+{% include "partials/tutorial_nav.html" %}
+<h1 class="h2">A whole page, from a link</h1>
+{% if book %}
+<p class="text-body-secondary">This is <code>GET /ui/tutorial/books/{{ book.id }}</code>. Nothing on this page was swapped in.</p>
+{% include "tutorial/book_card.html" %}
+<p class="mt-3"><a href="/ui/tutorial/1">Back to lesson 1</a></p>
+{% else %}
+<div class="alert alert-warning" role="status">That book is not in the catalog. <a href="/ui/tutorial/1">Return to lesson 1</a>.</div>
+{% endif %}
+{% endblock %}

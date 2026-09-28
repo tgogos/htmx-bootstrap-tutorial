@@ -1,0 +1,61 @@
+{% extends "layout.html" %}
+{% block title %}Lesson 3 · Indicator · Tutorial{% endblock %}
+{% block description %}A loading indicator on a deliberately slow book fetch{% endblock %}
+{% block content %}
+{% include "partials/tutorial_nav.html" %}
+<h1 class="h2">3. A slow request needs a signal</h1>
+<p>Lesson 2 returns immediately, so you never see a wait. This button calls the same card route with <code>?delay=1.5</code>. The server sleeps on purpose. <code>hx-indicator</code> points at the element HTMX shows while that request is in flight.</p>
+<div class="alert alert-secondary" role="note">The wait is only on this tutorial URL. The books list does not sleep.</div>
+
+<h2 class="h5">Try it</h2>
+{% if book %}
+<p class="d-flex align-items-center gap-2">
+  <button
+    type="button"
+    class="btn btn-primary"
+    hx-get="/ui/tutorial/books/{{ book.id }}/card?delay=1.5"
+    hx-target="#book-slot"
+    hx-swap="innerHTML"
+    hx-indicator="#lesson-indicator"
+  >Show {{ book.title }} slowly</button>
+  <span id="lesson-indicator" class="htmx-indicator spinner-border spinner-border-sm text-secondary" role="status" aria-live="polite">
+    <span class="visually-hidden">Loading</span>
+  </span>
+</p>
+<div id="book-slot" class="mb-3">
+  <p class="text-body-secondary mb-0">The book will appear here after the wait. Watch the spinner first.</p>
+</div>
+{% else %}
+<div class="alert alert-warning" role="status">The catalog is empty. Run <code>make seed</code>, then reload this page.</div>
+{% endif %}
+
+<h2 class="h5">What changed</h2>
+<p>The button is the lesson 2 button, with two additions: the URL asks the card route to wait, and <code>hx-indicator="#lesson-indicator"</code> names the spinner. During the request HTMX adds <code>htmx-request</code> to that element. The stylesheet fades it in. When the response arrives, HTMX removes the class and swaps the card into <code>#book-slot</code>, same as lesson 2.</p>
+
+<h2 class="h5">The markup and the wait</h2>
+{% if book %}
+<pre class="bg-body-tertiary border rounded p-3 small mb-3"><code>&lt;button
+  type="button"
+  hx-get="/ui/tutorial/books/{{ book.id }}/card?delay=1.5"
+  hx-target="#book-slot"
+  hx-swap="innerHTML"
+  hx-indicator="#lesson-indicator"
+&gt;Show {{ book.title }} slowly&lt;/button&gt;
+
+&lt;span id="lesson-indicator" class="htmx-indicator"&gt;...&lt;/span&gt;</code></pre>
+{% endif %}
+<p>The route is still <code>GET /ui/tutorial/books/&lt;id&gt;/card</code>. <code>delay</code> is a query parameter capped at 5 seconds. After the sleep it renders the same <code>tutorial/book_card.html</code> fragment. The card says that the wait was artificial.</p>
+
+<h2 class="h5">Request, response, target, swap</h2>
+<ul>
+  <li><strong>Request:</strong> <code>GET</code> the card URL with <code>delay=1.5</code>. The response is slow on purpose.</li>
+  <li><strong>Response:</strong> the same card fragment as lesson 2, plus a line that names the wait.</li>
+  <li><strong>Target:</strong> <code>#book-slot</code>. The spinner is not the target.</li>
+  <li><strong>Swap:</strong> <code>innerHTML</code>. The indicator is separate: it is shown for the life of the request, then hidden.</li>
+</ul>
+
+<h2 class="h5">Experiment</h2>
+<p>In the browser's inspector, delete <code>hx-indicator</code> from the button and click it again. The card still arrives, about a second and a half later, but nothing tells you the request is running.</p>
+
+<p class="mt-4"><a class="btn btn-outline-secondary" href="/ui/tutorial/2">Previous</a></p>
+{% endblock %}

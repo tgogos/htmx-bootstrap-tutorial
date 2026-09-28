@@ -1,12 +1,31 @@
-# FastAPI HTMX Bootstrap
+# HTMX Bootstrap tutorial
 
-Server-driven admin UI: the FastAPI + HTMX backend (SQLite books, session/CSRF, Bearer API) with the Bootstrap 5 admin shell as the browser UI.
+A runnable tutorial for HTMX 4 on the FastAPI + Jinja + Bootstrap boilerplate. The books app, login, and roles are already here. The lessons start smaller than that table.
 
-Browsers get HTML (Jinja + [Bootstrap 5.3](https://getbootstrap.com/) + [HTMX](https://htmx.org/)). Machines get `/api` with Bearer tokens. One user store, Docker Compose, pytest.
+Browsers get HTML (Jinja + [Bootstrap 5.3](https://getbootstrap.com/) + [HTMX 4.0.0](https://four.htmx.org/docs)). Machines get `/api` with Bearer tokens.
 
 Architecture: [`docs/ENGINEERING.md`](docs/ENGINEERING.md).  
-Sessions, CSRF, and Bearer: [`docs/auth.md`](docs/auth.md).  
-Vendored Bootstrap, Bootstrap Icons, and Chart.js notices: [`LICENSES.md`](LICENSES.md).
+Sessions, CSRF, and Bearer: [`docs/auth.md`](docs/auth.md).
+
+## Start here
+
+```bash
+make dotenv
+make upd
+make seed     # books for the lessons
+```
+
+Open `/ui/tutorial` after logging in (`DEMO_USERNAME` / `DEMO_PASSWORD`, defaults `admin` / `admin123`). Lesson 1 is an ordinary link. Lessons 2 and 3 fetch one book. The books table at `/ui/books` is the advanced example for later.
+
+## Lessons
+
+| | Page | Idea |
+|--|------|------|
+| 1 | `/ui/tutorial/1` | A normal link loads a full book page |
+| 2 | `/ui/tutorial/2` | `hx-get` puts an HTML fragment into a target |
+| 3 | `/ui/tutorial/3` | The same fetch, slowed on purpose, with `hx-indicator` |
+
+Lessons 4–11 are listed on the tutorial home and are not built yet.
 
 ## Primary path vs demos
 

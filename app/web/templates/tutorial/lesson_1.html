@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+{% block title %}Lesson 1 · A link · Tutorial{% endblock %}
+{% block description %}A server-rendered book page, requested with an ordinary link{% endblock %}
+{% block content %}
+{% include "partials/tutorial_nav.html" %}
+<h1 class="h2">1. A link is already a request</h1>
+<p>Before HTMX does anything, the browser can ask the server for a new page. This lesson is that request, with no <code>hx-</code> attributes.</p>
+
+<h2 class="h5">Try it</h2>
+{% if book %}
+<p><a class="btn btn-primary" href="/ui/tutorial/books/{{ book.id }}">Open {{ book.title }}</a></p>
+{% else %}
+<div class="alert alert-warning" role="status">The catalog is empty. Run <code>make seed</code>, then reload this page.</div>
+{% endif %}
+
+<h2 class="h5">What this shows</h2>
+<p>Clicking the link navigates away from this lesson. The address bar changes. The response is a whole page: the admin shell, plus the book. The browser throws away this page and draws the new one. The Back button returns here because the browser stored this address.</p>
+
+<h2 class="h5">The markup</h2>
+{% if book %}
+<pre class="bg-body-tertiary border rounded p-3 small mb-3"><code>&lt;a href="/ui/tutorial/books/{{ book.id }}"&gt;Open {{ book.title }}&lt;/a&gt;</code></pre>
+{% endif %}
+<p>The route <code>GET /ui/tutorial/books/&lt;id&gt;</code> renders <code>tutorial/book_page.html</code> inside <code>layout.html</code>. It returns HTML, not JSON. <code>/api/books</code> is the JSON API and is not used here.</p>
+
+<h2 class="h5">Request, response, target, swap</h2>
+<ul>
+  <li><strong>Request:</strong> the browser <code>GET</code>s the link URL. HTMX is not involved, so there is no <code>HX-Request</code> header.</li>
+  <li><strong>Response:</strong> a full HTML document.</li>
+  <li><strong>Target:</strong> the browser window. There is no element id.</li>
+  <li><strong>Swap:</strong> none. The new document replaces the old one.</li>
+</ul>
+
+<h2 class="h5">Experiment</h2>
+<p>Open the book, then press the browser Back button. You should land on this lesson again, with the same address you started from.</p>
+
+<p class="mt-4"><a class="btn btn-outline-secondary" href="/ui/tutorial/2">Next: fetch one book</a></p>
+{% endblock %}

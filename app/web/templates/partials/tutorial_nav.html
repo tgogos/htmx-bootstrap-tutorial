@@ -1,0 +1,15 @@
+<nav class="mb-4" aria-label="Lessons">
+  <ol class="breadcrumb mb-2">
+    <li class="breadcrumb-item"><a href="/ui/tutorial">Tutorial</a></li>
+    {% if lesson == 0 %}
+    <li class="breadcrumb-item active" aria-current="page">Start</li>
+    {% else %}
+    <li class="breadcrumb-item active" aria-current="page">Lesson {{ lesson }}</li>
+    {% endif %}
+  </ol>
+  <div class="d-flex flex-wrap gap-2">
+    <a class="btn btn-sm {% if lesson == 1 %}btn-primary{% else %}btn-outline-secondary{% endif %}" href="/ui/tutorial/1">1 · Link</a>
+    <a class="btn btn-sm {% if lesson == 2 %}btn-primary{% else %}btn-outline-secondary{% endif %}" href="/ui/tutorial/2">2 · Fetch</a>
+    <a class="btn btn-sm {% if lesson == 3 %}btn-primary{% else %}btn-outline-secondary{% endif %}" href="/ui/tutorial/3">3 · Indicator</a>
+  </div>
+</nav>

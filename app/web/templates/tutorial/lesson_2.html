@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+{% block title %}Lesson 2 · Fetch · Tutorial{% endblock %}
+{% block description %}Fetch one book into the current page{% endblock %}
+{% block content %}
+{% include "partials/tutorial_nav.html" %}
+<h1 class="h2">2. Ask for a fragment, and put it somewhere</h1>
+<p>Lesson 1 replaced the whole window. This button stays on this page. HTMX asks for a piece of HTML and writes it into one element.</p>
+
+<h2 class="h5">Try it</h2>
+{% if book %}
+<p>
+  <button
+    type="button"
+    class="btn btn-primary"
+    hx-get="/ui/tutorial/books/{{ book.id }}/card"
+    hx-target="#book-slot"
+    hx-swap="innerHTML"
+  >Show {{ book.title }}</button>
+</p>
+<div id="book-slot" class="mb-3">
+  <p class="text-body-secondary mb-0">The book will appear here. The rest of the page stays.</p>
+</div>
+{% else %}
+<div class="alert alert-warning" role="status">The catalog is empty. Run <code>make seed</code>, then reload this page.</div>
+{% endif %}
+
+<h2 class="h5">What changed</h2>
+<p>The control is a button, not a link. The address bar does not change. The response is not a document: it is the card markup only. <code>hx-target</code> names the element that receives it. <code>hx-swap="innerHTML"</code> replaces that element's contents and leaves the element itself in place.</p>
+
+<h2 class="h5">The markup and the response</h2>
+{% if book %}
+<pre class="bg-body-tertiary border rounded p-3 small mb-3"><code>&lt;button
+  type="button"
+  hx-get="/ui/tutorial/books/{{ book.id }}/card"
+  hx-target="#book-slot"
+  hx-swap="innerHTML"
+&gt;Show {{ book.title }}&lt;/button&gt;
+
+&lt;div id="book-slot"&gt;...&lt;/div&gt;</code></pre>
+{% endif %}
+<p><code>GET /ui/tutorial/books/&lt;id&gt;/card</code> renders <code>tutorial/book_card.html</code> and nothing else. The same session rule as the rest of <code>/ui</code> still applies: you have to be logged in.</p>
+
+<h2 class="h5">Request, response, target, swap</h2>
+<ul>
+  <li><strong>Request:</strong> <code>GET</code> the card URL. HTMX adds <code>HX-Request: true</code>.</li>
+  <li><strong>Response:</strong> an HTML fragment (a card). No <code>&lt;html&gt;</code> and no sidebar.</li>
+  <li><strong>Target:</strong> <code>#book-slot</code>.</li>
+  <li><strong>Swap:</strong> <code>innerHTML</code>. The children of <code>#book-slot</code> are replaced.</li>
+</ul>
+
+<h2 class="h5">Experiment</h2>
+<p>Click the button, then look at the address bar. It should still be <code>/ui/tutorial/2</code>. In the network panel, open the card response and confirm it is only the card, not a full page.</p>
+
+<p class="mt-4 d-flex gap-2">
+  <a class="btn btn-outline-secondary" href="/ui/tutorial/1">Previous</a>
+  <a class="btn btn-outline-secondary" href="/ui/tutorial/3">Next: show a spinner</a>
+</p>
+{% endblock %}

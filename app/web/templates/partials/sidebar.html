@@ -23,6 +23,12 @@
             <hr>
             <ul class="nav nav-pills flex-column gap-1 mb-0">
                 <li class="nav-item">
+                  <a class="nav-link{% if active == 'tutorial' %} active{% endif %}" {% if active == 'tutorial' %}aria-current="page"{% endif %} href="/ui/tutorial">
+                    <i class="bi bi-signpost-split" aria-hidden="true"></i>
+                    Tutorial
+                  </a>
+                </li>
+                <li class="nav-item">
                   <a class="nav-link{% if active == 'dashboard' %} active{% endif %}" {% if active == 'dashboard' %}aria-current="page"{% endif %} href="/ui/dashboard">
                     <i class="bi bi-speedometer2" aria-hidden="true"></i>
                     Dashboard

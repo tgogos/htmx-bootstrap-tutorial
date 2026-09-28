@@ -1,8 +1,29 @@
 # Engineering notes
 
-Decisions for this boilerplate. Prefer simple, robust, boring.
+Decisions for this tutorial, and for the boilerplate it was copied from. Prefer simple, robust, boring.
 
 This file is the source of truth for architecture and conventions. When a decision or the code changes, update this document in the same change so it stays accurate for future readers (and agents). Do not refer to chat threads, option letters, or temporary debate labels.
+
+## What this repository is
+
+This is a runnable HTMX tutorial. It was created from the FastAPI + HTMX + Bootstrap boilerplate, which already had books, auth, and an HTMX table. Learners meet that table last. Lessons under `/ui/tutorial` are the starting point.
+
+Two kinds of decisions live here.
+
+**Inherited from the boilerplate.** Keep these unless a lesson is specifically about replacing them: async request path, no ORM, Pydantic at the HTTP edge, uv, `/api` for JSON and `/ui` for HTML, session + CSRF for browsers, opaque Bearer tokens for machines, roles, and the Bootstrap admin shell. Books stay the domain the lessons read. `/items` and `/db-items` stay removable demos.
+
+**Decided for the tutorial.** HTMX is pinned to **4.0.0** in `app/web/static/js/htmx.min.js`. Teach from [four.htmx.org](https://four.htmx.org/docs), not from HTMX 2 examples. A lesson is one interaction: a thing to click, what changed since the previous lesson, the markup and the route that returns HTML, then request / response / target / swap, then one experiment. Do not add auth, CSRF, or several new `hx-` attributes in a lesson that is not about them. Tutorial endpoints stay off the books table. An artificial delay is allowed only on `GET /ui/tutorial/books/{id}/card?delay=` and must say that it is artificial.
+
+The books list (`/ui/books`) is lesson material for the end of the sequence. It already uses the boilerplate list contract (`page`, `size`, allowlisted `ordering`, `innerHTML` swaps).
+
+### HTMX 4, and what was adjusted so the books UI still works
+
+The boilerplate shipped HTMX 2.0.4. This repo now loads 4.0.0. Books markup already puts `hx-get`, `hx-target`, and `hx-swap` on the element that makes the request, so explicit inheritance does not change those buttons. These parts did change:
+
+- `app.js` listens for `htmx:config:request` and writes the CSRF token on `event.detail.ctx.request.headers`. The 2.x names `htmx:configRequest` and `event.detail.headers` do not fire.
+- The same file listens for `htmx:after:history:push` (was `htmx:pushedIntoHistory`). The page-size control calls `htmx.ajax` with `push`, not `pushUrl`, and the select carries `hx-indicator` because that option is no longer an `htmx.ajax` argument.
+- Back/Forward refetches the URL and still sends `HX-Request`. Books routes return the full page when `HX-History-Restore-Request` is set, and the table fragment otherwise.
+- HTTP 4xx and 5xx responses swap into the target. A books form that returns `400` with the table HTML now shows that HTML. In 2.x it did not.
 
 ## Goals
 
@@ -42,7 +63,7 @@ The browser UI is a Bootstrap 5 admin shell (navbar, sidebar, footer, colour mod
 
 `templates/layout.html` is the shell. Shared pieces are `partials/navbar.html`, `partials/sidebar.html`, and `partials/footer.html`. Operational pages extend the layout and replace only `{% block content %}`. Header and sidebar specimen pages keep their own chrome (`templates/gallery/`) because that chrome is the specimen; they still include the shared sidebar or navbar.
 
-The sidebar has two groups. **App** is the product: Dashboard, Books, Search books, and Staff (`/ui/admin/users`, admin only). **Samples** is the Bootstrap page set kept as UI copy sources (users, forms, tables, components, cheatsheet, settings, blank, headers, sidebars). Sample pages are not the product. The Users sample stays separate from Staff. Move a link from Samples to App when that page starts reading or writing application data.
+The sidebar has two groups. **App** is the product: Tutorial (`/ui/tutorial`), Dashboard, Books, Search books, and Staff (`/ui/admin/users`, admin only). **Samples** is the Bootstrap page set kept as UI copy sources (users, forms, tables, components, cheatsheet, settings, blank, headers, sidebars). Sample pages are not the product. The Users sample stays separate from Staff. Move a link from Samples to App when that page starts reading or writing application data.
 
 `app/web/static/css/admin.css` stays the shell layout file. `app/web/static/css/app.css` is the HTMX indicator plus the books table sort caret. `app/web/static/js/admin.js` is the shell (theme, palette, profile, hash nav, form validation), with hash highlighting keyed off the `/ui/...` path instead of `*.html` filenames. `app/web/static/js/app.js` is the HTMX island (Bootstrap confirm modal, toasts, CSRF header, page-size select).
 

@@ -16,7 +16,7 @@
       class="form-select form-select-sm w-auto"
       data-list-page-size
       data-panel-target="{{ list_panel_target }}"
-      data-indicator="{{ list_indicator }}"
+      hx-indicator="{{ list_indicator }}"
       aria-label="Rows per page"
     >
       {% for n in page_sizes %}

@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% block title %}Tutorial · HTMX{% endblock %}
+{% block description %}A runnable HTMX 4 tutorial{% endblock %}
+{% block content %}
+{% include "partials/tutorial_nav.html" %}
+<div class="pb-2 mb-3 border-bottom">
+  <h1 class="h2">Learn HTMX on a working app</h1>
+  <p class="text-body-secondary mb-0">These pages use <strong>HTMX 4.0.0</strong>. The reference is <a href="https://four.htmx.org/docs">four.htmx.org</a>.</p>
+</div>
+
+<p>Each lesson is one small interaction with a book. The <a href="/ui/books">books table</a> is the advanced example at the end of the sequence. Start with lesson 1, not with that table.</p>
+
+<h2 class="h5">Lessons you can open now</h2>
+<ol>
+  <li><a href="/ui/tutorial/1">A normal link</a> — the browser already knows how to ask the server for a new page.</li>
+  <li><a href="/ui/tutorial/2">A button that fetches one book</a> — <code>hx-get</code>, an HTML fragment, and a target.</li>
+  <li><a href="/ui/tutorial/3">A slow response and a spinner</a> — the same fetch, plus <code>hx-indicator</code>.</li>
+</ol>
+
+<h2 class="h5">Still to come</h2>
+<ol start="4">
+  <li>Where the HTML goes: <code>hx-swap</code>.</li>
+  <li>A control that fires the request: a category selector.</li>
+  <li>Search as you type: debounce, and what happens when a slower response arrives last.</li>
+  <li>Add a book. Validation errors come back as HTML.</li>
+  <li>Edit and delete, including a confirmation.</li>
+  <li>A toast from the response, and the small JavaScript island that shows it.</li>
+  <li>Pages, sorting, and a URL the Back button can return to.</li>
+  <li>A full page versus a fragment, then a walkthrough of the books table.</li>
+</ol>
+{% endblock %}

@@ -121,14 +121,16 @@
     showToast(detail.message, detail.level);
   });
 
-  document.body.addEventListener("htmx:configRequest", function (event) {
+  document.body.addEventListener("htmx:config:request", function (event) {
     var meta = document.querySelector('meta[name="csrf-token"]');
-    if (!meta) {
+    var ctx = event.detail && event.detail.ctx;
+    var headers = ctx && ctx.request && ctx.request.headers;
+    if (!meta || !headers) {
       return;
     }
     var token = meta.getAttribute("content");
-    if (token && !event.detail.headers["X-CSRF-Token"]) {
-      event.detail.headers["X-CSRF-Token"] = token;
+    if (token && !headers["X-CSRF-Token"]) {
+      headers["X-CSRF-Token"] = token;
     }
   });
 
@@ -157,13 +159,13 @@
       input.value = el.value;
     });
     htmx.ajax("GET", url, {
+      source: el,
       target: el.getAttribute("data-panel-target"),
       swap: "innerHTML",
-      pushUrl: url,
-      indicator: el.getAttribute("data-indicator"),
+      push: url,
     });
   });
 
-  document.body.addEventListener("htmx:pushedIntoHistory", syncListFiltersFromUrl);
+  document.body.addEventListener("htmx:after:history:push", syncListFiltersFromUrl);
   syncListFiltersFromUrl();
 })();
