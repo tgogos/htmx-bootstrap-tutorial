@@ -47,8 +47,20 @@
 &gt;
   &lt;input type="hidden" name="csrf_token" value="..."&gt;
   ...
-&lt;/form&gt;</code></pre>
-<p><code>POST /ui/tutorial/books</code> reads the title, author, and year. When they are acceptable it renders <code>tutorial/saved_card.html</code> with status 200. When they are not, it renders <code>tutorial/form_error.html</code> with status 400. HTMX 4 still places that HTML into the target. A 400 used to be ignored by HTMX 2, so the message would never have appeared.</p>
+&lt;/form&gt;
+&lt;div id="add-result"&gt;&lt;/div&gt;</code></pre>
+<p><code>POST /ui/tutorial/books</code> reads the title, author, and year. When they are acceptable it renders <code>tutorial/saved_card.html</code> with status 200. When they are not, it renders <code>tutorial/form_error.html</code> with status 400. HTMX 4 still places that HTML into <code>#add-result</code>. A 400 used to be ignored by HTMX 2, so the message would never have appeared.</p>
+<p>That choice is <code>lesson_add_book</code> in <code>app/ui/tutorial_routes.py</code>. HTMX does not pick the file. It puts whichever HTML comes back into the target.</p>
+<pre class="bg-body-tertiary border rounded p-3 small mb-3"><code>payload, form_error = _parse_simple_book(title, author, year)
+if form_error or payload is None:
+    return templates.TemplateResponse(
+        request, "tutorial/form_error.html",
+        {"message": form_error}, status_code=400,
+    )
+book = await books_repo.create_book(...)
+return templates.TemplateResponse(
+    request, "tutorial/saved_card.html", {"book": book},
+)</code></pre>
 
 <h2 class="h5">Request, response, target, swap</h2>
 <ul>
