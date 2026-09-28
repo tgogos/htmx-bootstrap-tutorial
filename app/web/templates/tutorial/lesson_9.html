@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+{% block title %}Lesson 9 · Toast · Tutorial{% endblock %}
+{% block description %}A toast triggered by the response, shown by a small script{% endblock %}
+{% block content %}
+{% include "partials/tutorial_nav.html" %}
+<h1 class="h2">9. A message that is not part of the swap</h1>
+<p>Lesson 8 puts the result into <code>#practice-slot</code>. A toast is a note in the corner. It should not replace the book, so it cannot be the swapped HTML.</p>
+
+<h2 class="h5">Try it</h2>
+<div class="d-flex flex-wrap align-items-center gap-3 mb-3">
+  <button
+    type="button"
+    class="btn btn-primary"
+    hx-post="/ui/tutorial/books/{{ book.id }}/announce"
+    hx-swap="none"
+  >Show a toast</button>
+  <span class="text-body-secondary">{{ book.title }}</span>
+</div>
+
+<h2 class="h5">What changed</h2>
+<p>The button posts, and <code>hx-swap="none"</code> tells HTMX to leave the page as it is. The response body is empty. The server also sends a header, <code>HX-Trigger</code>, whose value names an event, <code>showToast</code>, and a message. HTMX fires that event. It does not know how to draw a toast.</p>
+<p>The drawing lives in <code>app/web/static/js/app.js</code>. That file is the small JavaScript island: confirm dialogs, toasts, and copying the token onto requests. The toast part listens for <code>showToast</code> and asks Bootstrap to show one. HTMX stays in charge of the request. The island only handles a widget the swap cannot express.</p>
+
+<h2 class="h5">The markup and the header</h2>
+<pre class="bg-body-tertiary border rounded p-3 small mb-3"><code>&lt;button
+  type="button"
+  hx-post="/ui/tutorial/books/{{ book.id }}/announce"
+  hx-swap="none"
+&gt;Show a toast&lt;/button&gt;</code></pre>
+<p><code>POST /ui/tutorial/books/&lt;id&gt;/announce</code> returns no HTML. Its <code>HX-Trigger</code> header looks like <code>{"showToast": {"message": "...", "level": "ok"}}</code>. There is no form around the button, so the island copies the token from the page header, the same way lesson 8's delete does.</p>
+
+<h2 class="h5">Request, response, target, swap</h2>
+<ul>
+  <li><strong>Request:</strong> <code>POST</code> the announce URL.</li>
+  <li><strong>Response:</strong> an empty body, plus the <code>HX-Trigger</code> header.</li>
+  <li><strong>Target:</strong> none that matters. Nothing is inserted.</li>
+  <li><strong>Swap:</strong> <code>none</code>. The toast is a separate event, handled by <code>app.js</code>.</li>
+</ul>
+
+<h2 class="h5">Experiment</h2>
+<p>Click the button and watch the corner of the page. Then open the announce response in the network panel. The body is empty. The message is only in the <code>HX-Trigger</code> header.</p>
+
+<p class="mt-4">
+  <a class="btn btn-outline-secondary" href="/ui/tutorial/8">Previous</a>
+</p>
+{% endblock %}

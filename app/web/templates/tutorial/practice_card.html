@@ -1,0 +1,24 @@
+<div class="card">
+  <div class="card-body">
+    <h2 class="h5 card-title">{{ book.title }}</h2>
+    <p class="card-text mb-3">{{ book.author }}</p>
+    <div class="d-flex flex-wrap gap-2">
+      <button
+        type="button"
+        class="btn btn-outline-secondary"
+        hx-get="/ui/tutorial/books/{{ book.id }}/edit"
+        hx-target="#practice-slot"
+        hx-swap="innerHTML"
+      >Edit</button>
+      <button
+        type="button"
+        class="btn btn-outline-danger js-confirm-delete"
+        data-confirm="Delete {{ book.title }}? This cannot be undone."
+        hx-delete="/ui/tutorial/books/{{ book.id }}"
+        hx-trigger="confirmed-delete"
+        hx-target="#practice-slot"
+        hx-swap="innerHTML"
+      >Delete</button>
+    </div>
+  </div>
+</div>

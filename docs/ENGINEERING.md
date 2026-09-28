@@ -16,6 +16,8 @@ Two kinds of decisions live here.
 
 The books list (`/ui/books`) is lesson material for the end of the sequence. It already uses the boilerplate list contract (`page`, `size`, allowlisted `ordering`, `innerHTML` swaps).
 
+Lessons 7–9 are the first ones that change data. They use the same editor rule and CSRF check as the books forms. Lessons 8 and 9 ensure one practice row exists (ISBN `tutorial-practice`) so edit, delete, and the toast are not aimed at a sample title. Deleting it and reloading the lesson creates it again.
+
 ### HTMX 4, and what was adjusted so the books UI still works
 
 The boilerplate shipped HTMX 2.0.4. This repo now loads 4.0.0. Books markup already puts `hx-get`, `hx-target`, and `hx-swap` on the element that makes the request, so explicit inheritance does not change those buttons. These parts did change:

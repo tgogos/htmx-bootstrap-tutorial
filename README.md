@@ -15,7 +15,7 @@ make upd
 make seed     # books for the lessons
 ```
 
-Open `/ui/tutorial` after logging in (`DEMO_USERNAME` / `DEMO_PASSWORD`, defaults `admin` / `admin123`). Lessons 1–3 fetch one book. Lessons 4–6 place that HTML, filter by category, and search as you type. The books table at `/ui/books` is the advanced example for later.
+Open `/ui/tutorial` after logging in (`DEMO_USERNAME` / `DEMO_PASSWORD`, defaults `admin` / `admin123`). Lessons 1–6 read the catalog. Lessons 7–9 add, edit, and delete a book, then show a toast. The books table at `/ui/books` is the advanced example for later.
 
 ## Lessons
 
@@ -27,8 +27,11 @@ Open `/ui/tutorial` after logging in (`DEMO_USERNAME` / `DEMO_PASSWORD`, default
 | 4 | `/ui/tutorial/4` | `hx-swap` replaces the shelf or adds another card |
 | 5 | `/ui/tutorial/5` | A category menu sends its value on `change` |
 | 6 | `/ui/tutorial/6` | Search after a pause, and cancel a slower older request |
+| 7 | `/ui/tutorial/7` | `hx-post` a form; a validation error comes back as HTML |
+| 8 | `/ui/tutorial/8` | Edit with `hx-put`; delete only after confirmation |
+| 9 | `/ui/tutorial/9` | `HX-Trigger` asks the small script to show a toast |
 
-Lessons 7–11 are listed on the tutorial home and are not built yet.
+Lessons 10–11 are listed on the tutorial home and are not built yet.
 
 ## Primary path vs demos
 

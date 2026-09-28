@@ -1,4 +1,6 @@
-"""Tutorial landing page and lessons 1–6."""
+"""Tutorial landing page and lessons 1–9."""
+
+import re
 
 from fastapi.testclient import TestClient
 
@@ -33,6 +35,9 @@ class TestTutorial:
             "/ui/tutorial/4",
             "/ui/tutorial/5",
             "/ui/tutorial/6",
+            "/ui/tutorial/7",
+            "/ui/tutorial/8",
+            "/ui/tutorial/9",
         ):
             response = client.get(path, follow_redirects=False)
             assert response.status_code == 303
@@ -48,6 +53,9 @@ class TestTutorial:
         assert 'href="/ui/tutorial/4"' in page.text
         assert 'href="/ui/tutorial/5"' in page.text
         assert 'href="/ui/tutorial/6"' in page.text
+        assert 'href="/ui/tutorial/7"' in page.text
+        assert 'href="/ui/tutorial/8"' in page.text
+        assert 'href="/ui/tutorial/9"' in page.text
         assert "books table" in page.text.lower()
 
     def test_lesson_1_is_an_ordinary_link(self, auth_client: TestClient):
@@ -136,6 +144,91 @@ class TestTutorial:
         assert slow.status_code == 200
         assert "Artificial wait" in slow.text
         assert "books list does not do this" in slow.text
+
+    def test_lesson_7_returns_html_for_a_bad_form(self, auth_client: TestClient):
+        page = auth_client.get("/ui/tutorial/7")
+        assert page.status_code == 200
+        assert 'hx-post="/ui/tutorial/books"' in page.text
+        assert 'hx-target="#add-result"' in page.text
+        assert 'name="csrf_token"' in page.text
+
+        headers = session_csrf_headers(auth_client)
+        rejected = auth_client.post(
+            "/ui/tutorial/books",
+            data={"title": "", "author": "Tutor", "year": ""},
+            headers=headers,
+        )
+        assert rejected.status_code == 400
+        assert "Title and author are required." in rejected.text
+        assert "<html" not in rejected.text.lower()
+
+        saved = auth_client.post(
+            "/ui/tutorial/books",
+            data={"title": "Tutorial Added", "author": "Tutor", "year": "nope"},
+            headers=headers,
+        )
+        assert saved.status_code == 400
+        assert "Year must be a number." in saved.text
+
+        ok = auth_client.post(
+            "/ui/tutorial/books",
+            data={"title": "Tutorial Added", "author": "Tutor", "year": "1991"},
+            headers=headers,
+        )
+        assert ok.status_code == 200
+        assert "Tutorial Added" in ok.text
+        assert "Saved." in ok.text
+        assert "<html" not in ok.text.lower()
+
+    def test_lesson_8_edits_and_deletes_the_practice_book(self, auth_client: TestClient):
+        page = auth_client.get("/ui/tutorial/8")
+        assert page.status_code == 200
+        assert 'hx-trigger="confirmed-delete"' in page.text
+        match = re.search(r'hx-delete="/ui/tutorial/books/([^"]+)"', page.text)
+        assert match is not None
+        book_id = match.group(1)
+
+        headers = session_csrf_headers(auth_client)
+        rejected = auth_client.put(
+            f"/ui/tutorial/books/{book_id}",
+            data={"title": "", "author": "Tutor"},
+            headers=headers,
+        )
+        assert rejected.status_code == 400
+        assert "Title and author are required." in rejected.text
+
+        updated = auth_client.put(
+            f"/ui/tutorial/books/{book_id}",
+            data={"title": "Practice renamed", "author": "Tutor"},
+            headers=headers,
+        )
+        assert updated.status_code == 200
+        assert "Practice renamed" in updated.text
+        assert 'hx-trigger="confirmed-delete"' in updated.text
+
+        deleted = auth_client.delete(
+            f"/ui/tutorial/books/{book_id}",
+            headers=headers,
+        )
+        assert deleted.status_code == 200
+        assert "Deleted." in deleted.text
+        assert "<html" not in deleted.text.lower()
+
+    def test_lesson_9_triggers_a_toast(self, auth_client: TestClient):
+        page = auth_client.get("/ui/tutorial/9")
+        assert page.status_code == 200
+        assert 'hx-swap="none"' in page.text
+        match = re.search(r'hx-post="/ui/tutorial/books/([^"]+)/announce"', page.text)
+        assert match is not None
+
+        announced = auth_client.post(
+            f"/ui/tutorial/books/{match.group(1)}/announce",
+            headers=session_csrf_headers(auth_client),
+        )
+        assert announced.status_code == 200
+        assert announced.text == ""
+        assert "showToast" in announced.headers["hx-trigger"]
+        assert "not in the HTML" in announced.headers["hx-trigger"]
 
     def test_books_history_restore_is_a_full_page(self, auth_client: TestClient):
         partial = auth_client.get("/ui/books", headers={"HX-Request": "true"})

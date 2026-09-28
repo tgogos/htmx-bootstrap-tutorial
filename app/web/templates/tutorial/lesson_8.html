@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% block title %}Lesson 8 · Edit · Tutorial{% endblock %}
+{% block description %}Edit and delete one practice book{% endblock %}
+{% block content %}
+{% include "partials/tutorial_nav.html" %}
+<h1 class="h2">8. Change a book, and confirm before deleting it</h1>
+<p>Lesson 7 can add a book. It cannot change one, and a delete button that fires immediately is too easy to hit.</p>
+<div class="alert alert-secondary" role="note">This page uses one practice book, ISBN <code>tutorial-practice</code>. It is created again if you delete it and reload. The sample shelf is left alone.</div>
+
+<h2 class="h5">Try it</h2>
+<div id="practice-slot" class="mb-3">
+  {% include "tutorial/practice_card.html" %}
+</div>
+<p class="small text-body-secondary">Editing and deleting require an editor or an admin. The demo login is an admin.</p>
+
+<h2 class="h5">What changed</h2>
+<p><strong>Edit</strong> is another <code>hx-get</code>. It replaces the card with a form. <strong>Save</strong> is <code>hx-put</code>, the same idea as lesson 7's post, aimed at one book. A blank title comes back as the form plus the error alert, status 400.</p>
+<p><strong>Delete</strong> does not run on click. The button listens for <code>confirmed-delete</code>. A small script already on every page (<code>app.js</code>) opens the confirm dialog when you click a button marked <code>js-confirm-delete</code>. If you confirm, that script fires <code>confirmed-delete</code> on the button, and only then does HTMX send <code>DELETE</code>. Cancel closes the dialog and sends nothing.</p>
+<p>Delete is not a form, so there is no hidden field to carry the token. The same script copies the token from the page header onto the request. Lesson 9 looks at the other half of that script.</p>
+
+<h2 class="h5">The markup</h2>
+<pre class="bg-body-tertiary border rounded p-3 small mb-3"><code>&lt;button
+  class="js-confirm-delete"
+  data-confirm="Delete ...?"
+  hx-delete="/ui/tutorial/books/{{ book.id }}"
+  hx-trigger="confirmed-delete"
+  hx-target="#practice-slot"
+  hx-swap="innerHTML"
+&gt;Delete&lt;/button&gt;</code></pre>
+<p><code>GET .../edit</code> renders <code>tutorial/book_edit.html</code>. <code>PUT /ui/tutorial/books/&lt;id&gt;</code> renders the card again, or the form with an error. <code>DELETE</code> renders <code>tutorial/deleted.html</code>.</p>
+
+<h2 class="h5">Request, response, target, swap</h2>
+<ul>
+  <li><strong>Request:</strong> <code>GET</code> the edit form, <code>PUT</code> the fields, or <code>DELETE</code> after you confirm.</li>
+  <li><strong>Response:</strong> the form, the card, or a short deleted message.</li>
+  <li><strong>Target:</strong> <code>#practice-slot</code> for all three.</li>
+  <li><strong>Swap:</strong> <code>innerHTML</code>. The confirm dialog is not a swap. It only decides whether the delete request is sent.</li>
+</ul>
+
+<h2 class="h5">Experiment</h2>
+<p>Click <strong>Delete</strong>, then <strong>Cancel</strong> in the dialog. The card should still be there, and the network panel should show no delete. Confirm on a second try, then reload the page to get the practice book back.</p>
+
+<p class="mt-4 d-flex gap-2">
+  <a class="btn btn-outline-secondary" href="/ui/tutorial/7">Previous</a>
+  <a class="btn btn-outline-secondary" href="/ui/tutorial/9">Next: a toast</a>
+</p>
+{% endblock %}

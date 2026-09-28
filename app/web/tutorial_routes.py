@@ -3,11 +3,12 @@
 from __future__ import annotations
 
 import asyncio
+import json
 
-from fastapi import APIRouter, Depends, Query, Request
+from fastapi import APIRouter, Depends, Form, Query, Request
 from fastapi.responses import HTMLResponse
 
-from app.auth.deps import require_user_html
+from app.auth.deps import require_editor_html, require_user_html, verify_csrf
 from app.db import books as books_repo
 from app.db.books import BOOK_CATEGORIES
 from app.web.books_routes import CATEGORY_LABELS
@@ -20,6 +21,9 @@ MAX_DEMO_DELAY_SECONDS = 5.0
 # A one-letter search sleeps so an older response can arrive after a newer one.
 SLOW_SHORT_QUERY_SECONDS = 1.2
 LIST_LIMIT = 8
+PRACTICE_ISBN = "tutorial-practice"
+PRACTICE_TITLE = "Practice shelf book"
+PRACTICE_AUTHOR = "Tutorial"
 
 
 def _lesson_ctx(request: Request, user: dict, lesson: int, **extra) -> dict:
@@ -31,6 +35,42 @@ def _lesson_ctx(request: Request, user: dict, lesson: int, **extra) -> dict:
 async def _first_book() -> dict | None:
     rows, _total = await books_repo.list_books(page=1, size=1, ordering="title")
     return rows[0] if rows else None
+
+
+def _parse_simple_book(
+    title: str, author: str, year: str
+) -> tuple[dict | None, str | None]:
+    title = title.strip()
+    author = author.strip()
+    if not title or not author:
+        return None, "Title and author are required."
+    year_val: int | None = None
+    if year.strip():
+        try:
+            year_val = int(year.strip())
+        except ValueError:
+            return None, "Year must be a number."
+        if year_val < 0 or year_val > 9999:
+            return None, "Year must be between 0 and 9999."
+    return {"title": title, "author": author, "year": year_val}, None
+
+
+async def _practice_book(user_id: int) -> dict:
+    """The edit/delete lessons use one row, created again if it was removed."""
+    rows, _total = await books_repo.list_books(
+        page=1, size=20, q=PRACTICE_ISBN, ordering="title"
+    )
+    for row in rows:
+        if row.get("isbn") == PRACTICE_ISBN:
+            return row
+    return await books_repo.create_book(
+        PRACTICE_TITLE,
+        PRACTICE_AUTHOR,
+        category="other",
+        isbn=PRACTICE_ISBN,
+        notes="Practice row for the tutorial. The sample shelf does not use this ISBN.",
+        added_by_user_id=user_id,
+    )
 
 
 @router.get("/tutorial", response_class=HTMLResponse)
@@ -194,14 +234,190 @@ async def lesson_book_card(
         le=MAX_DEMO_DELAY_SECONDS,
         description="Artificial wait, in seconds, so the indicator lesson is visible.",
     ),
+    panel: str = Query(""),
 ):
     """HTML fragment. A non-zero delay exists only so lesson 3 can show a spinner."""
     if delay:
         await asyncio.sleep(delay)
     book = await books_repo.get_book(book_id)
+    template = (
+        "tutorial/practice_card.html" if panel == "practice" else "tutorial/book_card.html"
+    )
     return templates.TemplateResponse(
         request,
-        "tutorial/book_card.html",
+        template,
         {"book": book, "delay": delay},
         status_code=200 if book else 404,
     )
+
+
+@router.get("/tutorial/7", response_class=HTMLResponse)
+async def lesson_add(
+    request: Request,
+    user: dict = Depends(require_user_html),
+):
+    return templates.TemplateResponse(
+        request,
+        "tutorial/lesson_7.html",
+        _lesson_ctx(request, user, 7),
+    )
+
+
+@router.post(
+    "/tutorial/books",
+    response_class=HTMLResponse,
+    dependencies=[Depends(verify_csrf)],
+)
+async def lesson_add_book(
+    request: Request,
+    _user: dict = Depends(require_editor_html),
+    title: str = Form(""),
+    author: str = Form(""),
+    year: str = Form(""),
+):
+    payload, form_error = _parse_simple_book(title, author, year)
+    if form_error or payload is None:
+        return templates.TemplateResponse(
+            request,
+            "tutorial/form_error.html",
+            {"message": form_error or "Title and author are required."},
+            status_code=400,
+        )
+    book = await books_repo.create_book(
+        payload["title"],
+        payload["author"],
+        year=payload["year"],
+        category="other",
+        added_by_user_id=_user["id"],
+    )
+    return templates.TemplateResponse(
+        request,
+        "tutorial/saved_card.html",
+        {"book": book},
+    )
+
+
+@router.get("/tutorial/8", response_class=HTMLResponse)
+async def lesson_edit(
+    request: Request,
+    user: dict = Depends(require_user_html),
+):
+    book = await _practice_book(user["id"])
+    return templates.TemplateResponse(
+        request,
+        "tutorial/lesson_8.html",
+        _lesson_ctx(request, user, 8, book=book),
+    )
+
+
+@router.get("/tutorial/books/{book_id}/edit", response_class=HTMLResponse)
+async def lesson_edit_form(
+    request: Request,
+    book_id: str,
+    user: dict = Depends(require_editor_html),
+):
+    book = await books_repo.get_book(book_id)
+    if book is None:
+        return HTMLResponse("That book is not in the catalog.", status_code=404)
+    return templates.TemplateResponse(
+        request,
+        "tutorial/book_edit.html",
+        {
+            "book": book,
+            "csrf_token": _lesson_ctx(request, user, 8)["csrf_token"],
+            "message": None,
+        },
+    )
+
+
+@router.put(
+    "/tutorial/books/{book_id}",
+    response_class=HTMLResponse,
+    dependencies=[Depends(verify_csrf)],
+)
+async def lesson_update_book(
+    request: Request,
+    book_id: str,
+    user: dict = Depends(require_editor_html),
+    title: str = Form(""),
+    author: str = Form(""),
+):
+    existing = await books_repo.get_book(book_id)
+    if existing is None:
+        return HTMLResponse("That book is not in the catalog.", status_code=404)
+    payload, form_error = _parse_simple_book(title, author, "")
+    csrf_token = _lesson_ctx(request, user, 8)["csrf_token"]
+    if form_error or payload is None:
+        draft = {**existing, "title": title, "author": author}
+        return templates.TemplateResponse(
+            request,
+            "tutorial/book_edit.html",
+            {"book": draft, "csrf_token": csrf_token, "message": form_error},
+            status_code=400,
+        )
+    book = await books_repo.update_book(
+        book_id,
+        title=payload["title"],
+        author=payload["author"],
+    )
+    return templates.TemplateResponse(
+        request,
+        "tutorial/practice_card.html",
+        {"book": book, "csrf_token": csrf_token},
+    )
+
+
+@router.delete(
+    "/tutorial/books/{book_id}",
+    response_class=HTMLResponse,
+    dependencies=[Depends(verify_csrf)],
+)
+async def lesson_delete_book(
+    request: Request,
+    book_id: str,
+    _user: dict = Depends(require_editor_html),
+):
+    deleted = await books_repo.delete_book(book_id)
+    return templates.TemplateResponse(
+        request,
+        "tutorial/deleted.html",
+        {"deleted": deleted},
+        status_code=200 if deleted else 404,
+    )
+
+
+@router.get("/tutorial/9", response_class=HTMLResponse)
+async def lesson_toast(
+    request: Request,
+    user: dict = Depends(require_user_html),
+):
+    book = await _practice_book(user["id"])
+    return templates.TemplateResponse(
+        request,
+        "tutorial/lesson_9.html",
+        _lesson_ctx(request, user, 9, book=book),
+    )
+
+
+@router.post(
+    "/tutorial/books/{book_id}/announce",
+    response_class=HTMLResponse,
+    dependencies=[Depends(verify_csrf)],
+)
+async def lesson_announce(
+    book_id: str,
+    _user: dict = Depends(require_editor_html),
+):
+    book = await books_repo.get_book(book_id)
+    if book is None:
+        return HTMLResponse("That book is not in the catalog.", status_code=404)
+    response = HTMLResponse("")
+    response.headers["HX-Trigger"] = json.dumps(
+        {
+            "showToast": {
+                "message": "Noted this book. The message was not in the HTML.",
+                "level": "ok",
+            }
+        }
+    )
+    return response

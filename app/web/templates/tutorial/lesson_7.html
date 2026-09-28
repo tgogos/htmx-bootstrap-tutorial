@@ -1,0 +1,68 @@
+{% extends "layout.html" %}
+{% block title %}Lesson 7 · Add · Tutorial{% endblock %}
+{% block description %}Add a book and show a validation error as HTML{% endblock %}
+{% block content %}
+{% include "partials/tutorial_nav.html" %}
+<h1 class="h2">7. Send a form, and get HTML back when it is wrong</h1>
+<p>Lessons 1–6 only read the catalog. This form asks the server to save a book. If the form is incomplete, the server refuses and still sends HTML that explains why.</p>
+
+<h2 class="h5">Try it</h2>
+<form
+  class="mb-3"
+  style="max-width: 32rem;"
+  hx-post="/ui/tutorial/books"
+  hx-target="#add-result"
+  hx-swap="innerHTML"
+  hx-trigger="submit"
+>
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+  <div class="mb-3">
+    <label class="form-label" for="add-title">Title</label>
+    <input class="form-control" id="add-title" type="text" name="title" maxlength="200" autocomplete="off">
+  </div>
+  <div class="mb-3">
+    <label class="form-label" for="add-author">Author</label>
+    <input class="form-control" id="add-author" type="text" name="author" maxlength="200" autocomplete="off">
+  </div>
+  <div class="mb-3">
+    <label class="form-label" for="add-year">Year</label>
+    <input class="form-control" id="add-year" type="text" name="year" inputmode="numeric" autocomplete="off">
+  </div>
+  <button class="btn btn-primary" type="submit">Save book</button>
+</form>
+<div id="add-result" class="mb-3">
+  <p class="text-body-secondary mb-0">A saved book, or an error, will appear here. The form stays put.</p>
+</div>
+<p class="small text-body-secondary">Saving requires an editor or an admin. The demo login is an admin.</p>
+
+<h2 class="h5">What changed</h2>
+<p>The request is <code>hx-post</code>, not <code>hx-get</code>. A form's default trigger is <code>submit</code>, written out here so you can see it. The fields travel in the body, including a hidden <code>csrf_token</code>. That value was already on the page. The server checks it so some other site cannot submit this form as you. The form is outside <code>#add-result</code>, so an error does not wipe out what you typed.</p>
+
+<h2 class="h5">The markup and the response</h2>
+<pre class="bg-body-tertiary border rounded p-3 small mb-3"><code>&lt;form
+  hx-post="/ui/tutorial/books"
+  hx-target="#add-result"
+  hx-swap="innerHTML"
+  hx-trigger="submit"
+&gt;
+  &lt;input type="hidden" name="csrf_token" value="..."&gt;
+  ...
+&lt;/form&gt;</code></pre>
+<p><code>POST /ui/tutorial/books</code> reads the title, author, and year. When they are acceptable it renders <code>tutorial/saved_card.html</code> with status 200. When they are not, it renders <code>tutorial/form_error.html</code> with status 400. HTMX 4 still places that HTML into the target. A 400 used to be ignored by HTMX 2, so the message would never have appeared.</p>
+
+<h2 class="h5">Request, response, target, swap</h2>
+<ul>
+  <li><strong>Request:</strong> <code>POST /ui/tutorial/books</code> with the form fields.</li>
+  <li><strong>Response:</strong> a card when the book is saved, or an alert when it is not. The alert comes with status 400.</li>
+  <li><strong>Target:</strong> <code>#add-result</code>.</li>
+  <li><strong>Swap:</strong> <code>innerHTML</code>.</li>
+</ul>
+
+<h2 class="h5">Experiment</h2>
+<p>Leave the title blank and save. In the network panel the status is 400, and the alert still shows up in the page. Then fill in a title and author, put a word in Year, and save again.</p>
+
+<p class="mt-4 d-flex gap-2">
+  <a class="btn btn-outline-secondary" href="/ui/tutorial/6">Previous</a>
+  <a class="btn btn-outline-secondary" href="/ui/tutorial/8">Next: edit and delete</a>
+</p>
+{% endblock %}
