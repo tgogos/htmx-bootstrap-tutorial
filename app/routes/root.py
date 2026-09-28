@@ -30,7 +30,7 @@ async def root():
 )
 async def health():
     """
-    An easy way to get back information about the status of FastAPI HTMX Starter
+    An easy way to get back information about the status of FastAPI HTMX Bootstrap
     """
     from app.utils.mongo import check_database_connection
     from app.db.connection import check_sqlite_connection

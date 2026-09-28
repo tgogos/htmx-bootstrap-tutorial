@@ -223,7 +223,7 @@ wheels = [
 ]
 
 [[package]]
-name = "fastapi-htmx-starter"
+name = "fastapi-htmx-bootstrap"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [

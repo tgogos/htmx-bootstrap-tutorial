@@ -112,7 +112,7 @@ app/
   auth/     # passwords, users, tokens, deps
   db/       # SQLite connection + schema (primary)
   routes/   # JSON API (/api/..., demos)
-  web/      # HTML/HTMX templates + Bootstrap static
+  ui/       # HTML/HTMX templates + Bootstrap static
   models/   # Pydantic schemas
   core/     # settings + logging
 docs/
