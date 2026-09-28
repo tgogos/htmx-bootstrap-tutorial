@@ -1,0 +1,22 @@
+<p class="mb-2">
+  <a class="btn btn-sm {% if ordering == 'title' %}btn-primary{% else %}btn-outline-secondary{% endif %}" href="{{ title_url }}" hx-get="{{ title_url }}" hx-target="#shelf" hx-swap="innerHTML" hx-push-url="true">Sort by title</a>
+  <a class="btn btn-sm {% if ordering == 'author' %}btn-primary{% else %}btn-outline-secondary{% endif %}" href="{{ author_url }}" hx-get="{{ author_url }}" hx-target="#shelf" hx-swap="innerHTML" hx-push-url="true">Sort by author</a>
+</p>
+{% if books %}
+<ol class="mb-3">
+  {% for book in books %}
+  <li>{{ book.title }} <span class="text-body-secondary">— {{ book.author }}</span></li>
+  {% endfor %}
+</ol>
+{% else %}
+<p class="text-body-secondary">The catalog is empty. Run <code>make seed</code>, then reload this page.</p>
+{% endif %}
+<p class="text-body-secondary small mb-2">{{ total }} {% if total == 1 %}book{% else %}books{% endif %}{% if total_pages %} · page {{ page }} of {{ total_pages }}{% endif %}. Sorted by {{ ordering }}.</p>
+<p class="d-flex gap-2 mb-0">
+  {% if prev_url %}
+  <a class="btn btn-outline-secondary" href="{{ prev_url }}" hx-get="{{ prev_url }}" hx-target="#shelf" hx-swap="innerHTML" hx-push-url="true">Previous</a>
+  {% endif %}
+  {% if next_url %}
+  <a class="btn btn-outline-secondary" href="{{ next_url }}" hx-get="{{ next_url }}" hx-target="#shelf" hx-swap="innerHTML" hx-push-url="true">Next</a>
+  {% endif %}
+</p>

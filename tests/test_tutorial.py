@@ -1,4 +1,4 @@
-"""Tutorial landing page and lessons 1–9."""
+"""Tutorial landing page and lessons 1–11."""
 
 import re
 
@@ -13,12 +13,13 @@ def _create_book(
     auth_client: TestClient,
     title: str = "Lesson Book",
     *,
+    author: str = "Tutor",
     category: str = "other",
 ) -> str:
     headers = session_csrf_headers(auth_client)
     created = auth_client.post(
         f"{API_BOOKS}/",
-        json={"title": title, "author": "Tutor", "year": 1991, "category": category},
+        json={"title": title, "author": author, "year": 1991, "category": category},
         headers=headers,
     )
     assert created.status_code == 201
@@ -38,6 +39,8 @@ class TestTutorial:
             "/ui/tutorial/7",
             "/ui/tutorial/8",
             "/ui/tutorial/9",
+            "/ui/tutorial/10",
+            "/ui/tutorial/11",
         ):
             response = client.get(path, follow_redirects=False)
             assert response.status_code == 303
@@ -56,6 +59,8 @@ class TestTutorial:
         assert 'href="/ui/tutorial/7"' in page.text
         assert 'href="/ui/tutorial/8"' in page.text
         assert 'href="/ui/tutorial/9"' in page.text
+        assert 'href="/ui/tutorial/10"' in page.text
+        assert 'href="/ui/tutorial/11"' in page.text
         assert "books table" in page.text.lower()
 
     def test_lesson_1_is_an_ordinary_link(self, auth_client: TestClient):
@@ -229,6 +234,59 @@ class TestTutorial:
         assert announced.text == ""
         assert "showToast" in announced.headers["hx-trigger"]
         assert "not in the HTML" in announced.headers["hx-trigger"]
+
+    def test_lesson_10_pushes_a_url_and_restores_a_full_page(self, auth_client: TestClient):
+        for number in range(1, 7):
+            _create_book(
+                auth_client,
+                title=f"Shelf {number:02d}",
+                author=f"Author {7 - number:02d}",
+            )
+        page = auth_client.get("/ui/tutorial/10")
+        assert page.status_code == 200
+        assert "<html" in page.text.lower()
+        assert 'hx-push-url="true"' in page.text
+        assert "Shelf 01" in page.text
+        assert "Shelf 06" not in page.text
+
+        nxt = auth_client.get(
+            "/ui/tutorial/10",
+            params={"page": 2, "ordering": "title"},
+            headers={"HX-Request": "true"},
+        )
+        assert nxt.status_code == 200
+        assert "<html" not in nxt.text.lower()
+        assert "Shelf 06" in nxt.text
+        assert "Shelf 01" not in nxt.text
+
+        by_author = auth_client.get(
+            "/ui/tutorial/10",
+            params={"ordering": "author"},
+            headers={"HX-Request": "true"},
+        )
+        assert by_author.status_code == 200
+        assert by_author.text.index("Shelf 06") < by_author.text.index("Shelf 02")
+        assert "Shelf 01" not in by_author.text
+
+        restored = auth_client.get(
+            "/ui/tutorial/10",
+            params={"page": 2, "ordering": "title"},
+            headers={
+                "HX-Request": "true",
+                "HX-History-Restore-Request": "true",
+            },
+        )
+        assert restored.status_code == 200
+        assert "<html" in restored.text.lower()
+        assert "Shelf 06" in restored.text
+        assert "Put the page in the address bar" in restored.text
+
+    def test_lesson_11_points_at_the_books_table(self, auth_client: TestClient):
+        page = auth_client.get("/ui/tutorial/11")
+        assert page.status_code == 200
+        assert 'hx-get="/ui/books"' in page.text
+        assert 'href="/ui/books"' in page.text
+        assert "HX-History-Restore-Request" in page.text
 
     def test_books_history_restore_is_a_full_page(self, auth_client: TestClient):
         partial = auth_client.get("/ui/books", headers={"HX-Request": "true"})

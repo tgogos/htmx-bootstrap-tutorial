@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+{% block title %}Lesson 11 · Books table · Tutorial{% endblock %}
+{% block description %}Full page versus fragment, then the books table{% endblock %}
+{% block content %}
+{% include "partials/tutorial_nav.html" %}
+<h1 class="h2">11. The books table is the same ideas, together</h1>
+<p>Lesson 10's shelf is a small list with an address. <a href="/ui/books">Books</a> is that pattern with search, more columns, editing, and a toast. One route serves both the full page and the fragment.</p>
+
+<h2 class="h5">Try it</h2>
+<p class="d-flex flex-wrap gap-2">
+  <a class="btn btn-primary" href="/ui/books">Open the books table</a>
+  <button
+    type="button"
+    class="btn btn-outline-primary"
+    hx-get="/ui/books"
+    hx-target="#books-fragment"
+    hx-swap="innerHTML"
+  >Fetch only the table fragment</button>
+</p>
+<div id="books-fragment" class="mb-3 border-top pt-3">
+  <p class="text-body-secondary mb-0">The fragment will appear here. It has no sidebar, because it is not a page.</p>
+</div>
+
+<h2 class="h5">What changed</h2>
+<p>Nothing new is invented here. The button is lesson 2: <code>hx-get</code> a URL and swap the response. The link is lesson 1: the same URL, as a full page. <code>app/web/books_routes.py</code> chooses. <code>_wants_books_partial</code> returns the table fragment when <code>HX-Request</code> is set, and <code>books.html</code> when you open the address or when <code>HX-History-Restore-Request</code> is set. That is the lesson 10 rule, on <code>/ui/books</code>.</p>
+
+<h2 class="h5">Where each earlier lesson shows up</h2>
+<ul>
+  <li><strong>Search.</strong> <code>templates/books.html</code> keeps the search box outside <code>#books-panel</code>. The trigger is <code>keyup changed delay:300ms</code>, and <code>hx-push-url</code> puts the query in the address. Lesson 6, plus lesson 10.</li>
+  <li><strong>Sort and pages.</strong> <code>partials/sortable_th.html</code> and <code>partials/list_pagination.html</code> are links with <code>href</code>, <code>hx-get</code>, and <code>hx-push-url</code>, aimed at <code>#books-panel</code>. Ordering is an allowlisted name such as <code>title</code> or <code>-author</code>. The leading minus means descending. Lesson 10.</li>
+  <li><strong>Rows per page.</strong> The size menu is not a link. <code>app.js</code> calls <code>htmx.ajax</code> when it changes, and the menu carries <code>hx-indicator</code>. Lessons 3 and 9: a small script where a swap is not enough.</li>
+  <li><strong>Add.</strong> The form posts to <code>/ui/books</code> and targets <code>#books-panel</code>. A bad form returns the table HTML with status 400, which HTMX 4 still shows. Lesson 7.</li>
+  <li><strong>Edit and delete.</strong> <code>partials/book_row.html</code> loads an edit form with <code>hx-swap="outerHTML"</code>, and delete waits for <code>confirmed-delete</code>. The delete response sets <code>HX-Trigger</code> so <code>app.js</code> shows a toast. Lessons 8 and 9.</li>
+</ul>
+
+<h2 class="h5">Request, response, target, swap</h2>
+<ul>
+  <li><strong>Request:</strong> <code>GET /ui/books</code> from the button, or the same URL from the link.</li>
+  <li><strong>Response:</strong> <code>partials/books_table.html</code> for the button. <code>books.html</code>, the whole shell, for the link.</li>
+  <li><strong>Target:</strong> <code>#books-fragment</code> on this page. On the books page itself, swaps go to <code>#books-panel</code>.</li>
+  <li><strong>Swap:</strong> <code>innerHTML</code>.</li>
+</ul>
+
+<h2 class="h5">Experiment</h2>
+<p>Click the button and confirm the response has a table and no sidebar. Then open <a href="/ui/books?page=2&amp;ordering=author">/ui/books?page=2&amp;ordering=author</a>. Click another column, then press Back. The address and the table should both return to author order, page 2.</p>
+
+<p class="mt-4">
+  <a class="btn btn-outline-secondary" href="/ui/tutorial/10">Previous</a>
+</p>
+{% endblock %}

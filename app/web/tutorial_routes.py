@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+from urllib.parse import urlencode
 
 from fastapi import APIRouter, Depends, Form, Query, Request
 from fastapi.responses import HTMLResponse
@@ -21,6 +22,8 @@ MAX_DEMO_DELAY_SECONDS = 5.0
 # A one-letter search sleeps so an older response can arrive after a newer one.
 SLOW_SHORT_QUERY_SECONDS = 1.2
 LIST_LIMIT = 8
+SHELF_SIZE = 5
+SHELF_ORDERINGS = frozenset({"title", "author"})
 PRACTICE_ISBN = "tutorial-practice"
 PRACTICE_TITLE = "Practice shelf book"
 PRACTICE_AUTHOR = "Tutorial"
@@ -71,6 +74,41 @@ async def _practice_book(user_id: int) -> dict:
         notes="Practice row for the tutorial. The sample shelf does not use this ISBN.",
         added_by_user_id=user_id,
     )
+
+
+def _wants_fragment(request: Request) -> bool:
+    """A history restore must get the full page. A normal HTMX swap gets the shelf."""
+    if request.headers.get("HX-History-Restore-Request") == "true":
+        return False
+    return request.headers.get("HX-Request") == "true"
+
+
+def _shelf_url(page: int, ordering: str) -> str:
+    return "/ui/tutorial/10?" + urlencode({"page": page, "ordering": ordering})
+
+
+async def _shelf_data(page: int, ordering: str | None) -> dict:
+    chosen = ordering if ordering in SHELF_ORDERINGS else "title"
+    rows, total = await books_repo.list_books(
+        page=page, size=SHELF_SIZE, ordering=chosen
+    )
+    pages = books_repo.total_pages(total, SHELF_SIZE)
+    if pages and page > pages:
+        page = pages
+        rows, total = await books_repo.list_books(
+            page=page, size=SHELF_SIZE, ordering=chosen
+        )
+    return {
+        "books": rows,
+        "page": page,
+        "total": total,
+        "total_pages": pages,
+        "ordering": chosen,
+        "prev_url": _shelf_url(page - 1, chosen) if page > 1 else None,
+        "next_url": _shelf_url(page + 1, chosen) if pages and page < pages else None,
+        "title_url": _shelf_url(1, "title"),
+        "author_url": _shelf_url(1, "author"),
+    }
 
 
 @router.get("/tutorial", response_class=HTMLResponse)
@@ -421,3 +459,31 @@ async def lesson_announce(
         }
     )
     return response
+
+
+@router.get("/tutorial/10", response_class=HTMLResponse)
+async def lesson_pages(
+    request: Request,
+    user: dict = Depends(require_user_html),
+    page: int = Query(1, ge=1),
+    ordering: str | None = Query(None),
+):
+    data = await _shelf_data(page, ordering)
+    template = "tutorial/shelf.html" if _wants_fragment(request) else "tutorial/lesson_10.html"
+    return templates.TemplateResponse(
+        request,
+        template,
+        _lesson_ctx(request, user, 10, **data),
+    )
+
+
+@router.get("/tutorial/11", response_class=HTMLResponse)
+async def lesson_table(
+    request: Request,
+    user: dict = Depends(require_user_html),
+):
+    return templates.TemplateResponse(
+        request,
+        "tutorial/lesson_11.html",
+        _lesson_ctx(request, user, 11),
+    )
