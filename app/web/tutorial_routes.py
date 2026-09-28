@@ -9,12 +9,17 @@ from fastapi.responses import HTMLResponse
 
 from app.auth.deps import require_user_html
 from app.db import books as books_repo
+from app.db.books import BOOK_CATEGORIES
+from app.web.books_routes import CATEGORY_LABELS
 from app.web.pages_routes import shell_ctx, templates
 
 router = APIRouter()
 
-# Only the tutorial card uses this wait. The books list does not.
+# Only tutorial endpoints use these waits. The books list does not.
 MAX_DEMO_DELAY_SECONDS = 5.0
+# A one-letter search sleeps so an older response can arrive after a newer one.
+SLOW_SHORT_QUERY_SECONDS = 1.2
+LIST_LIMIT = 8
 
 
 def _lesson_ctx(request: Request, user: dict, lesson: int, **extra) -> dict:
@@ -73,6 +78,93 @@ async def lesson_indicator(
         request,
         "tutorial/lesson_3.html",
         _lesson_ctx(request, user, 3, book=await _first_book()),
+    )
+
+
+@router.get("/tutorial/4", response_class=HTMLResponse)
+async def lesson_swap(
+    request: Request,
+    user: dict = Depends(require_user_html),
+):
+    return templates.TemplateResponse(
+        request,
+        "tutorial/lesson_4.html",
+        _lesson_ctx(request, user, 4, book=await _first_book()),
+    )
+
+
+@router.get("/tutorial/5", response_class=HTMLResponse)
+async def lesson_trigger(
+    request: Request,
+    user: dict = Depends(require_user_html),
+):
+    categories = [
+        (key, CATEGORY_LABELS[key]) for key in sorted(BOOK_CATEGORIES)
+    ]
+    return templates.TemplateResponse(
+        request,
+        "tutorial/lesson_5.html",
+        _lesson_ctx(request, user, 5, categories=categories),
+    )
+
+
+@router.get("/tutorial/6", response_class=HTMLResponse)
+async def lesson_search(
+    request: Request,
+    user: dict = Depends(require_user_html),
+):
+    return templates.TemplateResponse(
+        request,
+        "tutorial/lesson_6.html",
+        _lesson_ctx(request, user, 6),
+    )
+
+
+@router.get("/tutorial/books", response_class=HTMLResponse)
+async def lesson_book_list(
+    request: Request,
+    _user: dict = Depends(require_user_html),
+    category: str | None = Query(None),
+    q: str | None = Query(None),
+    slow: int = Query(
+        0,
+        ge=0,
+        le=1,
+        description="When 1, a one-letter search waits so lesson 6 can show a stale response.",
+    ),
+):
+    """HTML fragment: a short title list. Not the books table."""
+    chosen = (category or "").strip() or None
+    query = (q or "").strip() or None
+    delay = 0.0
+    if slow and query is not None and len(query) <= 1:
+        delay = SLOW_SHORT_QUERY_SECONDS
+        await asyncio.sleep(delay)
+
+    unknown_category = chosen is not None and chosen not in BOOK_CATEGORIES
+    books: list[dict] = []
+    total = 0
+    if not unknown_category and (chosen or query):
+        books, total = await books_repo.list_books(
+            page=1,
+            size=LIST_LIMIT,
+            q=query,
+            category=chosen,
+            ordering="title",
+        )
+
+    return templates.TemplateResponse(
+        request,
+        "tutorial/book_list.html",
+        {
+            "books": books,
+            "total": total,
+            "q": query,
+            "category_label": CATEGORY_LABELS.get(chosen) if chosen else None,
+            "unknown_category": unknown_category,
+            "delay": delay,
+            "limited": total > LIST_LIMIT,
+        },
     )
 
 

@@ -1,0 +1,22 @@
+{% if unknown_category %}
+<p class="mb-0">That category is not in the catalog.</p>
+{% elif not q and not category_label %}
+<p class="text-body-secondary mb-0">Choose a category, or type a title or an author.</p>
+{% elif books %}
+<ul class="list-group mb-2">
+  {% for book in books %}
+  <li class="list-group-item">{{ book.title }} <span class="text-body-secondary">— {{ book.author }}</span></li>
+  {% endfor %}
+</ul>
+<p class="small text-body-secondary mb-0">
+  {{ total }} {% if total == 1 %}book{% else %}books{% endif %}
+  {% if q %}matching “{{ q }}”{% endif %}
+  {% if category_label %}in {{ category_label }}{% endif %}
+  {% if limited %}. Showing the first {{ books|length }}{% endif %}.
+</p>
+{% else %}
+<p class="mb-0">No books match{% if q %} “{{ q }}”{% endif %}{% if category_label %} in {{ category_label }}{% endif %}.</p>
+{% endif %}
+{% if delay %}
+<p class="small text-body-secondary mb-0">Artificial wait: this fragment was held for {{ delay }} seconds so an older search can finish last. The books list does not do this.</p>
+{% endif %}

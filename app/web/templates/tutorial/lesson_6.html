@@ -1,0 +1,80 @@
+{% extends "layout.html" %}
+{% block title %}Lesson 6 · Search · Tutorial{% endblock %}
+{% block description %}Search as you type, and cancel a slower older request{% endblock %}
+{% block content %}
+{% include "partials/tutorial_nav.html" %}
+<h1 class="h2">6. Search as you type</h1>
+<p>Lesson 5 waits until you finish choosing. A search box should update while you type, but not on every key, and not with an answer for a query you have already moved past.</p>
+<div class="alert alert-secondary" role="note">On this page a one-letter search is held for 1.2 seconds on purpose, so you can see an older answer arrive last. The books list does not sleep.</div>
+
+<h2 class="h5">Try it</h2>
+<div class="row g-4 mb-3">
+  <div class="col-md-6">
+    <label class="form-label" for="stale-q">Older answers can overwrite newer ones</label>
+    <input
+      id="stale-q"
+      class="form-control"
+      type="search"
+      name="q"
+      placeholder="Type a, pause, then type more"
+      hx-get="/ui/tutorial/books?slow=1"
+      hx-trigger="keyup changed delay:300ms, search"
+      hx-target="#stale-results"
+      hx-swap="innerHTML"
+      autocomplete="off"
+    >
+    <div id="stale-results" class="mt-2">
+      <p class="text-body-secondary mb-0">This box does not cancel the previous search.</p>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <label class="form-label" for="fresh-q">The previous search is cancelled</label>
+    <input
+      id="fresh-q"
+      class="form-control"
+      type="search"
+      name="q"
+      placeholder="Same typing, with hx-sync"
+      hx-get="/ui/tutorial/books?slow=1"
+      hx-trigger="keyup changed delay:300ms, search"
+      hx-target="#fresh-results"
+      hx-swap="innerHTML"
+      hx-sync="this:replace"
+      autocomplete="off"
+    >
+    <div id="fresh-results" class="mt-2">
+      <p class="text-body-secondary mb-0">This box drops an in-flight search when you type again.</p>
+    </div>
+  </div>
+</div>
+
+<h2 class="h5">What changed</h2>
+<p>The new piece on both boxes is <code>hx-trigger</code>. <code>keyup changed delay:300ms</code> waits until you pause, and it skips the request when the text did not change (arrow keys, for example). The <code>search</code> event covers the clear button on a search field. The second box adds one attribute: <code>hx-sync="this:replace"</code>. That aborts the request already running on this input and starts the new one. Without it, both requests finish, and whichever response arrives last is what you see — even if that response is for an older, shorter query.</p>
+
+<h2 class="h5">The markup</h2>
+<pre class="bg-body-tertiary border rounded p-3 small mb-3"><code>&lt;input
+  type="search"
+  name="q"
+  hx-get="/ui/tutorial/books?slow=1"
+  hx-trigger="keyup changed delay:300ms, search"
+  hx-target="#fresh-results"
+  hx-swap="innerHTML"
+  hx-sync="this:replace"
+&gt;</code></pre>
+<p>The route is the same list as lesson 5. <code>name="q"</code> adds the text you typed. <code>slow=1</code> is only for this lesson: a query of one character sleeps 1.2 seconds, and the fragment says so. The input stays outside the target, so the response cannot wipe out the letters you are still typing.</p>
+
+<h2 class="h5">Request, response, target, swap</h2>
+<ul>
+  <li><strong>Request:</strong> <code>GET /ui/tutorial/books?slow=1&amp;q=...</code> after a 300ms pause.</li>
+  <li><strong>Response:</strong> the title list. A one-letter search also includes the artificial-wait line.</li>
+  <li><strong>Target:</strong> the results element under that box, not the input.</li>
+  <li><strong>Swap:</strong> <code>innerHTML</code>. <code>hx-sync</code> is not a swap. It decides whether the previous request is allowed to finish.</li>
+</ul>
+
+<h2 class="h5">Experiment</h2>
+<p>In the left box, type <kbd>a</kbd>, wait until the request starts, then type <kbd>nimal</kbd> and pause again. You may see matches for "animal" and then the one-letter list replace them, because the slow response finishes last. Do the same in the right box. The one-letter request is cancelled, so that late list does not appear.</p>
+
+<p class="mt-4">
+  <a class="btn btn-outline-secondary" href="/ui/tutorial/5">Previous</a>
+</p>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+{% block title %}Lesson 5 · Trigger · Tutorial{% endblock %}
+{% block description %}A category menu that fetches a book list{% endblock %}
+{% block content %}
+{% include "partials/tutorial_nav.html" %}
+<h1 class="h2">5. Let a control fire the request</h1>
+<p>Lessons 2–4 wait for a click, and they always ask for the same book. A menu can start the request when its value changes, and that value can go along with the request.</p>
+
+<h2 class="h5">Try it</h2>
+<div class="mb-3" style="max-width: 24rem;">
+  <label class="form-label" for="category">Category</label>
+  <select
+    id="category"
+    name="category"
+    class="form-select"
+    hx-get="/ui/tutorial/books"
+    hx-target="#category-results"
+    hx-swap="innerHTML"
+    hx-trigger="change"
+  >
+    <option value="">Choose a category</option>
+    {% for key, label in categories %}
+    <option value="{{ key }}">{{ label }}</option>
+    {% endfor %}
+  </select>
+</div>
+<div id="category-results" class="mb-3">
+  <p class="text-body-secondary mb-0">Titles in the chosen category will appear here.</p>
+</div>
+
+<h2 class="h5">What changed</h2>
+<p>The control is a <code>select</code>, not a button. <code>hx-trigger="change"</code> means "send the request when the choice changes." For a <code>select</code>, <code>input</code>, or <code>textarea</code>, that is already the default, so writing it out is for you to see. A button's default is <code>click</code>. The <code>name="category"</code> attribute is what puts the chosen value on the URL as <code>?category=fiction</code>.</p>
+
+<h2 class="h5">The markup and the fragment</h2>
+<pre class="bg-body-tertiary border rounded p-3 small mb-3"><code>&lt;select
+  name="category"
+  hx-get="/ui/tutorial/books"
+  hx-target="#category-results"
+  hx-swap="innerHTML"
+  hx-trigger="change"
+&gt;...&lt;/select&gt;</code></pre>
+<p><code>GET /ui/tutorial/books</code> renders <code>tutorial/book_list.html</code>: a short list of titles, not the books table. The menu stays outside <code>#category-results</code>, so the response does not replace the control you are using.</p>
+
+<h2 class="h5">Request, response, target, swap</h2>
+<ul>
+  <li><strong>Request:</strong> <code>GET /ui/tutorial/books?category=...</code> when the menu changes.</li>
+  <li><strong>Response:</strong> an HTML list of matching titles.</li>
+  <li><strong>Target:</strong> <code>#category-results</code>.</li>
+  <li><strong>Swap:</strong> <code>innerHTML</code>, the same replacement as lesson 2.</li>
+</ul>
+
+<h2 class="h5">Experiment</h2>
+<p>In the inspector, delete <code>hx-trigger</code> and change the category again. It still fetches, because <code>change</code> is the default for a menu. Then set <code>hx-trigger="click"</code> and open the menu: the request fires on the click, before you have picked a new category.</p>
+
+<p class="mt-4 d-flex gap-2">
+  <a class="btn btn-outline-secondary" href="/ui/tutorial/4">Previous</a>
+  <a class="btn btn-outline-secondary" href="/ui/tutorial/6">Next: search as you type</a>
+</p>
+{% endblock %}

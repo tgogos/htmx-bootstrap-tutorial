@@ -1,0 +1,60 @@
+{% extends "layout.html" %}
+{% block title %}Lesson 4 · Swap · Tutorial{% endblock %}
+{% block description %}Replace or append a book card{% endblock %}
+{% block content %}
+{% include "partials/tutorial_nav.html" %}
+<h1 class="h2">4. Decide where the HTML goes</h1>
+<p>Lesson 2 always replaces whatever is in the slot. <code>hx-swap</code> is the instruction for where the response goes relative to the target. The request and the card stay the same.</p>
+
+<h2 class="h5">Try it</h2>
+{% if book %}
+<p class="d-flex flex-wrap gap-2">
+  <button
+    type="button"
+    class="btn btn-primary"
+    hx-get="/ui/tutorial/books/{{ book.id }}/card"
+    hx-target="#book-shelf"
+    hx-swap="innerHTML"
+  >Replace</button>
+  <button
+    type="button"
+    class="btn btn-outline-primary"
+    hx-get="/ui/tutorial/books/{{ book.id }}/card"
+    hx-target="#book-shelf"
+    hx-swap="beforeend"
+  >Add to the shelf</button>
+</p>
+<div id="book-shelf" class="d-flex flex-column gap-2 mb-3">
+  <p class="text-body-secondary mb-0">This shelf starts empty of books.</p>
+</div>
+{% else %}
+<div class="alert alert-warning" role="status">The catalog is empty. Run <code>make seed</code>, then reload this page.</div>
+{% endif %}
+
+<h2 class="h5">What changed</h2>
+<p>Both buttons use the lesson 2 card URL and the same target. Only <code>hx-swap</code> differs. <code>innerHTML</code> replaces the children of <code>#book-shelf</code>. <code>beforeend</code> inserts the card after the last child and leaves what was already there. HTMX also accepts the name <code>append</code> for that second style.</p>
+
+<h2 class="h5">The markup</h2>
+{% if book %}
+<pre class="bg-body-tertiary border rounded p-3 small mb-3"><code>&lt;button hx-get=".../card" hx-target="#book-shelf" hx-swap="innerHTML"&gt;Replace&lt;/button&gt;
+&lt;button hx-get=".../card" hx-target="#book-shelf" hx-swap="beforeend"&gt;Add to the shelf&lt;/button&gt;</code></pre>
+{% endif %}
+<p>The route is still <code>GET /ui/tutorial/books/&lt;id&gt;/card</code>. It does not know which swap you asked for. Placement is decided in the browser, after the HTML arrives.</p>
+
+<h2 class="h5">Request, response, target, swap</h2>
+<ul>
+  <li><strong>Request:</strong> the same <code>GET</code> as lesson 2.</li>
+  <li><strong>Response:</strong> the same card fragment.</li>
+  <li><strong>Target:</strong> <code>#book-shelf</code> for both buttons.</li>
+  <li><strong>Swap:</strong> <code>innerHTML</code> replaces the shelf's contents. <code>beforeend</code> adds inside the shelf, at the end.</li>
+</ul>
+<p>Other placements, for later: <code>afterbegin</code> adds at the start of the target, <code>beforebegin</code> and <code>afterend</code> put the HTML outside it, and <code>outerHTML</code> replaces the target element itself.</p>
+
+<h2 class="h5">Experiment</h2>
+<p>Click <strong>Add to the shelf</strong> twice, then <strong>Replace</strong> once. In the inspector, change the Add button's <code>hx-swap</code> from <code>beforeend</code> to <code>outerHTML</code> and click it. The shelf element is gone, so a second click has no target left.</p>
+
+<p class="mt-4 d-flex gap-2">
+  <a class="btn btn-outline-secondary" href="/ui/tutorial/3">Previous</a>
+  <a class="btn btn-outline-secondary" href="/ui/tutorial/5">Next: a category menu</a>
+</p>
+{% endblock %}

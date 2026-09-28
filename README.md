@@ -15,7 +15,7 @@ make upd
 make seed     # books for the lessons
 ```
 
-Open `/ui/tutorial` after logging in (`DEMO_USERNAME` / `DEMO_PASSWORD`, defaults `admin` / `admin123`). Lesson 1 is an ordinary link. Lessons 2 and 3 fetch one book. The books table at `/ui/books` is the advanced example for later.
+Open `/ui/tutorial` after logging in (`DEMO_USERNAME` / `DEMO_PASSWORD`, defaults `admin` / `admin123`). Lessons 1–3 fetch one book. Lessons 4–6 place that HTML, filter by category, and search as you type. The books table at `/ui/books` is the advanced example for later.
 
 ## Lessons
 
@@ -24,8 +24,11 @@ Open `/ui/tutorial` after logging in (`DEMO_USERNAME` / `DEMO_PASSWORD`, default
 | 1 | `/ui/tutorial/1` | A normal link loads a full book page |
 | 2 | `/ui/tutorial/2` | `hx-get` puts an HTML fragment into a target |
 | 3 | `/ui/tutorial/3` | The same fetch, slowed on purpose, with `hx-indicator` |
+| 4 | `/ui/tutorial/4` | `hx-swap` replaces the shelf or adds another card |
+| 5 | `/ui/tutorial/5` | A category menu sends its value on `change` |
+| 6 | `/ui/tutorial/6` | Search after a pause, and cancel a slower older request |
 
-Lessons 4–11 are listed on the tutorial home and are not built yet.
+Lessons 7–11 are listed on the tutorial home and are not built yet.
 
 ## Primary path vs demos
 
