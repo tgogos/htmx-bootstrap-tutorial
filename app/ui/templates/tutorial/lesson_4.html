@@ -39,7 +39,7 @@
 <pre class="bg-body-tertiary border rounded p-3 small mb-3"><code>&lt;button hx-get=".../card" hx-target="#book-shelf" hx-swap="innerHTML"&gt;Replace&lt;/button&gt;
 &lt;button hx-get=".../card" hx-target="#book-shelf" hx-swap="beforeend"&gt;Add to the shelf&lt;/button&gt;</code></pre>
 {% endif %}
-<p>The route is still <code>lesson_book_card</code>. This page is <code>lesson_swap</code>. The card function has no parameter for <code>hx-swap</code>. Both buttons get the same <code>tutorial/book_card.html</code>. HTMX reads the attribute on the button you clicked and places that HTML after it arrives.</p>
+<p>Both buttons still call <code>lesson_book_card</code>. That function has no parameter for <code>hx-swap</code>, so both get the same <code>tutorial/book_card.html</code>. HTMX reads the attribute on the button you clicked and places that HTML after it arrives.</p>
 <pre class="bg-body-tertiary border rounded p-3 small mb-3"><code>return templates.TemplateResponse(
     request,
     "tutorial/book_card.html",
@@ -74,7 +74,7 @@
       </tr>
       <tr>
         <td><code>app/ui/tutorial_routes.py</code></td>
-        <td><code>lesson_swap</code> renders this page. <code>lesson_book_card</code> returns the card and does not see the swap.</td>
+        <td><code>lesson_book_card</code> returns the card for both buttons and does not see the swap.</td>
       </tr>
       <tr>
         <td><code>app/ui/templates/tutorial/book_card.html</code></td>
