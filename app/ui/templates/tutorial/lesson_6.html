@@ -47,6 +47,7 @@
     </div>
   </div>
 </div>
+<div class="alert alert-warning" role="note">For a search box, keep the right-hand version. The left one is only so you can watch an older answer arrive last.</div>
 
 <h2 class="h5">What changed</h2>
 <p>The new piece on both boxes is <code>hx-trigger</code>. <code>keyup changed delay:300ms</code> waits until you pause, and it skips the request when the text did not change (arrow keys, for example). The <code>search</code> event covers the clear button on a search field. The second box adds one attribute: <code>hx-sync="this:replace"</code>. That aborts the request already running on this input and starts the new one. Without it, both requests finish, and whichever response arrives last is what you see — even if that response is for an older, shorter query.</p>
@@ -62,7 +63,13 @@
   hx-swap="innerHTML"
   hx-sync="this:replace"
 &gt;</code></pre>
-<p>The route is the same list as lesson 5. <code>name="q"</code> adds the text you typed. <code>slow=1</code> is only for this lesson: a query of one character sleeps 1.2 seconds, and the fragment says so. The input stays outside the target, so the response cannot wipe out the letters you are still typing.</p>
+<p>The route is still <code>lesson_book_list</code>. <code>name="q"</code> adds the text you typed. <code>slow=1</code> is only for this lesson: a query of one character sleeps 1.2 seconds, and the fragment says so. A longer query does not sleep. <code>hx-sync</code> is not a parameter of this function. A cancelled request never reaches it. The input stays outside the target, so the response cannot wipe out the letters you are still typing.</p>
+<pre class="bg-body-tertiary border rounded p-3 small mb-3"><code>query = (q or "").strip() or None
+if slow and query is not None and len(query) &lt;= 1:
+    await asyncio.sleep(1.2)
+return templates.TemplateResponse(
+    request, "tutorial/book_list.html", {"books": books, "delay": delay, ...},
+)</code></pre>
 
 <h2 class="h5">Request, response, target, swap</h2>
 <ul>
@@ -74,6 +81,32 @@
 
 <h2 class="h5">Experiment</h2>
 <p>In the left box, type <kbd>a</kbd>, wait until the request starts, then type <kbd>nimal</kbd> and pause again. You may see matches for "animal" and then the one-letter list replace them, because the slow response finishes last. Do the same in the right box. The one-letter request is cancelled, so that late list does not appear.</p>
+
+<h2 class="h5">Files</h2>
+<div class="table-responsive">
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th scope="col">File</th>
+        <th scope="col">Why it is here</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>app/ui/templates/tutorial/lesson_6.html</code></td>
+        <td>This page. Two search boxes. Only the right one has <code>hx-sync</code>.</td>
+      </tr>
+      <tr>
+        <td><code>app/ui/tutorial_routes.py</code></td>
+        <td><code>lesson_book_list</code> sleeps when <code>slow=1</code> and the query is one character.</td>
+      </tr>
+      <tr>
+        <td><code>app/ui/templates/tutorial/book_list.html</code></td>
+        <td>The title list. With a delay, it adds the artificial-wait line.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
 <p class="mt-4 d-flex gap-2">
   <a class="btn btn-outline-secondary" href="/ui/tutorial/5">Previous</a>
