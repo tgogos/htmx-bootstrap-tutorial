@@ -28,6 +28,11 @@
   hx-swap="none"
 &gt;Show a toast&lt;/button&gt;</code></pre>
 <p><code>POST /ui/tutorial/books/&lt;id&gt;/announce</code> returns no HTML. Its <code>HX-Trigger</code> header looks like <code>{"showToast": {"message": "...", "level": "ok"}}</code>. There is no form around the button, so the island copies the token from the page header, the same way lesson 8's delete does.</p>
+<p class="mb-2"><code>app.js</code> hears that event and reads the message. The rest of <code>showToast</code> builds the Bootstrap toast and puts it in <code>#toast-region</code>.</p>
+<pre class="bg-body-tertiary border rounded p-3 small mb-3"><code>document.body.addEventListener("showToast", function (event) {
+  var detail = event.detail || {};
+  showToast(detail.message, detail.level);
+});</code></pre>
 
 <h2 class="h5">Request, response, target, swap</h2>
 <ul>
@@ -39,6 +44,36 @@
 
 <h2 class="h5">Experiment</h2>
 <p>Click the button and watch the corner of the page. Then open the announce response in the network panel. The body is empty. The message is only in the <code>HX-Trigger</code> header.</p>
+
+<h2 class="h5">Files</h2>
+<div class="table-responsive">
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th scope="col">File</th>
+        <th scope="col">Why it is here</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>app/ui/templates/tutorial/lesson_9.html</code></td>
+        <td>This page. The button posts and uses <code>hx-swap="none"</code>.</td>
+      </tr>
+      <tr>
+        <td><code>app/ui/tutorial_routes.py</code></td>
+        <td><code>lesson_announce</code> returns an empty body and an <code>HX-Trigger</code> header named <code>showToast</code>.</td>
+      </tr>
+      <tr>
+        <td><code>app/ui/static/js/app.js</code></td>
+        <td>Listens for <code>showToast</code> and builds the toast. It also copies the CSRF token onto the post.</td>
+      </tr>
+      <tr>
+        <td><code>app/ui/templates/partials/confirm_modal.html</code></td>
+        <td>The empty <code>#toast-region</code> in the corner. The script adds the toast there.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
 <p class="mt-4 d-flex gap-2">
   <a class="btn btn-outline-secondary" href="/ui/tutorial/8">Previous</a>
