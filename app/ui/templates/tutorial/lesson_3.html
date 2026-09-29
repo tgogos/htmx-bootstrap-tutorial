@@ -44,7 +44,14 @@
 
 &lt;span id="lesson-indicator" class="htmx-indicator"&gt;...&lt;/span&gt;</code></pre>
 {% endif %}
-<p>The route is still <code>GET /ui/tutorial/books/&lt;id&gt;/card</code>. <code>delay</code> is a query parameter capped at 5 seconds. After the sleep it renders the same <code>tutorial/book_card.html</code> fragment. The card says that the wait was artificial.</p>
+<p>The route is still <code>lesson_book_card</code>. <code>delay</code> is a query parameter capped at 5 seconds. The function sleeps, then renders the same <code>tutorial/book_card.html</code> and passes <code>delay</code> into it. The card prints that number so you can see the wait was artificial. Lesson 2 calls this route with no delay, so it does not sleep.</p>
+<pre class="bg-body-tertiary border rounded p-3 small mb-3"><code>if delay:
+    await asyncio.sleep(delay)
+return templates.TemplateResponse(
+    request,
+    "tutorial/book_card.html",
+    {"book": book, "delay": delay},
+)</code></pre>
 
 <h2 class="h5">Request, response, target, swap</h2>
 <ul>
@@ -56,6 +63,36 @@
 
 <h2 class="h5">Experiment</h2>
 <p>In the browser's inspector, delete <code>hx-indicator</code> from the button and click it again. The card still arrives, about a second and a half later, but nothing tells you the request is running.</p>
+
+<h2 class="h5">Files</h2>
+<div class="table-responsive">
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th scope="col">File</th>
+        <th scope="col">Why it is here</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>app/ui/templates/tutorial/lesson_3.html</code></td>
+        <td>This page. The button, the spinner, and <code>#book-slot</code>.</td>
+      </tr>
+      <tr>
+        <td><code>app/ui/tutorial_routes.py</code></td>
+        <td><code>lesson_book_card</code> sleeps when <code>delay</code> is set, then returns the card.</td>
+      </tr>
+      <tr>
+        <td><code>app/ui/templates/tutorial/book_card.html</code></td>
+        <td>The same fragment as lesson 2. With <code>delay</code> set, it adds the artificial-wait line.</td>
+      </tr>
+      <tr>
+        <td><code>app/ui/static/css/app.css</code></td>
+        <td><code>.htmx-indicator</code> stays invisible until HTMX adds <code>htmx-request</code>.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
 <p class="mt-4 d-flex gap-2">
   <a class="btn btn-outline-secondary" href="/ui/tutorial/2">Previous</a>
