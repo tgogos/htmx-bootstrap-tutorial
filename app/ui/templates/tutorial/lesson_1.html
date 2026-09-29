@@ -4,7 +4,7 @@
 {% block content %}
 {% include "partials/tutorial_nav.html" %}
 <h1 class="h2">1. A link is already a request</h1>
-<p>Before HTMX does anything, the browser can ask the server for a new page. This lesson is that request, with no <code>hx-</code> attributes.</p>
+<p>Before HTMX does anything, the browser can ask the server for a new page. This lesson is that request, with no <code>hx-</code> attributes. The <a href="/ui/tutorial">tutorial home</a> lists the folders these paths come from. The Files table at the bottom names the ones this lesson uses.</p>
 
 <h2 class="h5">Try it</h2>
 {% if book %}
@@ -32,6 +32,40 @@
 
 <h2 class="h5">Experiment</h2>
 <p>Open the book, then press the browser Back button. You should land on this lesson again, with the same address you started from.</p>
+
+<h2 class="h5">Files</h2>
+<div class="table-responsive">
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th scope="col">File</th>
+        <th scope="col">Why it is here</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>app/ui/templates/tutorial/lesson_1.html</code></td>
+        <td>This page. The link is an <code>href</code> only.</td>
+      </tr>
+      <tr>
+        <td><code>app/ui/tutorial_routes.py</code></td>
+        <td><code>lesson_book_page</code> handles <code>GET /ui/tutorial/books/&lt;id&gt;</code> and returns HTML.</td>
+      </tr>
+      <tr>
+        <td><code>app/ui/templates/tutorial/book_page.html</code></td>
+        <td>The full page that link opens.</td>
+      </tr>
+      <tr>
+        <td><code>app/ui/templates/layout.html</code></td>
+        <td>The admin shell around that page. The browser replaces the whole document, shell included.</td>
+      </tr>
+      <tr>
+        <td><code>app/ui/templates/tutorial/book_card.html</code></td>
+        <td>The title and author inside the page. Lesson 2 fetches this card on its own.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
 <p class="mt-4"><a class="btn btn-outline-secondary" href="/ui/tutorial/2">Next: fetch one book</a></p>
 {% endblock %}

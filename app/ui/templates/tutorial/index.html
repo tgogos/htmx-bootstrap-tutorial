@@ -10,6 +10,42 @@
 
 <p>Each lesson is one small interaction with a book. The <a href="/ui/books">books table</a> is the advanced example at the end of the sequence. Start with lesson 1, not with that table.</p>
 
+<h2 class="h5">Where the files live</h2>
+<p>A lesson page is HTML. The Python route decides which template to return. HTMX then puts that HTML into the page, or the browser loads it as a whole document.</p>
+<div class="table-responsive">
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th scope="col">Place</th>
+        <th scope="col">What you will find</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>app/ui/templates/layout.html</code></td>
+        <td>The admin shell. Lesson pages extend it and fill in the content block.</td>
+      </tr>
+      <tr>
+        <td><code>app/ui/templates/tutorial/</code></td>
+        <td>One file per lesson, plus the fragments that lesson swaps in, such as a card or a form.</td>
+      </tr>
+      <tr>
+        <td><code>app/ui/templates/partials/</code></td>
+        <td>Pieces more than one page includes: the sidebar, the confirm dialog, and later a table row.</td>
+      </tr>
+      <tr>
+        <td><code>app/ui/tutorial_routes.py</code></td>
+        <td>The routes for these lessons. Each one returns one of those templates.</td>
+      </tr>
+      <tr>
+        <td><code>app/ui/static/js/app.js</code></td>
+        <td>The small script for a widget a swap cannot draw: the confirm dialog, a toast, the token on a request.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<p><code>templates/pages/</code> and <code>templates/gallery/</code> are the sample screens in the sidebar. The lessons do not use them. Each lesson ends with a Files table when you need to open the ones that lesson uses. Lesson 1 has the first of those.</p>
+
 <h2 class="h5">Lessons you can open now</h2>
 <ol>
   <li><a href="/ui/tutorial/1">A normal link</a> — the browser already knows how to ask the server for a new page.</li>
