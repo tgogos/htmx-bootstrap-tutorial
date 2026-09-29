@@ -21,8 +21,11 @@ router = APIRouter()
 MAX_DEMO_DELAY_SECONDS = 5.0
 # A one-letter search sleeps so an older response can arrive after a newer one.
 SLOW_SHORT_QUERY_SECONDS = 1.2
+# The revealed box sleeps so the placeholder stays readable.
+LAZY_DELAY_SECONDS = 1.0
 LIST_LIMIT = 8
 SHELF_SIZE = 5
+LAZY_SIZE = 5
 SHELF_ORDERINGS = frozenset({"title", "author"})
 PRACTICE_ISBN = "tutorial-practice"
 PRACTICE_TITLE = "Practice shelf book"
@@ -486,4 +489,31 @@ async def lesson_table(
         request,
         "tutorial/lesson_11.html",
         _lesson_ctx(request, user, 11),
+    )
+
+
+@router.get("/tutorial/12", response_class=HTMLResponse)
+async def lesson_lazy(
+    request: Request,
+    user: dict = Depends(require_user_html),
+):
+    return templates.TemplateResponse(
+        request,
+        "tutorial/lesson_12.html",
+        _lesson_ctx(request, user, 12),
+    )
+
+
+@router.get("/tutorial/12/books", response_class=HTMLResponse)
+async def lesson_lazy_books(
+    request: Request,
+    _user: dict = Depends(require_user_html),
+):
+    """HTML fragment: the first few titles, loaded when the box is revealed."""
+    await asyncio.sleep(LAZY_DELAY_SECONDS)
+    books, total = await books_repo.list_books(page=1, size=LAZY_SIZE, ordering="title")
+    return templates.TemplateResponse(
+        request,
+        "tutorial/lazy_books.html",
+        {"books": books, "total": total, "delay": LAZY_DELAY_SECONDS},
     )

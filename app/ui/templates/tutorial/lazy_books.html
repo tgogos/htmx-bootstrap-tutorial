@@ -1,0 +1,11 @@
+{% if books %}
+<ul class="list-group mb-2">
+  {% for book in books %}
+  <li class="list-group-item">{{ book.title }} <span class="text-body-secondary">— {{ book.author }}</span></li>
+  {% endfor %}
+</ul>
+<p class="small text-body-secondary mb-0">Showing the first {{ books|length }}{% if total > books|length %} of {{ total }}{% endif %}.</p>
+{% else %}
+<p class="mb-0">The catalog is empty. Run <code>make seed</code>, then reload this page.</p>
+{% endif %}
+<p class="small text-body-secondary mb-0">Artificial wait: this fragment was held for {{ delay|int }} second so the placeholder stays visible. The books list does not do this.</p>

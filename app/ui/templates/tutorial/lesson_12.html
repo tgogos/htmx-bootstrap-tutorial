@@ -1,0 +1,78 @@
+{% extends "layout.html" %}
+{% block title %}Lesson 12 · Reveal · Tutorial{% endblock %}
+{% block description %}Load a few books when they scroll into view{% endblock %}
+{% block content %}
+{% include "partials/tutorial_nav.html" %}
+<h1 class="h2">12. Load the list when it reaches the screen</h1>
+<p>Lesson 5 started a request from a menu. This box starts a request when you scroll it into view. Until then the titles are not in the page.</p>
+
+<h2 class="h5">Try it</h2>
+<p>Scroll down. The bordered box fetches the first few titles the moment it reaches the screen.</p>
+<div class="d-flex align-items-end" style="min-height: 100vh;">
+  <p class="text-body-secondary mb-3">Keep scrolling. The next box is the one that fetches.</p>
+</div>
+<div
+  id="lazy-books"
+  class="border rounded p-3 mb-3"
+  hx-get="/ui/tutorial/12/books"
+  hx-target="#lazy-books"
+  hx-swap="innerHTML"
+  hx-trigger="revealed"
+>
+  <p class="text-body-secondary mb-0">This box loads a few titles when it reaches the screen.</p>
+</div>
+
+<h2 class="h5">What changed</h2>
+<p>The new attribute is <code>hx-trigger="revealed"</code>. HTMX watches the box and sends the request the first time any of it is on screen. There is no button. The box is its own target, and <code>innerHTML</code> replaces the sentence inside it with the titles. Scrolling away and back does not ask again. The empty space above the box is only so the box starts off screen. A box that is already visible loads at once.</p>
+
+<h2 class="h5">The markup and the fragment</h2>
+<pre class="bg-body-tertiary border rounded p-3 small mb-3"><code>&lt;div
+  id="lazy-books"
+  hx-get="/ui/tutorial/12/books"
+  hx-target="#lazy-books"
+  hx-swap="innerHTML"
+  hx-trigger="revealed"
+&gt;...&lt;/div&gt;</code></pre>
+<p><code>GET /ui/tutorial/12/books</code> is <code>lesson_lazy_books</code> in <code>app/ui/tutorial_routes.py</code>. It returns <code>tutorial/lazy_books.html</code>: the first five titles, in title order. It sleeps for one second first, and the fragment says that wait is artificial, so the placeholder stays readable. This URL is only that list. It is not the books table, and it does not change the address.</p>
+
+<h2 class="h5">Request, response, target, swap</h2>
+<ul>
+  <li><strong>Request:</strong> <code>GET /ui/tutorial/12/books</code> when the box reaches the screen.</li>
+  <li><strong>Response:</strong> a short list of titles.</li>
+  <li><strong>Target:</strong> <code>#lazy-books</code>, the box itself.</li>
+  <li><strong>Swap:</strong> <code>innerHTML</code>.</li>
+</ul>
+
+<h2 class="h5">Experiment</h2>
+<p>In the inspector, set <code>hx-trigger="click"</code> and reload. The box waits until you click it. Set <code>revealed</code> again, scroll so the box is already on screen, and reload. The request starts at once, because a box that is already visible counts as revealed. The one-second wait is still there.</p>
+
+<h2 class="h5">Files</h2>
+<div class="table-responsive">
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th scope="col">File</th>
+        <th scope="col">Why it is here</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>app/ui/templates/tutorial/lesson_12.html</code></td>
+        <td>This page. The box sits below a tall gap so it starts off screen.</td>
+      </tr>
+      <tr>
+        <td><code>app/ui/tutorial_routes.py</code></td>
+        <td><code>lesson_lazy_books</code> waits one second, then returns the first five titles.</td>
+      </tr>
+      <tr>
+        <td><code>app/ui/templates/tutorial/lazy_books.html</code></td>
+        <td>The fragment: titles, not the books table.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p class="mt-4">
+  <a class="btn btn-outline-secondary" href="/ui/tutorial/11">Previous</a>
+</p>
+{% endblock %}

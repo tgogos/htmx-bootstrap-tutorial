@@ -1,4 +1,4 @@
-"""Tutorial landing page and lessons 1–11."""
+"""Tutorial landing page and lessons 1–12."""
 
 import re
 
@@ -41,6 +41,8 @@ class TestTutorial:
             "/ui/tutorial/9",
             "/ui/tutorial/10",
             "/ui/tutorial/11",
+            "/ui/tutorial/12",
+            "/ui/tutorial/12/books",
         ):
             response = client.get(path, follow_redirects=False)
             assert response.status_code == 303
@@ -61,6 +63,7 @@ class TestTutorial:
         assert 'href="/ui/tutorial/9"' in page.text
         assert 'href="/ui/tutorial/10"' in page.text
         assert 'href="/ui/tutorial/11"' in page.text
+        assert 'href="/ui/tutorial/12"' in page.text
         assert "books table" in page.text.lower()
 
     def test_lesson_1_is_an_ordinary_link(self, auth_client: TestClient):
@@ -289,6 +292,23 @@ class TestTutorial:
         assert 'id="books-panel"' in page.text
         assert 'href="/ui/books"' in page.text
         assert "HX-History-Restore-Request" in page.text
+
+    def test_lesson_12_loads_titles_when_revealed(self, auth_client: TestClient):
+        _create_book(auth_client, "000 Lazy Title", author="Lazy Author")
+        page = auth_client.get("/ui/tutorial/12")
+        assert page.status_code == 200
+        assert 'hx-get="/ui/tutorial/12/books"' in page.text
+        assert 'hx-trigger="revealed"' in page.text
+        assert 'id="lazy-books"' in page.text
+        assert "000 Lazy Title" not in page.text
+
+        fragment = auth_client.get("/ui/tutorial/12/books")
+        assert fragment.status_code == 200
+        assert "<html" not in fragment.text.lower()
+        assert "000 Lazy Title" in fragment.text
+        assert "Lazy Author" in fragment.text
+        assert "Artificial wait" in fragment.text
+        assert "held for 1 second" in fragment.text
 
     def test_books_history_restore_is_a_full_page(self, auth_client: TestClient):
         partial = auth_client.get("/ui/books", headers={"HX-Request": "true"})
