@@ -13,6 +13,7 @@
 
 <h2 class="h5">What changed</h2>
 <p>Each link has a normal <code>href</code> and the same <code>hx-get</code>, target, and <code>innerHTML</code> swap you already know. The new attribute is <code>hx-push-url="true"</code>. After the swap, the address becomes that link's URL. Five books are on a page. <strong>Next</strong> asks for the next five. <strong>Sort by author</strong> asks for the first page in author order. The lesson text stays outside <code>#shelf</code>, so it is not replaced.</p>
+<p>The route puts <code>prev_url</code> and <code>next_url</code> in the template context only when that page exists, so the shelf omits Previous on the first page and Next on the last. The swap brings those buttons back with the titles.</p>
 
 <h2 class="h5">The markup and the two responses</h2>
 <pre class="bg-body-tertiary border rounded p-3 small mb-3"><code>&lt;a
@@ -22,11 +23,11 @@
   hx-swap="innerHTML"
   hx-push-url="true"
 &gt;Next&lt;/a&gt;</code></pre>
-<p><code>GET /ui/tutorial/10</code> renders this whole lesson when you open the address yourself. When HTMX asks, it renders only <code>tutorial/shelf.html</code>. Pressing Back asks again, and HTMX adds <code>HX-History-Restore-Request</code>. That request gets the whole lesson, not the shelf. A shelf-only response would replace the window.</p>
+<p><code>GET /ui/tutorial/10</code> renders this whole lesson when you open the address yourself. A click sends the header <code>HX-Request</code>, and the response is only <code>tutorial/shelf.html</code>. Back and Forward send that header too, plus <code>HX-History-Restore-Request</code>. <code>_wants_fragment</code> checks the restore header first, so those requests still get the whole lesson. A shelf-only response would replace the window.</p>
 
 <h2 class="h5">Request, response, target, swap</h2>
 <ul>
-  <li><strong>Request:</strong> <code>GET /ui/tutorial/10?page=...&amp;ordering=...</code>. HTMX sends <code>HX-Request</code>. Back and Forward also send <code>HX-History-Restore-Request</code>.</li>
+  <li><strong>Request:</strong> <code>GET /ui/tutorial/10?page=...&amp;ordering=...</code>. A click sends <code>HX-Request</code>. Back and Forward send that header too, plus <code>HX-History-Restore-Request</code>.</li>
   <li><strong>Response:</strong> the shelf fragment for a click. The full lesson for a new tab, a reload, or Back/Forward.</li>
   <li><strong>Target:</strong> <code>#shelf</code> on a click. Back/Forward targets the page.</li>
   <li><strong>Swap:</strong> <code>innerHTML</code> on a click. <code>hx-push-url</code> is not a swap. It writes the address.</li>
@@ -55,7 +56,7 @@
       </tr>
       <tr>
         <td><code>app/ui/tutorial_routes.py</code></td>
-        <td><code>lesson_pages</code> reads <code>page</code> and <code>ordering</code>. A click gets <code>shelf.html</code>. A reload or <code>HX-History-Restore-Request</code> gets this whole lesson.</td>
+        <td><code>lesson_pages</code> reads <code>page</code> and <code>ordering</code>. <code>_wants_fragment</code> returns <code>shelf.html</code> for a click, and this whole lesson when <code>HX-History-Restore-Request</code> is set.</td>
       </tr>
     </tbody>
   </table>
