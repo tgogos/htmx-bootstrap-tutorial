@@ -23,7 +23,7 @@
   hx-swap="innerHTML"
   hx-push-url="true"
 &gt;Next&lt;/a&gt;</code></pre>
-<p><code>GET /ui/tutorial/10</code> renders this whole lesson when you open the address yourself. A click sends the header <code>HX-Request</code>, and the response is only <code>tutorial/shelf.html</code>. Back and Forward send that header too, plus <code>HX-History-Restore-Request</code>. <code>_wants_fragment</code> checks the restore header first, so those requests still get the whole lesson. A shelf-only response would replace the window.</p>
+<p><code>GET /ui/tutorial/10</code> renders this whole lesson when you open the address yourself. A click sends the header <code>HX-Request</code>, and the response is only <code>tutorial/shelf.html</code>. Back and Forward send that header too, plus <code>HX-History-Restore-Request</code>. <code>lesson_pages</code> calls <code>_wants_fragment</code> in <code>app/ui/tutorial_routes.py</code>. That function checks the restore header first, so those requests still get the whole lesson. A shelf-only response would replace the window.</p>
 
 <h2 class="h5">Request, response, target, swap</h2>
 <ul>
@@ -56,7 +56,7 @@
       </tr>
       <tr>
         <td><code>app/ui/tutorial_routes.py</code></td>
-        <td><code>lesson_pages</code> reads <code>page</code> and <code>ordering</code>. <code>_wants_fragment</code> returns <code>shelf.html</code> for a click, and this whole lesson when <code>HX-History-Restore-Request</code> is set.</td>
+        <td><code>lesson_pages</code> reads <code>page</code> and <code>ordering</code>, then calls <code>_wants_fragment</code>. That function returns <code>shelf.html</code> for a click, and this whole lesson when <code>HX-History-Restore-Request</code> is set.</td>
       </tr>
     </tbody>
   </table>
