@@ -67,6 +67,44 @@
 <h2 class="h5">Experiment</h2>
 <p>Click <strong>Delete</strong>, then <strong>Cancel</strong> in the dialog. The card should still be there, and the network panel should show no delete. Confirm on a second try, then reload the page to get the practice book back.</p>
 
+<h2 class="h5">Files</h2>
+<div class="table-responsive">
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th scope="col">File</th>
+        <th scope="col">Why it is here</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>app/ui/templates/tutorial/lesson_8.html</code></td>
+        <td>This page. <code>#practice-slot</code> starts with the practice card.</td>
+      </tr>
+      <tr>
+        <td><code>app/ui/templates/tutorial/practice_card.html</code></td>
+        <td>The card with Edit and Delete. Save and Cancel both put this back.</td>
+      </tr>
+      <tr>
+        <td><code>app/ui/templates/tutorial/book_edit.html</code></td>
+        <td>The form. A bad save returns it again, with the alert and status 400.</td>
+      </tr>
+      <tr>
+        <td><code>app/ui/templates/tutorial/deleted.html</code></td>
+        <td>The message after a confirmed delete.</td>
+      </tr>
+      <tr>
+        <td><code>app/ui/tutorial_routes.py</code></td>
+        <td><code>lesson_edit_form</code> returns the form. <code>lesson_update_book</code> returns the card, or the form with status 400. Cancel is <code>lesson_book_card</code> with <code>panel=practice</code>. <code>lesson_delete_book</code> returns the deleted message.</td>
+      </tr>
+      <tr>
+        <td><code>app/ui/static/js/app.js</code></td>
+        <td>Opens the confirm dialog, then fires <code>confirmed-delete</code>. It also copies the CSRF token onto the delete request.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
 <p class="mt-4 d-flex gap-2">
   <a class="btn btn-outline-secondary" href="/ui/tutorial/7">Previous</a>
   <a class="btn btn-outline-secondary" href="/ui/tutorial/9">Next: a toast</a>
