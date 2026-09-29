@@ -237,7 +237,7 @@
   const buildExportCss = () => {
     const lines = []
     const theme = root.getAttribute('data-bs-theme') || 'light'
-    const palette = root.getAttribute('data-admin-palette') || 'default'
+    const palette = root.getAttribute('data-admin-palette') || 'grey'
     lines.push(`/* Palette lab export — theme=${theme}, starting palette=${palette} */`)
     lines.push('[data-admin-palette="custom"] {')
     flatTokens.forEach(token => {

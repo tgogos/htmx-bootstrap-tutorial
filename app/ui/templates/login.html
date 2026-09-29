@@ -16,7 +16,7 @@
           storedPalette === "mil-std" ||
           storedPalette === "night"
             ? storedPalette
-            : "default";
+            : "grey";
         document.documentElement.setAttribute("data-admin-palette", palette);
         const storedProfile = localStorage.getItem("admin-profile");
         if (storedProfile === "mil-std") {
@@ -81,7 +81,7 @@
                 type="button"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
-                aria-label="Palette (default)"
+                aria-label="Palette (grey)"
               >
                 <i class="bi bi-palette" aria-hidden="true"></i>
                 <span class="visually-hidden">Palette</span>

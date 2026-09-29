@@ -7,7 +7,7 @@
           storedPalette === "mil-std" ||
           storedPalette === "night"
             ? storedPalette
-            : "default";
+            : "grey";
         document.documentElement.setAttribute("data-admin-palette", palette);
         const storedProfile = localStorage.getItem("admin-profile");
         if (storedProfile === "mil-std") {

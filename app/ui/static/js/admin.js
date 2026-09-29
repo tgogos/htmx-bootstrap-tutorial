@@ -54,11 +54,11 @@
 
   const getPreferredPalette = () => {
     const storedPalette = getStoredPalette()
-    return palettes.has(storedPalette) ? storedPalette : 'default'
+    return palettes.has(storedPalette) ? storedPalette : 'grey'
   }
 
   const setPalette = palette => {
-    const next = palettes.has(palette) ? palette : 'default'
+    const next = palettes.has(palette) ? palette : 'grey'
     document.documentElement.setAttribute('data-admin-palette', next)
     // Night is dark-adaptation only; keep Bootstrap in dark mode while it is active.
     setTheme(getPreferredTheme())
