@@ -39,6 +39,13 @@
 &lt;div id="book-slot"&gt;...&lt;/div&gt;</code></pre>
 {% endif %}
 <p><code>GET /ui/tutorial/books/&lt;id&gt;/card</code> renders <code>tutorial/book_card.html</code> and nothing else. The same session rule as the rest of <code>/ui</code> still applies: you have to be logged in.</p>
+<p>That response is <code>lesson_book_card</code> in <code>app/ui/tutorial_routes.py</code>. It does not use <code>_lesson_ctx</code>, and <code>book_card.html</code> does not extend <code>layout.html</code>. That is why the network panel shows a card and no sidebar. This lesson page is a different function, <code>lesson_fetch</code>, and that one does use the shell.</p>
+<pre class="bg-body-tertiary border rounded p-3 small mb-3"><code>book = await books_repo.get_book(book_id)
+return templates.TemplateResponse(
+    request,
+    "tutorial/book_card.html",
+    {"book": book},
+)</code></pre>
 
 <h2 class="h5">Request, response, target, swap</h2>
 <ul>
@@ -50,6 +57,36 @@
 
 <h2 class="h5">Experiment</h2>
 <p>Click the button, then look at the address bar. It should still be <code>/ui/tutorial/2</code>. In the network panel, open the card response and confirm it is only the card, not a full page.</p>
+
+<h2 class="h5">Files</h2>
+<div class="table-responsive">
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th scope="col">File</th>
+        <th scope="col">Why it is here</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>app/ui/templates/tutorial/lesson_2.html</code></td>
+        <td>This page. The button and <code>#book-slot</code>.</td>
+      </tr>
+      <tr>
+        <td><code>app/ui/tutorial_routes.py</code></td>
+        <td><code>lesson_fetch</code> renders this page. <code>lesson_book_card</code> renders the card and nothing around it.</td>
+      </tr>
+      <tr>
+        <td><code>app/ui/templates/tutorial/book_card.html</code></td>
+        <td>The fragment: title, author, and year.</td>
+      </tr>
+      <tr>
+        <td><code>app/ui/templates/layout.html</code></td>
+        <td>The shell of this lesson. The card response does not extend it.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
 <p class="mt-4 d-flex gap-2">
   <a class="btn btn-outline-secondary" href="/ui/tutorial/1">Previous</a>
