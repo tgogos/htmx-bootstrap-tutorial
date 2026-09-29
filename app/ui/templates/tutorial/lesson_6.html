@@ -5,18 +5,18 @@
 {% include "partials/tutorial_nav.html" %}
 <h1 class="h2">6. Search as you type</h1>
 <p>Lesson 5 waits until you finish choosing. A search box should update while you type, but not on every key, and not with an answer for a query you have already moved past.</p>
-<div class="alert alert-secondary" role="note">On this page a one-letter search is held for 1.2 seconds on purpose, so you can see an older answer arrive last. The books list does not sleep.</div>
+<div class="alert alert-secondary" role="note">On this page a one-letter search is held for 1.2 seconds on purpose, so the left box can show that list before the longer one. The books list does not sleep.</div>
 
 <h2 class="h5">Try it</h2>
 <div class="row g-4 mb-3">
   <div class="col-md-6">
-    <label class="form-label" for="stale-q">Older answers can overwrite newer ones</label>
+    <label class="form-label" for="stale-q">The next search waits</label>
     <input
       id="stale-q"
       class="form-control"
       type="search"
       name="q"
-      placeholder="Type a, pause, then type more"
+      placeholder="Type d, pause, then une"
       hx-get="/ui/tutorial/books?slow=1"
       hx-trigger="keyup changed delay:300ms, search"
       hx-target="#stale-results"
@@ -24,7 +24,7 @@
       autocomplete="off"
     >
     <div id="stale-results" class="mt-2">
-      <p class="text-body-secondary mb-0">This box does not cancel the previous search.</p>
+      <p class="text-body-secondary mb-0">This box lets the current search finish, then runs the new one.</p>
     </div>
   </div>
   <div class="col-md-6">
@@ -47,11 +47,11 @@
     </div>
   </div>
 </div>
-<div class="alert alert-warning" role="note">For a search box, keep the right-hand version. The left one is only so you can watch an older answer arrive last.</div>
+<div class="alert alert-info" role="note">HTMX 4 queues the next search on the left until the one in flight finishes, so the list you end on matches the box. The right box cancels that in-flight search, so the one-letter list never appears.</div>
 
 <h2 class="h5">What changed</h2>
-<p>The new piece on both boxes is <code>hx-trigger</code>. <code>keyup changed delay:300ms</code> waits until you pause, and it skips the request when the text did not change (arrow keys, for example). The <code>search</code> event covers the clear button on a search field. The second box adds one attribute: <code>hx-sync="this:replace"</code>. That aborts the request already running on this input and starts the new one. Without it, both requests finish, and whichever response arrives last is what you see — even if that response is for an older, shorter query.</p>
-<p>For this search box, use the right-hand version. <code>hx-sync="this:replace"</code> throws away the search still in flight and keeps the one for the text you see now. Leave it off only when you are willing to show an older answer. Use <code>queue</code> or <code>drop</code> when each request must be kept or extra clicks should be ignored.</p>
+<p>The new piece on both boxes is <code>hx-trigger</code>. <code>keyup changed delay:300ms</code> waits until you pause, and it skips the request when the text did not change (arrow keys, for example). The <code>search</code> event covers the clear button on a search field. With no <code>hx-sync</code>, HTMX 4 uses <code>queue first</code>: the new search waits until the current one finishes. You see the older list, then the newer one replaces it. The list you end on matches the text in the box.</p>
+<p>The right-hand box adds <code>hx-sync="this:replace"</code>. That aborts the search already running and starts the new one, so the one-letter list never appears. That is the version to keep for a search box. <code>drop</code> is the other choice: ignore a new request while one is running.</p>
 
 <h2 class="h5">The markup</h2>
 <pre class="bg-body-tertiary border rounded p-3 small mb-3"><code>&lt;input
@@ -76,11 +76,11 @@ return templates.TemplateResponse(
   <li><strong>Request:</strong> <code>GET /ui/tutorial/books?slow=1&amp;q=...</code> after a 300ms pause.</li>
   <li><strong>Response:</strong> the title list. A one-letter search also includes the artificial-wait line.</li>
   <li><strong>Target:</strong> the results element under that box, not the input.</li>
-  <li><strong>Swap:</strong> <code>innerHTML</code>. <code>hx-sync</code> is not a swap. It decides whether the previous request is allowed to finish.</li>
+  <li><strong>Swap:</strong> <code>innerHTML</code>. <code>hx-sync</code> is not a swap. With none set, the next request waits. <code>this:replace</code> cancels the one in flight.</li>
 </ul>
 
 <h2 class="h5">Experiment</h2>
-<p>In the left box, type <kbd>a</kbd>, wait until the request starts, then type <kbd>nimal</kbd> and pause again. You may see matches for "animal" and then the one-letter list replace them, because the slow response finishes last. Do the same in the right box. The one-letter request is cancelled, so that late list does not appear.</p>
+<p>In the left box, type <kbd>d</kbd> and pause until the request has started, about half a second. Then type <kbd>une</kbd> and pause. The one-letter list appears first, with the artificial-wait line. Then the Dune list replaces it: the second search waited. Do the same in the right box. The one-letter list does not appear, and Dune stays.</p>
 
 <h2 class="h5">Files</h2>
 <div class="table-responsive">
