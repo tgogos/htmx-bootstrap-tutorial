@@ -35,6 +35,32 @@
 <h2 class="h5">Experiment</h2>
 <p>Click <strong>Next</strong>. The address changes and this explanation stays. Copy that address into a new tab: you get the whole lesson, already on that page. Come back and press the browser Back button. You should land on the first page of this lesson, not on a bare list.</p>
 
+<h2 class="h5">Files</h2>
+<div class="table-responsive">
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th scope="col">File</th>
+        <th scope="col">Why it is here</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>app/ui/templates/tutorial/lesson_10.html</code></td>
+        <td>This page. The explanation stays outside <code>#shelf</code>.</td>
+      </tr>
+      <tr>
+        <td><code>app/ui/templates/tutorial/shelf.html</code></td>
+        <td>Five titles, the sort links, and Previous / Next. Each link pushes its URL.</td>
+      </tr>
+      <tr>
+        <td><code>app/ui/tutorial_routes.py</code></td>
+        <td><code>lesson_pages</code> reads <code>page</code> and <code>ordering</code>. A click gets <code>shelf.html</code>. A reload or <code>HX-History-Restore-Request</code> gets this whole lesson.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
 <p class="mt-4 d-flex gap-2">
   <a class="btn btn-outline-secondary" href="/ui/tutorial/9">Previous</a>
   <a class="btn btn-outline-secondary" href="/ui/tutorial/11">Next: the books table</a>
