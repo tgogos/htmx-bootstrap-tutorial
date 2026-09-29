@@ -73,6 +73,36 @@ return templates.TemplateResponse(
 <h2 class="h5">Experiment</h2>
 <p>Leave the title blank and save. In the network panel the status is 400, and the alert still shows up in the page. Then fill in a title and author, put a word in Year, and save again.</p>
 
+<h2 class="h5">Files</h2>
+<div class="table-responsive">
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th scope="col">File</th>
+        <th scope="col">Why it is here</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>app/ui/templates/tutorial/lesson_7.html</code></td>
+        <td>This page. The form stays outside <code>#add-result</code>.</td>
+      </tr>
+      <tr>
+        <td><code>app/ui/tutorial_routes.py</code></td>
+        <td><code>lesson_add_book</code> returns the error fragment with status 400, or the saved card with status 200.</td>
+      </tr>
+      <tr>
+        <td><code>app/ui/templates/tutorial/form_error.html</code></td>
+        <td>The alert for a refused form.</td>
+      </tr>
+      <tr>
+        <td><code>app/ui/templates/tutorial/saved_card.html</code></td>
+        <td>The “Saved.” line, plus the card from <code>book_card.html</code>.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
 <p class="mt-4 d-flex gap-2">
   <a class="btn btn-outline-secondary" href="/ui/tutorial/6">Previous</a>
   <a class="btn btn-outline-secondary" href="/ui/tutorial/8">Next: edit and delete</a>
