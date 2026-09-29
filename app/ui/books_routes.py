@@ -580,7 +580,7 @@ async def update_book(
     )
     if book is None:
         return HTMLResponse("Book not found", status_code=404)
-    return templates.TemplateResponse(
+    response = templates.TemplateResponse(
         request,
         "partials/book_row.html",
         _ctx(
@@ -596,6 +596,10 @@ async def update_book(
             ),
         ),
     )
+    response.headers["HX-Trigger"] = json.dumps(
+        {"showToast": {"message": "Book saved", "level": "ok"}}
+    )
+    return response
 
 
 @router.delete(

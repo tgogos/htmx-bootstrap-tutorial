@@ -384,6 +384,28 @@ class TestAuthWeb:
         assert "showToast" in deleted.headers["HX-Trigger"]
         assert "Book deleted" in deleted.headers["HX-Trigger"]
 
+    def test_ui_update_triggers_toast_header(self, auth_client: TestClient):
+        headers = session_csrf_headers(auth_client)
+        created = auth_client.post(
+            f"{API_BOOKS}/",
+            json={
+                "title": "Toast Save",
+                "author": "Z",
+                "category": "other",
+            },
+            headers=headers,
+        )
+        assert created.status_code == 201
+        book_id = created.json()["id"]
+        saved = auth_client.put(
+            f"/ui/books/{book_id}",
+            data={"title": "Toast Save", "author": "Z", "category": "other"},
+            headers={**headers, "HX-Request": "true"},
+        )
+        assert saved.status_code == 200
+        assert "Toast Save" in saved.text
+        assert "Book saved" in saved.headers["HX-Trigger"]
+
     def test_login_logout(self, client: TestClient):
         page = client.get("/auth/login")
         csrf = page.text.split('name="csrf_token" value="', 1)[1].split('"', 1)[0]

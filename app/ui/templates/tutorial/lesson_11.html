@@ -31,7 +31,7 @@
   <li><strong>Sort and pages.</strong> <code>partials/sortable_th.html</code> and <code>partials/list_pagination.html</code> are links with <code>href</code>, <code>hx-get</code>, and <code>hx-push-url</code>, aimed at <code>#books-panel</code>. Ordering is an allowlisted name such as <code>title</code> or <code>-author</code>. The leading minus means descending. Lesson 10.</li>
   <li><strong>Rows per page.</strong> The size menu is not a link. <code>app.js</code> calls <code>htmx.ajax</code> when it changes, and the menu carries <code>hx-indicator</code>. Lessons 3 and 9: a small script where a swap is not enough.</li>
   <li><strong>Add.</strong> The form posts to <code>/ui/books</code> and targets <code>#books-panel</code>. A bad form returns the table HTML with status 400, which HTMX 4 still shows. Lesson 7.</li>
-  <li><strong>Edit and delete.</strong> <code>partials/book_row.html</code> loads an edit form with <code>hx-swap="outerHTML"</code>, and delete waits for <code>confirmed-delete</code>. The delete response sets <code>HX-Trigger</code> so <code>app.js</code> shows a toast. Lessons 8 and 9.</li>
+  <li><strong>Edit and delete.</strong> <code>partials/book_row.html</code> loads an edit form with <code>hx-swap="outerHTML"</code>, and delete waits for <code>confirmed-delete</code>. A saved edit and a confirmed delete both set <code>HX-Trigger</code> so <code>app.js</code> shows a toast. Lessons 8 and 9.</li>
 </ul>
 
 <h2 class="h5">Request, response, target, swap</h2>
