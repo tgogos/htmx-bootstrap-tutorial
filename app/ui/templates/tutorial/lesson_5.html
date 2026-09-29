@@ -39,7 +39,15 @@
   hx-swap="innerHTML"
   hx-trigger="change"
 &gt;...&lt;/select&gt;</code></pre>
-<p><code>GET /ui/tutorial/books</code> renders <code>tutorial/book_list.html</code>: a short list of titles, not the books table. The menu stays outside <code>#category-results</code>, so the response does not replace the control you are using.</p>
+<p><code>GET /ui/tutorial/books</code> is <code>lesson_book_list</code>. It reads <code>category</code> from the query string, because the menu's <code>name</code> is <code>category</code>, and it renders <code>tutorial/book_list.html</code>: a short list of titles, not the books table. The menu stays outside <code>#category-results</code>, so the response does not replace the control you are using.</p>
+<pre class="bg-body-tertiary border rounded p-3 small mb-3"><code>category: str | None = Query(None)
+chosen = (category or "").strip() or None
+books, total = await books_repo.list_books(
+    page=1, size=8, category=chosen, ordering="title",
+)
+return templates.TemplateResponse(
+    request, "tutorial/book_list.html", {"books": books, ...},
+)</code></pre>
 
 <h2 class="h5">Request, response, target, swap</h2>
 <ul>
@@ -51,6 +59,32 @@
 
 <h2 class="h5">Experiment</h2>
 <p>In the inspector, delete <code>hx-trigger</code> and change the category again. It still fetches, because <code>change</code> is the default for a menu. Then set <code>hx-trigger="click"</code> and open the menu: the request fires on the click, before you have picked a new category.</p>
+
+<h2 class="h5">Files</h2>
+<div class="table-responsive">
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th scope="col">File</th>
+        <th scope="col">Why it is here</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>app/ui/templates/tutorial/lesson_5.html</code></td>
+        <td>This page. The menu stays outside <code>#category-results</code>.</td>
+      </tr>
+      <tr>
+        <td><code>app/ui/tutorial_routes.py</code></td>
+        <td><code>lesson_book_list</code> reads <code>category</code> and returns the title list.</td>
+      </tr>
+      <tr>
+        <td><code>app/ui/templates/tutorial/book_list.html</code></td>
+        <td>The fragment: matching titles, not the books table.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
 <p class="mt-4 d-flex gap-2">
   <a class="btn btn-outline-secondary" href="/ui/tutorial/4">Previous</a>
