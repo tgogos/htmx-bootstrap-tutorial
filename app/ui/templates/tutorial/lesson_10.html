@@ -23,7 +23,14 @@
   hx-swap="innerHTML"
   hx-push-url="true"
 &gt;Next&lt;/a&gt;</code></pre>
-<p><code>GET /ui/tutorial/10</code> renders this whole lesson when you open the address yourself. A click sends the header <code>HX-Request</code>, and the response is only <code>tutorial/shelf.html</code>. Back and Forward send that header too, plus <code>HX-History-Restore-Request</code>. <code>lesson_pages</code> calls <code>_wants_fragment</code> in <code>app/ui/tutorial_routes.py</code>. That function checks the restore header first, so those requests still get the whole lesson. A shelf-only response would replace the window.</p>
+<p><code>GET /ui/tutorial/10</code> renders this whole lesson when you open the address yourself. A click sends the header <code>HX-Request</code>, and the response is only <code>tutorial/shelf.html</code>. Back and Forward send that header too, plus <code>HX-History-Restore-Request</code>. <code>_wants_fragment</code> in <code>app/ui/tutorial_routes.py</code> checks the restore header first, so those requests still get the whole lesson. A shelf-only response would replace the window.</p>
+<pre class="bg-body-tertiary border rounded p-3 small mb-3"><code>def _wants_fragment(request: Request) -&gt; bool:
+    if request.headers.get("HX-History-Restore-Request") == "true":
+        return False
+    return request.headers.get("HX-Request") == "true"
+
+# later in the file... inside the /tutorial/10 handler:
+template = "tutorial/shelf.html" if _wants_fragment(request) else "tutorial/lesson_10.html"</code></pre>
 
 <h2 class="h5">Request, response, target, swap</h2>
 <ul>
@@ -56,7 +63,7 @@
       </tr>
       <tr>
         <td><code>app/ui/tutorial_routes.py</code></td>
-        <td><code>lesson_pages</code> reads <code>page</code> and <code>ordering</code>, then calls <code>_wants_fragment</code>. That function returns <code>shelf.html</code> for a click, and this whole lesson when <code>HX-History-Restore-Request</code> is set.</td>
+        <td>Reads <code>page</code> and <code>ordering</code>. <code>_wants_fragment</code> returns false when <code>HX-History-Restore-Request</code> is set, so a click gets <code>shelf.html</code> and Back/Forward gets this whole lesson.</td>
       </tr>
     </tbody>
   </table>
