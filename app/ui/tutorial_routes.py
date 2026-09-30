@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+from datetime import datetime, timezone
 from urllib.parse import urlencode
 
 from fastapi import APIRouter, Depends, Form, Query, Request
@@ -516,4 +517,30 @@ async def lesson_lazy_books(
         request,
         "tutorial/lazy_books.html",
         {"books": books, "total": total, "delay": LAZY_DELAY_SECONDS},
+    )
+
+
+@router.get("/tutorial/13", response_class=HTMLResponse)
+async def lesson_poll(
+    request: Request,
+    user: dict = Depends(require_user_html),
+):
+    return templates.TemplateResponse(
+        request,
+        "tutorial/lesson_13.html",
+        _lesson_ctx(request, user, 13),
+    )
+
+
+@router.get("/tutorial/13/clock", response_class=HTMLResponse)
+async def lesson_clock(
+    request: Request,
+    _user: dict = Depends(require_user_html),
+):
+    """HTML fragment: the server clock, fetched again by the lesson's timer."""
+    now = datetime.now(timezone.utc)
+    return templates.TemplateResponse(
+        request,
+        "tutorial/clock.html",
+        {"clock": now.strftime("%H:%M:%S"), "stamp": now.strftime("%Y-%m-%dT%H:%M:%SZ")},
     )

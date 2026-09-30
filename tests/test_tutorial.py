@@ -1,4 +1,4 @@
-"""Tutorial landing page and lessons 1–12."""
+"""Tutorial landing page and lessons 1–13."""
 
 import re
 
@@ -43,6 +43,8 @@ class TestTutorial:
             "/ui/tutorial/11",
             "/ui/tutorial/12",
             "/ui/tutorial/12/books",
+            "/ui/tutorial/13",
+            "/ui/tutorial/13/clock",
         ):
             response = client.get(path, follow_redirects=False)
             assert response.status_code == 303
@@ -64,6 +66,7 @@ class TestTutorial:
         assert 'href="/ui/tutorial/10"' in page.text
         assert 'href="/ui/tutorial/11"' in page.text
         assert 'href="/ui/tutorial/12"' in page.text
+        assert 'href="/ui/tutorial/13"' in page.text
         assert "books table" in page.text.lower()
 
     def test_lesson_1_is_an_ordinary_link(self, auth_client: TestClient):
@@ -309,6 +312,22 @@ class TestTutorial:
         assert "Lazy Author" in fragment.text
         assert "Artificial wait" in fragment.text
         assert "held for 1 second" in fragment.text
+
+    def test_lesson_13_polls_the_server_clock(self, auth_client: TestClient):
+        page = auth_client.get("/ui/tutorial/13")
+        assert page.status_code == 200
+        assert 'hx-get="/ui/tutorial/13/clock"' in page.text
+        assert 'hx-trigger="every 2s"' in page.text
+        assert 'id="server-clock"' in page.text
+        assert "The time appears here, then updates every two seconds." in page.text
+        assert "<time" not in page.text
+
+        fragment = auth_client.get("/ui/tutorial/13/clock")
+        assert fragment.status_code == 200
+        assert "<html" not in fragment.text.lower()
+        assert "Server time:" in fragment.text
+        assert "UTC" in fragment.text
+        assert re.search(r"\d{2}:\d{2}:\d{2} UTC", fragment.text)
 
     def test_books_history_restore_is_a_full_page(self, auth_client: TestClient):
         partial = auth_client.get("/ui/books", headers={"HX-Request": "true"})

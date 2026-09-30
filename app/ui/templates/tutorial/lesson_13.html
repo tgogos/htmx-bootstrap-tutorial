@@ -1,0 +1,75 @@
+{% extends "layout.html" %}
+{% block title %}Lesson 13 · Poll · Tutorial{% endblock %}
+{% block description %}Fetch the server clock again every two seconds{% endblock %}
+{% block content %}
+{% include "partials/tutorial_nav.html" %}
+<h1 class="h2">13. Ask again on a timer</h1>
+<p>Lesson 12 asks once, when the box reaches the screen. This box asks on its own, every two seconds, and shows the time on the server.</p>
+
+<h2 class="h5">Try it</h2>
+<p>Wait. After two seconds the sentence in the box becomes the clock, then it updates again two seconds later.</p>
+<div
+  id="server-clock"
+  class="border rounded p-3 mb-3"
+  hx-get="/ui/tutorial/13/clock"
+  hx-target="#server-clock"
+  hx-swap="innerHTML"
+  hx-trigger="every 2s"
+>
+  <p class="text-body-secondary mb-0">The time appears here, then updates every two seconds.</p>
+</div>
+
+<h2 class="h5">What changed</h2>
+<p>The new trigger is <code>every 2s</code>. HTMX waits two seconds, sends the request, waits two seconds, and sends it again. There is no button. The box is its own target, and <code>innerHTML</code> replaces the sentence inside it. The attributes stay on the box, so the timer stays too. The fragment is the clock in UTC, so a later response shows a later second. The address does not change.</p>
+
+<h2 class="h5">The markup and the fragment</h2>
+<pre class="bg-body-tertiary border rounded p-3 small mb-3"><code>&lt;div
+  id="server-clock"
+  hx-get="/ui/tutorial/13/clock"
+  hx-target="#server-clock"
+  hx-swap="innerHTML"
+  hx-trigger="every 2s"
+&gt;...&lt;/div&gt;</code></pre>
+<p><code>GET /ui/tutorial/13/clock</code> is <code>lesson_clock</code> in <code>app/ui/tutorial_routes.py</code>. It returns <code>tutorial/clock.html</code>: the hour, minute, and second in UTC. It does not sleep. This URL is only that clock. It is not the books table, and it does not change the address.</p>
+
+<h2 class="h5">Request, response, target, swap</h2>
+<ul>
+  <li><strong>Request:</strong> <code>GET /ui/tutorial/13/clock</code> every two seconds.</li>
+  <li><strong>Response:</strong> the current time.</li>
+  <li><strong>Target:</strong> <code>#server-clock</code>, the box itself.</li>
+  <li><strong>Swap:</strong> <code>innerHTML</code>.</li>
+</ul>
+
+<h2 class="h5">Experiment</h2>
+<p>In the inspector, set <code>hx-trigger="click"</code> and wait. The clock stops where it is. A click fetches once. Set <code>every 2s</code> again and the updates resume.</p>
+
+<h2 class="h5">Files</h2>
+<div class="table-responsive">
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th scope="col">File</th>
+        <th scope="col">Why it is here</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>app/ui/templates/tutorial/lesson_13.html</code></td>
+        <td>This page. The box polls on <code>every 2s</code>.</td>
+      </tr>
+      <tr>
+        <td><code>app/ui/tutorial_routes.py</code></td>
+        <td><code>lesson_clock</code> returns the current UTC time. It does not wait.</td>
+      </tr>
+      <tr>
+        <td><code>app/ui/templates/tutorial/clock.html</code></td>
+        <td>The fragment: one time, not the books table.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p class="mt-4">
+  <a class="btn btn-outline-secondary" href="/ui/tutorial/12">Previous</a>
+</p>
+{% endblock %}

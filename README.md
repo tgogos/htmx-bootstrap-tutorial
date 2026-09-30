@@ -15,7 +15,7 @@ make upd
 make seed     # books for the lessons
 ```
 
-Open `/ui/tutorial` after logging in (`DEMO_USERNAME` / `DEMO_PASSWORD`, defaults `admin` / `admin123`). Lessons 1–9 are small interactions. Lesson 10 puts a page in the address bar. Lesson 11 walks the books table at `/ui/books`. Lesson 12 loads a few titles when a box scrolls into view.
+Open `/ui/tutorial` after logging in (`DEMO_USERNAME` / `DEMO_PASSWORD`, defaults `admin` / `admin123`). Lessons 1–9 are small interactions. Lesson 10 puts a page in the address bar. Lesson 11 walks the books table at `/ui/books`. Lesson 12 loads a few titles when a box scrolls into view. Lesson 13 fetches the server clock every two seconds.
 
 ## Lessons
 
@@ -33,6 +33,7 @@ Open `/ui/tutorial` after logging in (`DEMO_USERNAME` / `DEMO_PASSWORD`, default
 | 10 | `/ui/tutorial/10` | Page and sort links update the address; Back restores the full lesson |
 | 11 | `/ui/tutorial/11` | The books URL as a full page or a fragment, then a walkthrough |
 | 12 | `/ui/tutorial/12` | `hx-trigger="revealed"` loads the first five titles when the box reaches the screen |
+| 13 | `/ui/tutorial/13` | `hx-trigger="every 2s"` fetches the server clock, then fetches it again |
 
 ## Primary path vs demos
 
