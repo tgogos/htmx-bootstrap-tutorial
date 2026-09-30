@@ -441,7 +441,7 @@ class TestAuthWeb:
         assert edit.status_code == 200
         assert "<html" in edit.text.lower()
         assert f'action="/ui/books/{book_id}/edit"' in edit.text
-        assert "return_to=page" in edit.text
+        assert "redirect=1" in edit.text
 
         row = auth_client.get(
             f"/ui/books/{book_id}/edit",
@@ -464,7 +464,7 @@ class TestAuthWeb:
         assert 'data-message="Book saved"' in revised.text
 
         deleted = auth_client.delete(
-            f"/ui/books/{book_id}?return_to=page",
+            f"/ui/books/{book_id}?redirect=1",
             headers={**headers, "HX-Request": "true"},
         )
         assert deleted.status_code == 200
@@ -490,31 +490,23 @@ class TestAuthWeb:
 
         listed = auth_client.get("/ui/books", params={"size": 25, "ordering": "-author"})
         assert (
-            f'href="/ui/books/{book_id}?page=1&amp;size=25&amp;ordering=-author"'
+            f'href="/ui/books/{book_id}?page=1&amp;size=25&amp;ordering=-author&amp;return_to=list"'
             in listed.text
         )
 
-        query = {"page": 2, "size": 25, "ordering": "-author"}
+        query = {"page": 2, "size": 25, "ordering": "-author", "return_to": "list"}
+        carried = "page=2&amp;size=25&amp;ordering=-author&amp;return_to=list"
         detail = auth_client.get(f"/ui/books/{book_id}", params=query)
         assert 'href="/ui/books?page=2&amp;size=25&amp;ordering=-author"' in detail.text
-        assert (
-            f'href="/ui/books/{book_id}/edit?page=2&amp;size=25&amp;ordering=-author"'
-            in detail.text
-        )
+        assert f'href="/ui/books/{book_id}/edit?{carried}"' in detail.text
 
         plain = auth_client.get(f"/ui/books/{book_id}")
         assert 'href="/ui/books">Back to the list' in plain.text
 
         edit = auth_client.get(f"/ui/books/{book_id}/edit", params=query)
-        assert (
-            f'action="/ui/books/{book_id}/edit?page=2&amp;size=25&amp;ordering=-author"'
-            in edit.text
-        )
-        assert (
-            f'href="/ui/books/{book_id}?page=2&amp;size=25&amp;ordering=-author"'
-            in edit.text
-        )
-        assert "return_to=page&amp;page=2&amp;size=25&amp;ordering=-author" in edit.text
+        assert f'action="/ui/books/{book_id}/edit?{carried}"' in edit.text
+        assert f'href="/ui/books/{book_id}?{carried}"' in edit.text
+        assert f"redirect=1&amp;{carried}" in edit.text
 
         saved = auth_client.post(
             f"/ui/books/{book_id}/edit",
@@ -526,12 +518,12 @@ class TestAuthWeb:
         assert saved.status_code == 303
         assert (
             saved.headers["location"]
-            == f"/ui/books/{book_id}?page=2&size=25&ordering=-author"
+            == f"/ui/books/{book_id}?page=2&size=25&ordering=-author&return_to=list"
         )
 
         search = auth_client.get(
             f"/ui/books/{book_id}",
-            params={"q": "Ada", "category": "fiction", "src": "search"},
+            params={"q": "Ada", "category": "fiction", "return_to": "search"},
         )
         assert (
             'href="/ui/books/search?page=1&amp;size=10&amp;ordering=title&amp;q=Ada&amp;category=fiction"'
@@ -540,7 +532,7 @@ class TestAuthWeb:
 
         deleted = auth_client.delete(
             f"/ui/books/{book_id}",
-            params={**query, "return_to": "page"},
+            params={**query, "redirect": 1},
             headers={**headers, "HX-Request": "true"},
         )
         assert deleted.status_code == 200
