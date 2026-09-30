@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% block title %}Edit {{ book.title }} · Admin{% endblock %}
+{% block description %}Edit a book{% endblock %}
+{% block content %}
+<nav aria-label="Breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/ui/dashboard">Home</a></li>
+    <li class="breadcrumb-item"><a href="{{ list_href }}">Books</a></li>
+    <li class="breadcrumb-item"><a href="{{ detail_href }}">{{ book.title }}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Edit</li>
+  </ol>
+</nav>
+<h1 class="h2">Edit {{ book.title }}</h1>
+<p class="text-body-secondary">Saving returns to the book page. The Edit button on the list still replaces the row in the table.</p>
+<div class="card mb-3">
+  <div class="card-body">
+    {% with form_action=edit_href, next="", submit_label="Save", cancel_href=detail_href %}
+    {% include "partials/book_page_form.html" %}
+    {% endwith %}
+  </div>
+</div>
+<button
+  type="button"
+  class="btn btn-outline-danger js-confirm-delete"
+  data-confirm="Delete “{{ book.title }}”? This cannot be undone."
+  hx-delete="{{ delete_href }}"
+  hx-trigger="confirmed-delete"
+  hx-headers='{"X-CSRF-Token": "{{ csrf_token }}"}'
+>Delete</button>
+{% endblock %}

@@ -13,6 +13,9 @@
     <h1 class="h2">Books</h1>
     <p class="text-body-secondary mb-0">SQLite catalog. <a href="/ui/books/search">Advanced search</a> for filters.</p>
   </div>
+  {% if can_edit %}
+  <a class="btn btn-outline-primary" href="/ui/books/new">New book</a>
+  {% endif %}
 </div>
 
 {% if can_edit %}

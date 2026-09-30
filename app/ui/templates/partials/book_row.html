@@ -1,6 +1,6 @@
 <tr id="book-row-{{ book.id }}">
   <td>
-    {{ book.title }}
+    <a href="/ui/books/{{ book.id }}{% if carry_query %}?{{ carry_query }}{% endif %}">{{ book.title }}</a>
     {% if book.isbn %}<br><small class="text-body-secondary">{{ book.isbn }}</small>{% endif %}
   </td>
   <td>{{ book.author }}</td>

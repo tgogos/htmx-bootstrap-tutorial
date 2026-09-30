@@ -1,0 +1,51 @@
+{% if form_error %}
+<div class="alert alert-danger" role="alert">{{ form_error }}</div>
+{% endif %}
+<form method="post" action="{{ form_action }}">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+  {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+  <div class="row g-3">
+    <div class="col-md-6">
+      <label class="form-label" for="page-title">Title</label>
+      <input class="form-control" id="page-title" type="text" name="title" value="{{ values.title }}" required maxlength="200">
+    </div>
+    <div class="col-md-6">
+      <label class="form-label" for="page-author">Author</label>
+      <input class="form-control" id="page-author" type="text" name="author" value="{{ values.author }}" required maxlength="200">
+    </div>
+    <div class="col-md-4">
+      <label class="form-label" for="page-category">Category</label>
+      <select class="form-select" id="page-category" name="category">
+        {% for value, label in categories %}
+        <option value="{{ value }}" {% if values.category == value %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-4">
+      <label class="form-label" for="page-year">Year</label>
+      <input class="form-control" id="page-year" type="number" name="year" value="{{ values.year }}" min="0" max="9999">
+    </div>
+    <div class="col-md-4">
+      <label class="form-label" for="page-pages">Pages</label>
+      <input class="form-control" id="page-pages" type="number" name="page_count" value="{{ values.page_count }}" min="1" max="100000">
+    </div>
+    <div class="col-md-6">
+      <label class="form-label" for="page-isbn">ISBN</label>
+      <input class="form-control" id="page-isbn" type="text" name="isbn" value="{{ values.isbn }}" maxlength="32">
+    </div>
+    <div class="col-md-6">
+      <label class="form-label" for="page-notes">Notes</label>
+      <input class="form-control" id="page-notes" type="text" name="notes" value="{{ values.notes }}" maxlength="2000">
+    </div>
+    <div class="col-12">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="page-available" name="available" value="1" {% if values.available %}checked{% endif %}>
+        <label class="form-check-label" for="page-available">Available</label>
+      </div>
+    </div>
+    <div class="col-12 d-flex flex-wrap gap-2">
+      <button class="btn btn-primary" type="submit">{{ submit_label }}</button>
+      <a class="btn btn-outline-secondary" href="{{ cancel_href }}">Cancel</a>
+    </div>
+  </div>
+</form>

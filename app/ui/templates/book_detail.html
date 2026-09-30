@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+{% block title %}{{ book.title }} · Books · Admin{% endblock %}
+{% block description %}{{ book.title }} by {{ book.author }}{% endblock %}
+{% block content %}
+<nav aria-label="Breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/ui/dashboard">Home</a></li>
+    <li class="breadcrumb-item"><a href="{{ list_href }}">Books</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{ book.title }}</li>
+  </ol>
+</nav>
+<div class="d-flex justify-content-between flex-wrap align-items-start gap-2 pb-2 mb-3 border-bottom">
+  <div>
+    <h1 class="h2">{{ book.title }}</h1>
+    <p class="text-body-secondary mb-0">{{ book.author }}</p>
+  </div>
+  {% if can_edit %}
+  <a class="btn btn-primary" href="{{ edit_href }}">Edit</a>
+  {% endif %}
+</div>
+<dl class="row">
+  <dt class="col-sm-3">Category</dt>
+  <dd class="col-sm-9">{{ category_labels.get(book.category, book.category) }}</dd>
+  <dt class="col-sm-3">Year</dt>
+  <dd class="col-sm-9">{{ book.year if book.year is not none else "—" }}</dd>
+  <dt class="col-sm-3">Pages</dt>
+  <dd class="col-sm-9">{{ book.page_count if book.page_count is not none else "—" }}</dd>
+  <dt class="col-sm-3">ISBN</dt>
+  <dd class="col-sm-9">{{ book.isbn or "—" }}</dd>
+  <dt class="col-sm-3">Available</dt>
+  <dd class="col-sm-9">{{ "Yes" if book.available else "No" }}</dd>
+  <dt class="col-sm-3">Added by</dt>
+  <dd class="col-sm-9">{{ book.added_by_username or "—" }}</dd>
+  <dt class="col-sm-3">Notes</dt>
+  <dd class="col-sm-9">{{ book.notes or "—" }}</dd>
+</dl>
+<p class="mb-0"><a href="{{ list_href }}">Back to the list</a></p>
+{% endblock %}

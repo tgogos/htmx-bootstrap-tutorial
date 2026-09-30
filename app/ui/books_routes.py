@@ -6,7 +6,7 @@ import json
 from urllib.parse import urlencode
 
 from fastapi import APIRouter, Depends, Form, Query, Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
 from app.auth.deps import (
@@ -26,6 +26,7 @@ from app.auth.users import (
 )
 from app.db import books as books_repo
 from app.db.books import BOOK_CATEGORIES, normalize_category
+from app.ui.pages_routes import render_not_found
 from app.ui.pagination import DEFAULT_PAGE_SIZE, PAGE_SIZES, page_size, sort_column_state
 from app.ui.paths import TEMPLATES_DIR
 
@@ -87,7 +88,13 @@ def _ctx(request: Request, user: dict, **extra):
         "main_class": "",
     }
     ctx.update(extra)
+    if not _wants_books_partial(request):
+        ctx["toast"] = request.session.pop("toast", None)
     return ctx
+
+
+def _remember_toast(request: Request, message: str) -> None:
+    request.session["toast"] = {"message": message, "level": "ok"}
 
 
 def _parse_optional_int(raw: str | None) -> int | None:
@@ -115,8 +122,7 @@ def _toggle_order(current: str, column: str) -> str:
     return column
 
 
-def _books_list_url(
-    base: str,
+def _list_params(
     *,
     page: int,
     size: int,
@@ -127,7 +133,7 @@ def _books_list_url(
     added_by_user_id: int | None = None,
     year_min: int | None = None,
     year_max: int | None = None,
-) -> str:
+) -> dict[str, str | int]:
     params: dict[str, str | int] = {
         "page": page,
         "size": size,
@@ -145,7 +151,164 @@ def _books_list_url(
         params["year_min"] = year_min
     if year_max is not None:
         params["year_max"] = year_max
-    return f"{base}?{urlencode(params)}"
+    return params
+
+
+def _books_list_url(
+    base: str,
+    *,
+    page: int,
+    size: int,
+    ordering: str,
+    q: str | None = None,
+    category: str | None = None,
+    available: str | None = None,
+    added_by_user_id: int | None = None,
+    year_min: int | None = None,
+    year_max: int | None = None,
+) -> str:
+    return f"{base}?{urlencode(_list_params(
+        page=page,
+        size=size,
+        ordering=ordering,
+        q=q,
+        category=category,
+        available=available,
+        added_by_user_id=added_by_user_id,
+        year_min=year_min,
+        year_max=year_max,
+    ))}"
+
+
+_LIST_QUERY_KEYS = (
+    "page",
+    "size",
+    "ordering",
+    "q",
+    "category",
+    "available",
+    "added_by_user_id",
+    "year_min",
+    "year_max",
+    "return_to",
+)
+
+
+def _has_list_query(request: Request) -> bool:
+    return any(key in request.query_params for key in _LIST_QUERY_KEYS)
+
+
+def _list_return(
+    *,
+    page: int,
+    size: int,
+    ordering: str | None,
+    q: str | None,
+    category: str | None,
+    available: str | None,
+    added_by_user_id: int | None,
+    year_min: int | None,
+    year_max: int | None,
+    return_to: str,
+) -> tuple[str, str, str]:
+    """List URL, the query string that reproduces it, and the sidebar key.
+
+    return_to is list or search. It is not part of the list URL.
+    """
+    ordering_value = books_repo.normalize_ordering(ordering)
+    size_value = page_size(size)
+    cat = category if category in BOOK_CATEGORIES else None
+    q_value = q.strip() if q and q.strip() else None
+    dest = "search" if return_to == "search" else "list"
+    base = "/ui/books/search" if dest == "search" else "/ui/books"
+    params = _list_params(
+        page=page,
+        size=size_value,
+        ordering=ordering_value,
+        q=q_value,
+        category=cat,
+        available=available,
+        added_by_user_id=added_by_user_id,
+        year_min=year_min,
+        year_max=year_max,
+    )
+    carry = {**params, "return_to": dest}
+    active = "books-search" if dest == "search" else "books"
+    return _books_list_url(base, **params), urlencode(carry), active  # type: ignore[arg-type]
+
+
+def _plain_list(
+    *,
+    page: int,
+    size: int,
+    ordering: str,
+    q: str | None,
+    category: str | None,
+    available: str | None,
+    added_by_user_id: int | None,
+    year_min: int | None,
+    year_max: int | None,
+    return_to: str,
+) -> bool:
+    return (
+        return_to != "search"
+        and page == 1
+        and size == DEFAULT_PAGE_SIZE
+        and ordering == books_repo.DEFAULT_ORDERING
+        and not q
+        and not category
+        and not (available and available != "any")
+        and added_by_user_id is None
+        and year_min is None
+        and year_max is None
+    )
+
+
+def _list_place(
+    request: Request,
+    page: int = Query(1, ge=1),
+    size: int = Query(DEFAULT_PAGE_SIZE, ge=1, le=100),
+    ordering: str | None = Query(None),
+    q: str | None = Query(None),
+    category: str | None = Query(None),
+    available: str | None = Query(None),
+    added_by_user_id: int | None = Query(None),
+    year_min: int | None = Query(None),
+    year_max: int | None = Query(None),
+    return_to: str = Query("list"),
+) -> dict[str, str]:
+    """FastAPI dependency: where a book page should send the reader back."""
+    if not _has_list_query(request):
+        return {"list_href": "/ui/books", "carry_query": "", "active": "books"}
+    list_href, carry_query, active = _list_return(
+        page=page,
+        size=size,
+        ordering=ordering,
+        q=q,
+        category=category,
+        available=available,
+        added_by_user_id=added_by_user_id,
+        year_min=year_min,
+        year_max=year_max,
+        return_to=return_to,
+    )
+    return {"list_href": list_href, "carry_query": carry_query, "active": active}
+
+
+def _book_page_urls(book_id: str, place: dict[str, str]) -> dict[str, str]:
+    carry = place["carry_query"]
+    suffix = f"?{carry}" if carry else ""
+    delete_href = f"/ui/books/{book_id}?redirect=1"
+    if carry:
+        delete_href = f"{delete_href}&{carry}"
+    return {
+        "list_href": place["list_href"],
+        "carry_query": carry,
+        "detail_href": f"/ui/books/{book_id}{suffix}",
+        "edit_href": f"/ui/books/{book_id}/edit{suffix}",
+        "delete_href": delete_href,
+        "active": place["active"],
+    }
 
 
 def _active_filter_chips(
@@ -234,23 +397,33 @@ async def _books_page_data(
 
     return_to = "search" if base_path.rstrip("/").endswith("/search") else "list"
     results_params: dict[str, str | int] = {
-        "page": page,
-        "size": size,
-        "ordering": ordering,
+        **_list_params(
+            page=page,
+            size=size,
+            ordering=ordering,
+            q=q,
+            category=cat,
+            available=available,
+            added_by_user_id=added_by_user_id,
+            year_min=year_min,
+            year_max=year_max,
+        ),
         "return_to": return_to,
     }
-    if q:
-        results_params["q"] = q
-    if cat:
-        results_params["category"] = cat
-    if available and available != "any":
-        results_params["available"] = available
-    if added_by_user_id is not None:
-        results_params["added_by_user_id"] = added_by_user_id
-    if year_min is not None:
-        results_params["year_min"] = year_min
-    if year_max is not None:
-        results_params["year_max"] = year_max
+    carry_query = ""
+    if not _plain_list(
+        page=page,
+        size=size,
+        ordering=ordering,
+        q=q,
+        category=cat,
+        available=available,
+        added_by_user_id=added_by_user_id,
+        year_min=year_min,
+        year_max=year_max,
+        return_to=return_to,
+    ):
+        carry_query = urlencode(results_params)
 
     chips = _active_filter_chips(
         q=q,
@@ -281,6 +454,7 @@ async def _books_page_data(
         "year_max": year_max if year_max is not None else "",
         "list_base": base_path,
         "results_query": urlencode(results_params),
+        "carry_query": carry_query,
         "active_filters": chips,
         "show_filter_summary": base_path.rstrip("/").endswith("/search"),
         "first_url": href(page=1) if page > 1 else None,
@@ -337,6 +511,42 @@ def _parse_book_form(
         "page_count": pages_val,
         "available": available_val,
     }, None
+
+
+def _form_values(
+    *,
+    title: str,
+    author: str,
+    year: str,
+    notes: str,
+    category: str,
+    isbn: str,
+    page_count: str,
+    available: str | None,
+) -> dict:
+    return {
+        "title": title,
+        "author": author,
+        "year": year,
+        "notes": notes,
+        "category": category or "fiction",
+        "isbn": isbn,
+        "page_count": page_count,
+        "available": available in {"1", "true", "on", "yes"},
+    }
+
+
+def _form_values_from_book(book: dict) -> dict:
+    return {
+        "title": book["title"],
+        "author": book["author"],
+        "year": "" if book["year"] is None else str(book["year"]),
+        "notes": book["notes"] or "",
+        "category": book["category"],
+        "isbn": book["isbn"] or "",
+        "page_count": "" if book["page_count"] is None else str(book["page_count"]),
+        "available": bool(book["available"]),
+    }
 
 
 @router.get("/books", response_class=HTMLResponse)
@@ -417,6 +627,32 @@ async def books_search_page(
     )
 
 
+@router.get("/books/new", response_class=HTMLResponse)
+async def new_book_page(
+    request: Request,
+    user: dict = Depends(require_editor_html),
+):
+    return templates.TemplateResponse(
+        request,
+        "book_new.html",
+        _ctx(
+            request,
+            user,
+            form_error=None,
+            values=_form_values(
+                title="",
+                author="",
+                year="",
+                notes="",
+                category="fiction",
+                isbn="",
+                page_count="",
+                available="1",
+            ),
+        ),
+    )
+
+
 @router.post(
     "/books",
     response_class=HTMLResponse,
@@ -437,6 +673,7 @@ async def create_book(
     size: int = Form(DEFAULT_PAGE_SIZE),
     ordering: str = Form(""),
     q: str = Form(""),
+    next: str = Form(""),
 ):
     # Unchecked checkbox omits the field → treat as unavailable.
     payload, form_error = _parse_book_form(
@@ -449,8 +686,9 @@ async def create_book(
         page_count=page_count,
         available=available if available is not None else "0",
     )
+    created = None
     if form_error is None and payload is not None:
-        await books_repo.create_book(
+        created = await books_repo.create_book(
             payload["title"],
             payload["author"],
             year=payload["year"],
@@ -462,6 +700,30 @@ async def create_book(
             added_by_user_id=user["id"],
         )
         page = 1
+
+    if next == "detail":
+        if created is not None:
+            return RedirectResponse(url=f"/ui/books/{created['id']}", status_code=303)
+        return templates.TemplateResponse(
+            request,
+            "book_new.html",
+            _ctx(
+                request,
+                user,
+                form_error=form_error,
+                values=_form_values(
+                    title=title,
+                    author=author,
+                    year=year,
+                    notes=notes,
+                    category=category,
+                    isbn=isbn,
+                    page_count=page_count,
+                    available=available,
+                ),
+            ),
+            status_code=400,
+        )
 
     data = await _books_page_data(
         base_path="/ui/books",
@@ -483,25 +745,134 @@ async def edit_book_form(
     request: Request,
     book_id: str,
     user: dict = Depends(require_editor_html),
+    place: dict[str, str] = Depends(_list_place),
 ):
     book = await books_repo.get_book(book_id)
     if book is None:
-        return HTMLResponse("Book not found", status_code=404)
+        if _wants_books_partial(request):
+            return HTMLResponse("Book not found", status_code=404)
+        return await render_not_found(request)
+    if _wants_books_partial(request):
+        return templates.TemplateResponse(
+            request,
+            "partials/book_edit_row.html",
+            _ctx(
+                request,
+                user,
+                book=book,
+                page=1,
+                size=DEFAULT_PAGE_SIZE,
+                q="",
+                list_base="/ui/books",
+                results_query=urlencode(
+                    {"page": 1, "size": DEFAULT_PAGE_SIZE, "return_to": "list"}
+                ),
+            ),
+        )
     return templates.TemplateResponse(
         request,
-        "partials/book_edit_row.html",
+        "book_edit.html",
         _ctx(
             request,
             user,
             book=book,
-            page=1,
-            size=DEFAULT_PAGE_SIZE,
-            q="",
-            list_base="/ui/books",
-            results_query=urlencode(
-                {"page": 1, "size": DEFAULT_PAGE_SIZE, "return_to": "list"}
-            ),
+            form_error=None,
+            values=_form_values_from_book(book),
+            **_book_page_urls(book_id, place),
         ),
+    )
+
+
+@router.post(
+    "/books/{book_id}/edit",
+    response_class=HTMLResponse,
+    dependencies=[Depends(verify_csrf)],
+)
+async def save_book_page(
+    request: Request,
+    book_id: str,
+    user: dict = Depends(require_editor_html),
+    place: dict[str, str] = Depends(_list_place),
+    title: str = Form(...),
+    author: str = Form(...),
+    year: str = Form(""),
+    notes: str = Form(""),
+    category: str = Form("other"),
+    isbn: str = Form(""),
+    page_count: str = Form(""),
+    available: str | None = Form(None),
+):
+    payload, form_error = _parse_book_form(
+        title=title,
+        author=author,
+        year=year,
+        notes=notes,
+        category=category,
+        isbn=isbn,
+        page_count=page_count,
+        available=available if available is not None else "0",
+    )
+    if form_error or payload is None:
+        return templates.TemplateResponse(
+            request,
+            "book_edit.html",
+            _ctx(
+                request,
+                user,
+                book={"id": book_id, "title": title},
+                form_error=form_error,
+                values=_form_values(
+                    title=title,
+                    author=author,
+                    year=year,
+                    notes=notes,
+                    category=category,
+                    isbn=isbn,
+                    page_count=page_count,
+                    available=available,
+                ),
+                **_book_page_urls(book_id, place),
+            ),
+            status_code=400,
+        )
+    book = await books_repo.update_book(
+        book_id,
+        title=payload["title"],
+        author=payload["author"],
+        year=payload["year"],
+        year_set=True,
+        notes=payload["notes"],
+        notes_set=True,
+        category=payload["category"],
+        isbn=payload["isbn"],
+        isbn_set=True,
+        page_count=payload["page_count"],
+        page_count_set=True,
+        available=payload["available"],
+    )
+    if book is None:
+        return await render_not_found(request)
+    _remember_toast(request, "Book saved")
+    return RedirectResponse(
+        url=_book_page_urls(book["id"], place)["detail_href"],
+        status_code=303,
+    )
+
+
+@router.get("/books/{book_id}", response_class=HTMLResponse)
+async def book_page(
+    request: Request,
+    book_id: str,
+    user: dict = Depends(require_user_html),
+    place: dict[str, str] = Depends(_list_place),
+):
+    book = await books_repo.get_book(book_id)
+    if book is None:
+        return await render_not_found(request)
+    return templates.TemplateResponse(
+        request,
+        "book_detail.html",
+        _ctx(request, user, book=book, **_book_page_urls(book_id, place)),
     )
 
 
@@ -621,6 +992,7 @@ async def delete_book(
     year_min: str | None = Query(None),
     year_max: str | None = Query(None),
     return_to: str = Query("list"),
+    redirect: int = Query(0, ge=0, le=1),
 ):
     await books_repo.delete_book(book_id)
     try:
@@ -629,6 +1001,27 @@ async def delete_book(
         added_by = _parse_optional_int(added_by_user_id)
     except ValueError:
         return HTMLResponse("Invalid filter value", status_code=400)
+
+    if redirect:
+        _remember_toast(request, "Book deleted")
+        if _has_list_query(request):
+            list_href, _, _ = _list_return(
+                page=page,
+                size=size,
+                ordering=ordering,
+                q=q,
+                category=category,
+                available=available,
+                added_by_user_id=added_by,
+                year_min=ymin,
+                year_max=ymax,
+                return_to=return_to,
+            )
+        else:
+            list_href = "/ui/books"
+        response = HTMLResponse("")
+        response.headers["HX-Redirect"] = list_href
+        return response
 
     base_path = "/ui/books/search" if return_to == "search" else "/ui/books"
     added_by_label = None
