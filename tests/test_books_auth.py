@@ -474,6 +474,81 @@ class TestAuthWeb:
         missing = auth_client.get(f"/ui/books/{book_id}")
         assert missing.status_code == 404
 
+    def test_book_page_keeps_the_list_query(self, auth_client: TestClient):
+        headers = session_csrf_headers(auth_client)
+        created = auth_client.post(
+            f"{API_BOOKS}/",
+            json={"title": "Paged Book", "author": "Ada", "category": "fiction"},
+            headers=headers,
+        )
+        assert created.status_code == 201
+        book_id = created.json()["id"]
+
+        plain_list = auth_client.get("/ui/books")
+        assert f'href="/ui/books/{book_id}"' in plain_list.text
+        assert f'href="/ui/books/{book_id}?' not in plain_list.text
+
+        listed = auth_client.get("/ui/books", params={"size": 25, "ordering": "-author"})
+        assert (
+            f'href="/ui/books/{book_id}?page=1&amp;size=25&amp;ordering=-author"'
+            in listed.text
+        )
+
+        query = {"page": 2, "size": 25, "ordering": "-author"}
+        detail = auth_client.get(f"/ui/books/{book_id}", params=query)
+        assert 'href="/ui/books?page=2&amp;size=25&amp;ordering=-author"' in detail.text
+        assert (
+            f'href="/ui/books/{book_id}/edit?page=2&amp;size=25&amp;ordering=-author"'
+            in detail.text
+        )
+
+        plain = auth_client.get(f"/ui/books/{book_id}")
+        assert 'href="/ui/books">Back to the list' in plain.text
+
+        edit = auth_client.get(f"/ui/books/{book_id}/edit", params=query)
+        assert (
+            f'action="/ui/books/{book_id}/edit?page=2&amp;size=25&amp;ordering=-author"'
+            in edit.text
+        )
+        assert (
+            f'href="/ui/books/{book_id}?page=2&amp;size=25&amp;ordering=-author"'
+            in edit.text
+        )
+        assert "return_to=page&amp;page=2&amp;size=25&amp;ordering=-author" in edit.text
+
+        saved = auth_client.post(
+            f"/ui/books/{book_id}/edit",
+            params=query,
+            data={"title": "Paged Book", "author": "Ada", "category": "fiction"},
+            headers=headers,
+            follow_redirects=False,
+        )
+        assert saved.status_code == 303
+        assert (
+            saved.headers["location"]
+            == f"/ui/books/{book_id}?page=2&size=25&ordering=-author"
+        )
+
+        search = auth_client.get(
+            f"/ui/books/{book_id}",
+            params={"q": "Ada", "category": "fiction", "src": "search"},
+        )
+        assert (
+            'href="/ui/books/search?page=1&amp;size=10&amp;ordering=title&amp;q=Ada&amp;category=fiction"'
+            in search.text
+        )
+
+        deleted = auth_client.delete(
+            f"/ui/books/{book_id}",
+            params={**query, "return_to": "page"},
+            headers={**headers, "HX-Request": "true"},
+        )
+        assert deleted.status_code == 200
+        assert (
+            deleted.headers["HX-Redirect"]
+            == "/ui/books?page=2&size=25&ordering=-author"
+        )
+
     def test_login_logout(self, client: TestClient):
         page = client.get("/auth/login")
         csrf = page.text.split('name="csrf_token" value="', 1)[1].split('"', 1)[0]

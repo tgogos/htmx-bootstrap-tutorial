@@ -5,7 +5,7 @@
 <nav aria-label="Breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="/ui/dashboard">Home</a></li>
-    <li class="breadcrumb-item"><a href="/ui/books">Books</a></li>
+    <li class="breadcrumb-item"><a href="{{ list_href }}">Books</a></li>
     <li class="breadcrumb-item active" aria-current="page">{{ book.title }}</li>
   </ol>
 </nav>
@@ -15,7 +15,7 @@
     <p class="text-body-secondary mb-0">{{ book.author }}</p>
   </div>
   {% if can_edit %}
-  <a class="btn btn-primary" href="/ui/books/{{ book.id }}/edit">Edit</a>
+  <a class="btn btn-primary" href="{{ edit_href }}">Edit</a>
   {% endif %}
 </div>
 <dl class="row">
@@ -34,5 +34,5 @@
   <dt class="col-sm-3">Notes</dt>
   <dd class="col-sm-9">{{ book.notes or "—" }}</dd>
 </dl>
-<p class="mb-0"><a href="/ui/books">Back to the list</a></p>
+<p class="mb-0"><a href="{{ list_href }}">Back to the list</a></p>
 {% endblock %}

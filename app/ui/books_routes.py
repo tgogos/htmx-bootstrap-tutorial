@@ -122,8 +122,7 @@ def _toggle_order(current: str, column: str) -> str:
     return column
 
 
-def _books_list_url(
-    base: str,
+def _list_params(
     *,
     page: int,
     size: int,
@@ -134,7 +133,7 @@ def _books_list_url(
     added_by_user_id: int | None = None,
     year_min: int | None = None,
     year_max: int | None = None,
-) -> str:
+) -> dict[str, str | int]:
     params: dict[str, str | int] = {
         "page": page,
         "size": size,
@@ -152,7 +151,154 @@ def _books_list_url(
         params["year_min"] = year_min
     if year_max is not None:
         params["year_max"] = year_max
-    return f"{base}?{urlencode(params)}"
+    return params
+
+
+def _books_list_url(
+    base: str,
+    *,
+    page: int,
+    size: int,
+    ordering: str,
+    q: str | None = None,
+    category: str | None = None,
+    available: str | None = None,
+    added_by_user_id: int | None = None,
+    year_min: int | None = None,
+    year_max: int | None = None,
+) -> str:
+    return f"{base}?{urlencode(_list_params(
+        page=page,
+        size=size,
+        ordering=ordering,
+        q=q,
+        category=category,
+        available=available,
+        added_by_user_id=added_by_user_id,
+        year_min=year_min,
+        year_max=year_max,
+    ))}"
+
+
+def _list_query(
+    *,
+    page: int,
+    size: int,
+    ordering: str,
+    q: str | None = None,
+    category: str | None = None,
+    available: str | None = None,
+    added_by_user_id: int | None = None,
+    year_min: int | None = None,
+    year_max: int | None = None,
+    src: str | None = None,
+) -> tuple[str, str]:
+    """List URL, and the query string a book page should keep to return there.
+
+    The default list (page 1, 10 rows, title order, no filters) carries nothing,
+    so a plain visit still links back to /ui/books.
+    """
+    params = _list_params(
+        page=page,
+        size=size,
+        ordering=ordering,
+        q=q,
+        category=category,
+        available=available,
+        added_by_user_id=added_by_user_id,
+        year_min=year_min,
+        year_max=year_max,
+    )
+    default_list = (
+        src != "search"
+        and page == 1
+        and size == DEFAULT_PAGE_SIZE
+        and ordering == books_repo.DEFAULT_ORDERING
+        and len(params) == 3
+    )
+    if default_list:
+        return "/ui/books", ""
+    base = "/ui/books/search" if src == "search" else "/ui/books"
+    carry = dict(params)
+    if src == "search":
+        carry["src"] = "search"
+    return f"{base}?{urlencode(params)}", urlencode(carry)
+
+
+def _optional_query_int(raw: str | None) -> int | None:
+    if raw is None:
+        return None
+    raw = raw.strip()
+    if not raw:
+        return None
+    try:
+        return int(raw)
+    except ValueError:
+        return None
+
+
+def _book_return_urls(request: Request, book_id: str) -> dict[str, str]:
+    """Where Back, Save, and Delete should go, from the query that opened the book."""
+    detail_href = f"/ui/books/{book_id}"
+    edit_href = f"/ui/books/{book_id}/edit"
+    bare = {
+        "list_href": "/ui/books",
+        "carry_query": "",
+        "detail_href": detail_href,
+        "edit_href": edit_href,
+        "delete_href": f"/ui/books/{book_id}?return_to=page",
+        "active": "books",
+    }
+    qp = request.query_params
+    watched = (
+        "page",
+        "size",
+        "ordering",
+        "q",
+        "category",
+        "available",
+        "added_by_user_id",
+        "year_min",
+        "year_max",
+        "src",
+    )
+    if not any(key in qp for key in watched):
+        return bare
+
+    page = _optional_query_int(qp.get("page"))
+    if page is None or page < 1:
+        page = 1
+    size_raw = _optional_query_int(qp.get("size"))
+    size = page_size(size_raw if size_raw is not None else DEFAULT_PAGE_SIZE)
+    ordering = books_repo.normalize_ordering(qp.get("ordering"))
+    q = (qp.get("q") or "").strip() or None
+    category = qp.get("category")
+    category = category if category in BOOK_CATEGORIES else None
+    available = qp.get("available")
+    if available not in {"0", "1", "true", "false", "yes", "no"}:
+        available = None
+    src = "search" if qp.get("src") == "search" else None
+    list_href, carry_query = _list_query(
+        page=page,
+        size=size,
+        ordering=ordering,
+        q=q,
+        category=category,
+        available=available,
+        added_by_user_id=_optional_query_int(qp.get("added_by_user_id")),
+        year_min=_optional_query_int(qp.get("year_min")),
+        year_max=_optional_query_int(qp.get("year_max")),
+        src=src,
+    )
+    suffix = f"?{carry_query}" if carry_query else ""
+    return {
+        "list_href": list_href,
+        "carry_query": carry_query,
+        "detail_href": f"{detail_href}{suffix}",
+        "edit_href": f"{edit_href}{suffix}",
+        "delete_href": f"/ui/books/{book_id}?return_to=page" + (f"&{carry_query}" if carry_query else ""),
+        "active": "books-search" if src == "search" else "books",
+    }
 
 
 def _active_filter_chips(
@@ -267,6 +413,18 @@ async def _books_page_data(
         year_min=year_min,
         year_max=year_max,
     )
+    _, carry_query = _list_query(
+        page=page,
+        size=size,
+        ordering=ordering,
+        q=q,
+        category=cat,
+        available=available,
+        added_by_user_id=added_by_user_id,
+        year_min=year_min,
+        year_max=year_max,
+        src="search" if return_to == "search" else None,
+    )
     return {
         "books": rows,
         "total": total,
@@ -288,6 +446,7 @@ async def _books_page_data(
         "year_max": year_max if year_max is not None else "",
         "list_base": base_path,
         "results_query": urlencode(results_params),
+        "carry_query": carry_query,
         "active_filters": chips,
         "show_filter_summary": base_path.rstrip("/").endswith("/search"),
         "first_url": href(page=1) if page > 1 else None,
@@ -610,6 +769,7 @@ async def edit_book_form(
             book=book,
             form_error=None,
             values=_form_values_from_book(book),
+            **_book_return_urls(request, book_id),
         ),
     )
 
@@ -661,6 +821,7 @@ async def save_book_page(
                     page_count=page_count,
                     available=available,
                 ),
+                **_book_return_urls(request, book_id),
             ),
             status_code=400,
         )
@@ -682,7 +843,10 @@ async def save_book_page(
     if book is None:
         return await render_not_found(request)
     _remember_toast(request, "Book saved")
-    return RedirectResponse(url=f"/ui/books/{book['id']}", status_code=303)
+    return RedirectResponse(
+        url=_book_return_urls(request, book["id"])["detail_href"],
+        status_code=303,
+    )
 
 
 @router.get("/books/{book_id}", response_class=HTMLResponse)
@@ -697,7 +861,7 @@ async def book_page(
     return templates.TemplateResponse(
         request,
         "book_detail.html",
-        _ctx(request, user, book=book),
+        _ctx(request, user, book=book, **_book_return_urls(request, book_id)),
     )
 
 
@@ -822,7 +986,7 @@ async def delete_book(
     if return_to == "page":
         _remember_toast(request, "Book deleted")
         response = HTMLResponse("")
-        response.headers["HX-Redirect"] = "/ui/books"
+        response.headers["HX-Redirect"] = _book_return_urls(request, book_id)["list_href"]
         return response
     try:
         ymin = _parse_optional_int(year_min)
