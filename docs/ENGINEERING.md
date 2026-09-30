@@ -138,6 +138,9 @@ Primary mounts:
 | Surface | Path |
 |---------|------|
 | UI list / HTMX | `/ui/books` (full page or partial via `HX-Request`) |
+| Book page | `/ui/books/{id}` |
+| New book page | `/ui/books/new` (editor+). The list form still posts into the table. |
+| Edit book page | `/ui/books/{id}/edit` — full page on a visit; the table row when `HX-Request` is set |
 | Advanced search | `/ui/books/search` (filters outside swap target) |
 | Staff | `/ui/admin/users` (admin only) |
 | JSON API | `/api/books` (reads: login; writes: editor+; filter query params) |
@@ -154,13 +157,14 @@ Books include scalars (`category`, `isbn`, `page_count`, `available`) and `added
 See **UI architecture** for the HTML-first contract. Patterns below are what this app actually ships (Bootstrap shell + `app.js`). Do not add Idiomorph, `hx-boost` shells, or OOB toasts unless they land in code and this file in the same change.
 
 - **`HX-Request` dual response** — one list route returns the full page or `partials/books_table.html`.
+- **Book pages** — `/ui/books/new`, `/ui/books/{id}`, and `/ui/books/{id}/edit` are whole pages. The edit URL still returns the table row when the list sends `HX-Request`. A delete from the edit page sends `HX-Redirect` back to the list. These pages are not tutorial lessons.
 - **Search** — `q` on title/author/ISBN with debounce + `hx-push-url`. Keep the search/filter form **outside** the HTMX swap target so inputs are not replaced (focus stays while typing).
 - **Advanced filters** — `/ui/books/search`: selects + debounced text update live; year inputs update on `change`/explicit Apply (avoid mid-typing requests). Active filter chips render inside the results partial. Delete keeps filter query params via `return_to`.
 - **Pagination and sort** — URL is the source of truth: `page`, `size` (`10`, `25`, `50`, `100`; default 10), and `ordering` (allowlisted column, prefix `-` for descending; default `title`). Sort links and the page-size control swap `#books-panel` with `innerHTML` and `hx-push-url`. Filter forms keep a hidden `ordering` so a search does not drop the sort. Unknown `ordering` values fall back to the default. Same contract on `/api/books`. Swaps stay `innerHTML`; do not add Idiomorph for this.
 - **Indicator** — shared `#books-indicator` via `hx-indicator` (search, pagination, sort, create). CSS-only spinner; HTMX toggles `.htmx-request` / opacity. Keep the indicator outside the swap target.
 - Progressive enhancement: pagination links keep usable `href`s.
 - **Confirm modal** — Bootstrap modal + small JS (`app/ui/static/js/app.js`); delete buttons use `hx-trigger="confirmed-delete"` after the user confirms (no `window.confirm`).
-- **Toasts** — Bootstrap toasts; server sets `HX-Trigger: {"showToast": {...}}` (e.g. after delete).
+- **Toasts** — Bootstrap toasts. A swap can send `HX-Trigger: {"showToast": {...}}` (table save and delete). A full-page save or a delete that leaves the edit page stores the same message for the next page.
 
 ## Authentication
 

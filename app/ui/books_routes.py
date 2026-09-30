@@ -6,7 +6,7 @@ import json
 from urllib.parse import urlencode
 
 from fastapi import APIRouter, Depends, Form, Query, Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
 from app.auth.deps import (
@@ -26,6 +26,7 @@ from app.auth.users import (
 )
 from app.db import books as books_repo
 from app.db.books import BOOK_CATEGORIES, normalize_category
+from app.ui.pages_routes import render_not_found
 from app.ui.pagination import DEFAULT_PAGE_SIZE, PAGE_SIZES, page_size, sort_column_state
 from app.ui.paths import TEMPLATES_DIR
 
@@ -87,7 +88,13 @@ def _ctx(request: Request, user: dict, **extra):
         "main_class": "",
     }
     ctx.update(extra)
+    if not _wants_books_partial(request):
+        ctx["toast"] = request.session.pop("toast", None)
     return ctx
+
+
+def _remember_toast(request: Request, message: str) -> None:
+    request.session["toast"] = {"message": message, "level": "ok"}
 
 
 def _parse_optional_int(raw: str | None) -> int | None:
@@ -339,6 +346,42 @@ def _parse_book_form(
     }, None
 
 
+def _form_values(
+    *,
+    title: str,
+    author: str,
+    year: str,
+    notes: str,
+    category: str,
+    isbn: str,
+    page_count: str,
+    available: str | None,
+) -> dict:
+    return {
+        "title": title,
+        "author": author,
+        "year": year,
+        "notes": notes,
+        "category": category or "fiction",
+        "isbn": isbn,
+        "page_count": page_count,
+        "available": available in {"1", "true", "on", "yes"},
+    }
+
+
+def _form_values_from_book(book: dict) -> dict:
+    return {
+        "title": book["title"],
+        "author": book["author"],
+        "year": "" if book["year"] is None else str(book["year"]),
+        "notes": book["notes"] or "",
+        "category": book["category"],
+        "isbn": book["isbn"] or "",
+        "page_count": "" if book["page_count"] is None else str(book["page_count"]),
+        "available": bool(book["available"]),
+    }
+
+
 @router.get("/books", response_class=HTMLResponse)
 async def books_page(
     request: Request,
@@ -417,6 +460,32 @@ async def books_search_page(
     )
 
 
+@router.get("/books/new", response_class=HTMLResponse)
+async def new_book_page(
+    request: Request,
+    user: dict = Depends(require_editor_html),
+):
+    return templates.TemplateResponse(
+        request,
+        "book_new.html",
+        _ctx(
+            request,
+            user,
+            form_error=None,
+            values=_form_values(
+                title="",
+                author="",
+                year="",
+                notes="",
+                category="fiction",
+                isbn="",
+                page_count="",
+                available="1",
+            ),
+        ),
+    )
+
+
 @router.post(
     "/books",
     response_class=HTMLResponse,
@@ -437,6 +506,7 @@ async def create_book(
     size: int = Form(DEFAULT_PAGE_SIZE),
     ordering: str = Form(""),
     q: str = Form(""),
+    next: str = Form(""),
 ):
     # Unchecked checkbox omits the field → treat as unavailable.
     payload, form_error = _parse_book_form(
@@ -449,8 +519,9 @@ async def create_book(
         page_count=page_count,
         available=available if available is not None else "0",
     )
+    created = None
     if form_error is None and payload is not None:
-        await books_repo.create_book(
+        created = await books_repo.create_book(
             payload["title"],
             payload["author"],
             year=payload["year"],
@@ -462,6 +533,30 @@ async def create_book(
             added_by_user_id=user["id"],
         )
         page = 1
+
+    if next == "detail":
+        if created is not None:
+            return RedirectResponse(url=f"/ui/books/{created['id']}", status_code=303)
+        return templates.TemplateResponse(
+            request,
+            "book_new.html",
+            _ctx(
+                request,
+                user,
+                form_error=form_error,
+                values=_form_values(
+                    title=title,
+                    author=author,
+                    year=year,
+                    notes=notes,
+                    category=category,
+                    isbn=isbn,
+                    page_count=page_count,
+                    available=available,
+                ),
+            ),
+            status_code=400,
+        )
 
     data = await _books_page_data(
         base_path="/ui/books",
@@ -486,22 +581,123 @@ async def edit_book_form(
 ):
     book = await books_repo.get_book(book_id)
     if book is None:
-        return HTMLResponse("Book not found", status_code=404)
+        if _wants_books_partial(request):
+            return HTMLResponse("Book not found", status_code=404)
+        return await render_not_found(request)
+    if _wants_books_partial(request):
+        return templates.TemplateResponse(
+            request,
+            "partials/book_edit_row.html",
+            _ctx(
+                request,
+                user,
+                book=book,
+                page=1,
+                size=DEFAULT_PAGE_SIZE,
+                q="",
+                list_base="/ui/books",
+                results_query=urlencode(
+                    {"page": 1, "size": DEFAULT_PAGE_SIZE, "return_to": "list"}
+                ),
+            ),
+        )
     return templates.TemplateResponse(
         request,
-        "partials/book_edit_row.html",
+        "book_edit.html",
         _ctx(
             request,
             user,
             book=book,
-            page=1,
-            size=DEFAULT_PAGE_SIZE,
-            q="",
-            list_base="/ui/books",
-            results_query=urlencode(
-                {"page": 1, "size": DEFAULT_PAGE_SIZE, "return_to": "list"}
-            ),
+            form_error=None,
+            values=_form_values_from_book(book),
         ),
+    )
+
+
+@router.post(
+    "/books/{book_id}/edit",
+    response_class=HTMLResponse,
+    dependencies=[Depends(verify_csrf)],
+)
+async def save_book_page(
+    request: Request,
+    book_id: str,
+    user: dict = Depends(require_editor_html),
+    title: str = Form(...),
+    author: str = Form(...),
+    year: str = Form(""),
+    notes: str = Form(""),
+    category: str = Form("other"),
+    isbn: str = Form(""),
+    page_count: str = Form(""),
+    available: str | None = Form(None),
+):
+    payload, form_error = _parse_book_form(
+        title=title,
+        author=author,
+        year=year,
+        notes=notes,
+        category=category,
+        isbn=isbn,
+        page_count=page_count,
+        available=available if available is not None else "0",
+    )
+    if form_error or payload is None:
+        return templates.TemplateResponse(
+            request,
+            "book_edit.html",
+            _ctx(
+                request,
+                user,
+                book={"id": book_id, "title": title},
+                form_error=form_error,
+                values=_form_values(
+                    title=title,
+                    author=author,
+                    year=year,
+                    notes=notes,
+                    category=category,
+                    isbn=isbn,
+                    page_count=page_count,
+                    available=available,
+                ),
+            ),
+            status_code=400,
+        )
+    book = await books_repo.update_book(
+        book_id,
+        title=payload["title"],
+        author=payload["author"],
+        year=payload["year"],
+        year_set=True,
+        notes=payload["notes"],
+        notes_set=True,
+        category=payload["category"],
+        isbn=payload["isbn"],
+        isbn_set=True,
+        page_count=payload["page_count"],
+        page_count_set=True,
+        available=payload["available"],
+    )
+    if book is None:
+        return await render_not_found(request)
+    _remember_toast(request, "Book saved")
+    return RedirectResponse(url=f"/ui/books/{book['id']}", status_code=303)
+
+
+@router.get("/books/{book_id}", response_class=HTMLResponse)
+async def book_page(
+    request: Request,
+    book_id: str,
+    user: dict = Depends(require_user_html),
+):
+    book = await books_repo.get_book(book_id)
+    if book is None:
+        return await render_not_found(request)
+    return templates.TemplateResponse(
+        request,
+        "book_detail.html",
+        _ctx(request, user, book=book),
     )
 
 
@@ -623,6 +819,11 @@ async def delete_book(
     return_to: str = Query("list"),
 ):
     await books_repo.delete_book(book_id)
+    if return_to == "page":
+        _remember_toast(request, "Book deleted")
+        response = HTMLResponse("")
+        response.headers["HX-Redirect"] = "/ui/books"
+        return response
     try:
         ymin = _parse_optional_int(year_min)
         ymax = _parse_optional_int(year_max)

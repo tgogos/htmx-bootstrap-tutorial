@@ -168,4 +168,10 @@
 
   document.body.addEventListener("htmx:after:history:push", syncListFiltersFromUrl);
   syncListFiltersFromUrl();
+
+  var pendingToast = document.getElementById("pending-toast");
+  if (pendingToast) {
+    showToast(pendingToast.getAttribute("data-message"), pendingToast.getAttribute("data-level"));
+    pendingToast.remove();
+  }
 })();

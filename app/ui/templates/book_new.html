@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% block title %}New book · Admin{% endblock %}
+{% block description %}Add a book{% endblock %}
+{% block content %}
+<nav aria-label="Breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/ui/dashboard">Home</a></li>
+    <li class="breadcrumb-item"><a href="/ui/books">Books</a></li>
+    <li class="breadcrumb-item active" aria-current="page">New book</li>
+  </ol>
+</nav>
+<h1 class="h2">New book</h1>
+<p class="text-body-secondary">This page posts the same fields as the form on the list. A successful save opens the new book's page.</p>
+<div class="card">
+  <div class="card-body">
+    {% with form_action="/ui/books", next="detail", submit_label="Create", cancel_href="/ui/books" %}
+    {% include "partials/book_page_form.html" %}
+    {% endwith %}
+  </div>
+</div>
+{% endblock %}
