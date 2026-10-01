@@ -1,0 +1,100 @@
+{% extends "layout.html" %}
+{% block title %}Lesson 14 · From · Tutorial{% endblock %}
+{% block description %}One form hears a search box and a category menu{% endblock %}
+{% block content %}
+{% include "partials/tutorial_nav.html" %}
+<h1 class="h2">14. A form hears a search box and a menu</h1>
+<p>Lesson 13 puts the trigger on the same element that asks. This form asks, and the trigger names two other controls: the search box and the category menu.</p>
+
+<h2 class="h5">Try it</h2>
+<form
+  class="row g-3 align-items-end mb-3"
+  hx-get="/ui/tutorial/books"
+  hx-target="#catalog-results"
+  hx-swap="innerHTML"
+  hx-trigger="change from:select[name='category'], keyup changed delay:300ms from:input[name='q'], search from:input[name='q']"
+>
+  <div class="col-md-6">
+    <label class="form-label" for="catalog-q">Search</label>
+    <input
+      id="catalog-q"
+      class="form-control"
+      type="search"
+      name="q"
+      placeholder="Title or author"
+      autocomplete="off"
+    >
+  </div>
+  <div class="col-md-6">
+    <label class="form-label" for="catalog-category">Category</label>
+    <select id="catalog-category" name="category" class="form-select">
+      <option value="">Any category</option>
+      {% for key, label in categories %}
+      <option value="{{ key }}">{{ label }}</option>
+      {% endfor %}
+    </select>
+  </div>
+</form>
+<div id="catalog-results" class="mb-3">
+  <p class="text-body-secondary mb-0">Matching titles will appear here.</p>
+</div>
+
+<h2 class="h5">What changed</h2>
+<p>The new piece is <code>from:</code> on <code>hx-trigger</code>. <code>hx-get</code>, <code>hx-target</code>, and <code>hx-swap</code> sit on the form. The search box and the menu have no <code>hx-</code> attributes of their own. A form's default trigger is <code>submit</code>, and this form has no submit button, so the written trigger is what starts the request.</p>
+<p><code>change from:select[name='category']</code> hears the menu. <code>keyup changed delay:300ms from:input[name='q']</code> hears the search box after the same pause as lesson 6, and it skips a key that did not change the text. <code>search from:input[name='q']</code> hears the clear button on that box. Because the form owns the request, both <code>name="q"</code> and <code>name="category"</code> go on the URL together. A category chosen after a search stays in the next search, and the text stays when you change the menu.</p>
+
+<h2 class="h5">The markup and the fragment</h2>
+<pre class="bg-body-tertiary border rounded p-3 small mb-3"><code>&lt;form
+  hx-get="/ui/tutorial/books"
+  hx-target="#catalog-results"
+  hx-swap="innerHTML"
+  hx-trigger="change from:select[name='category'], keyup changed delay:300ms from:input[name='q'], search from:input[name='q']"
+&gt;
+  &lt;input type="search" name="q"&gt;
+  &lt;select name="category"&gt;...&lt;/select&gt;
+&lt;/form&gt;</code></pre>
+<p>The route is still <code>lesson_book_list</code>, the same one lessons 5 and 6 call. It already reads <code>q</code> and <code>category</code>, and it renders <code>tutorial/book_list.html</code>: a short list of titles, not the books table. The form stays outside <code>#catalog-results</code>, so the response cannot wipe out the letters you are still typing or the category you chose.</p>
+<pre class="bg-body-tertiary border rounded p-3 small mb-3"><code>category: str | None = Query(None),
+q: str | None = Query(None),</code></pre>
+
+<h2 class="h5">Request, response, target, swap</h2>
+<ul>
+  <li><strong>Request:</strong> <code>GET /ui/tutorial/books?q=...&amp;category=...</code> when the menu changes, or after a pause in the search box.</li>
+  <li><strong>Response:</strong> an HTML list of matching titles.</li>
+  <li><strong>Target:</strong> <code>#catalog-results</code>. The form is not the target.</li>
+  <li><strong>Swap:</strong> <code>innerHTML</code>. <code>from:</code> is not a swap. It names the element that fires the form's request.</li>
+</ul>
+
+<h2 class="h5">Experiment</h2>
+<p>In the inspector, delete <code>hx-trigger</code> from the form. Type in the search box, and change the menu. Nothing fetches: a form waits for submit, and this form has no submit button. Put the trigger back. Then delete only the <code>change from:select[name='category']</code> clause and change the menu. The search box still updates the list. The menu does not, until you put that clause back.</p>
+
+<h2 class="h5">Files</h2>
+<div class="table-responsive">
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th scope="col">File</th>
+        <th scope="col">Why it is here</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>app/ui/templates/tutorial/lesson_14.html</code></td>
+        <td>This page. The form hears the search box and the menu with <code>from:</code>.</td>
+      </tr>
+      <tr>
+        <td><code>app/ui/tutorial_routes.py</code></td>
+        <td><code>lesson_from</code> renders this page. <code>lesson_book_list</code> still returns the title list for both <code>q</code> and <code>category</code>.</td>
+      </tr>
+      <tr>
+        <td><code>app/ui/templates/tutorial/book_list.html</code></td>
+        <td>The fragment: matching titles, not the books table.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p class="mt-4">
+  <a class="btn btn-outline-secondary" href="/ui/tutorial/13">Previous</a>
+</p>
+{% endblock %}

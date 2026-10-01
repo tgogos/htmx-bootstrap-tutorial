@@ -544,3 +544,18 @@ async def lesson_clock(
         "tutorial/clock.html",
         {"clock": now.strftime("%H:%M:%S"), "stamp": now.strftime("%Y-%m-%dT%H:%M:%SZ")},
     )
+
+
+@router.get("/tutorial/14", response_class=HTMLResponse)
+async def lesson_from(
+    request: Request,
+    user: dict = Depends(require_user_html),
+):
+    categories = [
+        (key, CATEGORY_LABELS[key]) for key in sorted(BOOK_CATEGORIES)
+    ]
+    return templates.TemplateResponse(
+        request,
+        "tutorial/lesson_14.html",
+        _lesson_ctx(request, user, 14, categories=categories),
+    )

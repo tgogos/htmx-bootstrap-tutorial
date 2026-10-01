@@ -1,4 +1,4 @@
-"""Tutorial landing page and lessons 1–13."""
+"""Tutorial landing page and lessons 1–14."""
 
 import re
 
@@ -45,6 +45,7 @@ class TestTutorial:
             "/ui/tutorial/12/books",
             "/ui/tutorial/13",
             "/ui/tutorial/13/clock",
+            "/ui/tutorial/14",
         ):
             response = client.get(path, follow_redirects=False)
             assert response.status_code == 303
@@ -67,6 +68,7 @@ class TestTutorial:
         assert 'href="/ui/tutorial/11"' in page.text
         assert 'href="/ui/tutorial/12"' in page.text
         assert 'href="/ui/tutorial/13"' in page.text
+        assert 'href="/ui/tutorial/14"' in page.text
         assert "books table" in page.text.lower()
 
     def test_lesson_1_is_an_ordinary_link(self, auth_client: TestClient):
@@ -328,6 +330,30 @@ class TestTutorial:
         assert "Server time:" in fragment.text
         assert "UTC" in fragment.text
         assert re.search(r"\d{2}:\d{2}:\d{2} UTC", fragment.text)
+
+    def test_lesson_14_form_hears_search_and_menu(self, auth_client: TestClient):
+        _create_book(auth_client, "Heard Fiction Title", category="fiction")
+        _create_book(auth_client, "Heard History Title", category="biography")
+        page = auth_client.get("/ui/tutorial/14")
+        assert page.status_code == 200
+        assert page.text.count('hx-get="/ui/tutorial/books"') == 2
+        assert 'hx-target="#catalog-results"' in page.text
+        assert "from:select[name='category']" in page.text
+        assert "from:input[name='q']" in page.text
+        assert 'name="q"' in page.text
+        assert 'name="category"' in page.text
+        assert 'id="catalog-results"' in page.text
+        assert "Heard Fiction Title" not in page.text
+
+        both = auth_client.get(
+            "/ui/tutorial/books",
+            params={"q": "Heard", "category": "fiction"},
+        )
+        assert both.status_code == 200
+        assert "<html" not in both.text.lower()
+        assert "Heard Fiction Title" in both.text
+        assert "Heard History Title" not in both.text
+        assert "in Fiction" in both.text
 
     def test_books_history_restore_is_a_full_page(self, auth_client: TestClient):
         partial = auth_client.get("/ui/books", headers={"HX-Request": "true"})
