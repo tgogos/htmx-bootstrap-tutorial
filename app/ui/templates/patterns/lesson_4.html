@@ -1,14 +1,32 @@
 {% extends "layout.html" %}
-{% block title %}4 · Keep the selection{% endblock %}
+{% block title %}4 · Morph{% endblock %}
 {% block content %}
 {% include "patterns/nav.html" %}
-<h1 class="h3">4 · Keep the selection</h1>
+<h1 class="h3">4 · Morph</h1>
 <p>The new table is merged into the one already on the page. A check you did not mean to clear can stay.</p>
 {% include "patterns/stage.html" %}
 
-<h2 class="h5 mt-4">What changed</h2>
-<p>Patterns 2 and 3 use <code>innerHTML</code>. That builds a new table and drops the old one, so every box comes back empty. This page uses <code>hx-swap="innerMorph"</code>. HTMX walks the old table and edits it to match the new HTML. A row, a box, and the form keep the same <code>id</code>, so the check you set in the browser is still that box.</p>
-<p>The count line is still outside the table. Refresh does not send the extra fragment from pattern 3, so that line can stay old. This page is only about the checks.</p>
+<div class="alert alert-warning mt-4" role="status">
+  The count line is still outside the table. Refresh does not send the extra fragment from pattern 3, so that line can stay old. This page is only about the checks.
+</div>
+
+<h2 class="h5">What changed</h2>
+<p>Patterns 2 and 3 use <code>hx-swap="innerHTML"</code>. That drops the old table and builds a new one, so every box comes back empty. This page uses <code>hx-swap="innerMorph"</code>. HTMX edits the table already on the page until it matches the new HTML. A row and a box keep the same <code>id</code>, so the check you set is still that box.</p>
+
+<h2 class="h5">The markup</h2>
+<pre class="bg-body-tertiary border rounded p-3 small mb-3"><code>&lt;form id="pattern-form" hx-post="/ui/patterns/4/mark" hx-target="#pattern-board" hx-swap="innerMorph"&gt;
+  &lt;button type="button" hx-get="/ui/patterns/4/table" hx-target="#pattern-board" hx-swap="innerMorph"&gt;
+    Refresh
+  &lt;/button&gt;
+  &lt;tr id="pattern-row-…"&gt;
+    &lt;input type="checkbox" id="select-…" name="book_id" value="…"&gt;
+  &lt;/tr&gt;
+&lt;/form&gt;</code></pre>
+<p>Refresh is <code>type="button"</code> and <code>hx-get</code>. It does not submit the form, so the checked ids are not sent. The response is the same row and the same box, with no <code>checked</code>:</p>
+<pre class="bg-body-tertiary border rounded p-3 small mb-3"><code>&lt;tr id="pattern-row-…"&gt;
+  &lt;input type="checkbox" id="select-…" name="book_id" value="…"&gt;
+&lt;/tr&gt;</code></pre>
+<p><code>innerMorph</code> finds <code>id="select-…"</code> and keeps the check you set in the browser. <code>innerHTML</code> would throw that box away, and the new one would arrive empty.</p>
 
 <h2 class="h5">Request, response, target, swap</h2>
 <ul>

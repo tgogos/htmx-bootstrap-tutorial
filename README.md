@@ -46,7 +46,7 @@ A second sequence after the lessons, at `/ui/patterns`. Same books, first eight 
 | 1 | `/ui/patterns/1` | A checkbox on each row. Nothing is sent |
 | 2 | `/ui/patterns/2` | Checked ids are posted; `innerHTML` replaces the table |
 | 3 | `/ui/patterns/3` | The same post, plus an out-of-band swap (`hx-swap-oob`) for the count outside the table |
-| 4 | `/ui/patterns/4` | `innerMorph` keeps a check the new HTML does not set |
+| 4 | `/ui/patterns/4` | Morph (`innerMorph`) merges the new table in, so a check you set can stay |
 | 5 | `/ui/patterns/5` | Delete selected, after confirm, using the count fragment and the morph swap |
 | 6 | `/ui/patterns/6` | Export selected; the bar polls and the finished fragment has no `every` |
 
