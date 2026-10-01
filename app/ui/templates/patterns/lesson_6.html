@@ -21,7 +21,30 @@
 <div id="export-job" class="mb-3"></div>
 
 <h2 class="h5 mt-4">What changed</h2>
-<p>The table is not the target. The button includes <code>#pattern-form</code>, so the checked ids are sent, and the response lands in <code>#export-job</code>. That fragment has <code>hx-trigger="every 1s"</code>. Each response moves the bar one step. The server does not wait. When the bar is full, the fragment has no <code>every</code>, so the asking stops.</p>
+<p>Lesson 13 puts <code>every</code> on the box. <code>innerHTML</code> replaces only the inside, so the trigger stays and the clock never stops. Here the button is outside the form. It posts the checked ids with <code>hx-include="#pattern-form"</code>, and the answer lands in the empty <code>#export-job</code>, not in the table.</p>
+<p>The fragment that comes back carries <code>hx-trigger="every 1s"</code> and targets that same box. Each answer replaces the fragment. The last answer has no <code>every</code>, so nothing is left to ask again. The books stay as they are.</p>
+<p><code>POST /ui/patterns/6/export</code> remembers the checked titles for this browser and returns the bar at 0%. Each <code>GET</code> to that address adds one step, 25% then 50%, 75%, and 100%, and then forgets the job. No file is written, and the request does not wait.</p>
+
+<h2 class="h5">The markup</h2>
+<pre class="bg-body-tertiary border rounded p-3 small mb-3"><code>&lt;button
+  type="button"
+  hx-post="/ui/patterns/6/export"
+  hx-include="#pattern-form"
+  hx-target="#export-job"
+  hx-swap="innerHTML"
+&gt;Export selected&lt;/button&gt;
+&lt;div id="export-job"&gt;&lt;/div&gt;</code></pre>
+<p>The first answers still ask again:</p>
+<pre class="bg-body-tertiary border rounded p-3 small mb-3"><code>&lt;div
+  id="export-progress"
+  hx-get="/ui/patterns/6/export"
+  hx-trigger="every 1s"
+  hx-target="#export-job"
+  hx-swap="innerHTML"
+&gt;25%&lt;/div&gt;</code></pre>
+<p>The last answer is the same bar at 100%, with those attributes gone:</p>
+<pre class="bg-body-tertiary border rounded p-3 small mb-3"><code>&lt;div id="export-progress"&gt;100%&lt;/div&gt;</code></pre>
+<p>Because the trigger lived on the fragment, replacing the fragment removes the trigger. On lesson 13 the trigger lives on the box, so a new sentence inside it cannot stop the clock.</p>
 
 <h2 class="h5">Request, response, target, swap</h2>
 <ul>

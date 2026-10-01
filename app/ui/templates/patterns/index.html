@@ -5,7 +5,7 @@
 {% include "patterns/nav.html" %}
 <div class="pb-2 mb-3 border-bottom">
   <h1 class="h2">Patterns</h1>
-  <p class="text-body-secondary mb-0">These pages come after <a href="/ui/tutorial">lessons 1–15</a>. Each one is still one idea.</p>
+  <p class="text-body-secondary mb-0">These pages come after <a href="/ui/tutorial">lessons 1–16</a>. Each one is still one idea.</p>
 </div>
 <p>They use the same books as the <a href="/ui/books">books table</a>: the first eight titles. That table does not change. Checking a row here does not check it there.</p>
 <ol>
@@ -14,7 +14,7 @@
   <li><a href="/ui/patterns/3">Out of band</a> — the same action, and <code>hx-swap-oob</code> updates the line above the table.</li>
   <li><a href="/ui/patterns/4">Morph</a> — <code>innerMorph</code> merges the new table in, so a check you set can stay.</li>
   <li><a href="/ui/patterns/5">Delete</a> — confirm, then the count and the merge from the two pages before.</li>
-  <li><a href="/ui/patterns/6">Export</a> — a bar that asks again until the job is finished.</li>
+  <li><a href="/ui/patterns/6">Export</a> — the bar asks again on <code>every 1s</code>, and the finished fragment has no <code>every</code>.</li>
 </ol>
 <p class="mb-0">The files for these pages live in <code>app/ui/templates/patterns/</code>. The routes are <code>app/ui/patterns_routes.py</code>.</p>
 {% endblock %}
