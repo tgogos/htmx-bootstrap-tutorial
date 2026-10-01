@@ -1,0 +1,83 @@
+{% extends "layout.html" %}
+{% block title %}Lesson 16 · Morph · Tutorial{% endblock %}
+{% block description %}The table morphs in place{% endblock %}
+{% block content %}
+{% include "partials/tutorial_nav.html" %}
+<h1 class="h2">16. The table morphs in place</h1>
+<p>Lesson 4 replaces the shelf or adds a card. Both throw the old HTML away and insert new HTML. This page fetches the same small table twice. One swap still throws it away. The other updates the table that is already there.</p>
+
+<h2 class="h5">Try it</h2>
+<p>Type a word in the note. Click <strong>Replace</strong>. The word is gone, and the built time changes. Type the word again. Click <strong>Morph</strong>. The built time changes. The word is still in the note.</p>
+<p class="d-flex flex-wrap gap-2">
+  <button
+    type="button"
+    class="btn btn-outline-primary"
+    hx-get="/ui/tutorial/16/table"
+    hx-target="#title-table"
+    hx-swap="innerHTML"
+  >Replace</button>
+  <button
+    type="button"
+    class="btn btn-primary"
+    hx-get="/ui/tutorial/16/table"
+    hx-target="#title-table"
+    hx-swap="innerMorph"
+  >Morph</button>
+</p>
+<div id="title-table" class="mb-3">
+  {% include "tutorial/morph_table.html" %}
+</div>
+
+<h2 class="h5">What changed</h2>
+<p>The new swap is <code>innerMorph</code>. <code>innerHTML</code> removes the children of <code>#title-table</code> and inserts the response, so the note is a new box and the word is gone. <code>innerMorph</code> updates the elements that are already there. The note's <code>id="shelf-note"</code> is how HTMX knows it is the same box. The response sends that box empty, and the word you typed stays. The built time still changes, so you can see the table was updated. The buttons stay outside <code>#title-table</code>. In HTMX 2, <code>hx-ext="morph"</code> lived on a parent, often <code>body</code>, and an Idiomorph script lived beside HTMX. HTMX 4 removed <code>hx-ext</code>. The morph lives in <code>app/ui/static/js/htmx.min.js</code>, and on this page it lives on the Morph button as <code>hx-swap="innerMorph"</code>. The books table still uses <code>innerHTML</code>.</p>
+
+<h2 class="h5">The markup and the fragment</h2>
+<pre class="bg-body-tertiary border rounded p-3 small mb-3"><code>&lt;button hx-get="/ui/tutorial/16/table" hx-target="#title-table" hx-swap="innerHTML"&gt;Replace&lt;/button&gt;
+&lt;button hx-get="/ui/tutorial/16/table" hx-target="#title-table" hx-swap="innerMorph"&gt;Morph&lt;/button&gt;</code></pre>
+<p><code>GET /ui/tutorial/16/table</code> is <code>lesson_morph_table</code> in <code>app/ui/tutorial_routes.py</code>. It returns <code>tutorial/morph_table.html</code>: the note, the first five titles in title order, and the UTC time when the server built the fragment. It does not sleep. This URL is only that table. It is not the books table, and it does not change the address.</p>
+
+<h2 class="h5">Request, response, target, swap</h2>
+<ul>
+  <li><strong>Request:</strong> <code>GET /ui/tutorial/16/table</code> from either button.</li>
+  <li><strong>Response:</strong> <code>tutorial/morph_table.html</code>, the note and the titles.</li>
+  <li><strong>Target:</strong> <code>#title-table</code> for both buttons.</li>
+  <li><strong>Swap:</strong> <code>innerHTML</code> replaces the children. <code>innerMorph</code> patches them. Only the swap differs.</li>
+</ul>
+
+<h2 class="h5">Experiment</h2>
+<p>In the inspector, delete <code>id="shelf-note"</code> from the note, type a word, and click <strong>Morph</strong>. The word is gone. Nothing ties the old box to the new one, so HTMX replaces it. Reload to get the id back.</p>
+
+<h2 class="h5">Files</h2>
+<div class="table-responsive">
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th scope="col">File</th>
+        <th scope="col">Why it is here</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>app/ui/templates/tutorial/lesson_16.html</code></td>
+        <td>This page. Two buttons and <code>#title-table</code>. Only <code>hx-swap</code> differs.</td>
+      </tr>
+      <tr>
+        <td><code>app/ui/tutorial_routes.py</code></td>
+        <td><code>lesson_morph</code> renders this page. <code>lesson_morph_table</code> returns the fragment for both buttons.</td>
+      </tr>
+      <tr>
+        <td><code>app/ui/templates/tutorial/morph_table.html</code></td>
+        <td>The note, the titles, and the built time. The note's id is what the morph matches.</td>
+      </tr>
+      <tr>
+        <td><code>app/ui/static/js/htmx.min.js</code></td>
+        <td>HTMX 4. The morph lives in this file. <code>hx-ext="morph"</code> is the HTMX 2 name for a parent attribute, and it is not in this file.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p class="mt-4">
+  <a class="btn btn-outline-secondary" href="/ui/tutorial/15">Previous</a>
+</p>
+{% endblock %}
