@@ -20,6 +20,8 @@ Lessons 7–9 are the first ones that change data. They use the same editor rule
 
 Lesson 10 is a five-row shelf at `/ui/tutorial/10`. A click gets `tutorial/shelf.html`. A direct visit, a reload, or `HX-History-Restore-Request` gets the full lesson. `/ui/books` uses that same rule in `_wants_books_partial`. Lesson 11 points at the table; it does not grow a second one. Lesson 12 is `hx-trigger="revealed"` on a box below the fold. `GET /ui/tutorial/12/books` waits one second, then returns the first five titles. The books table stays on its page arrows. Lesson 13 is `hx-trigger="every 2s"` on a clock box. `GET /ui/tutorial/13/clock` returns the current UTC time and does not sleep; the next second is what makes a later response look different.
 
+**Patterns** (`/ui/patterns`, templates in `templates/patterns/`, routes in `app/ui/patterns_routes.py`) is a second sequence, not lesson 14. Six pages, still one idea each, on the first eight books by title. `/ui/books` does not gain checkboxes. Writes use the same editor rule and CSRF check as the books forms. Pattern 2 replaces `#pattern-board` with `innerHTML`. Pattern 3 adds `hx-swap-oob="outerHTML"` so the available count, which sits outside that target, updates in the same response. Pattern 4 uses `hx-swap="innerMorph"` so a checkbox the user set can survive a swap that returns the box unchecked. Pattern 5 uses that count fragment and that swap on delete. Pattern 6 posts the checked ids, then `GET /ui/patterns/6/export` advances a bar one step per request and does not sleep; the finished fragment has no `every`, so polling stops. Do not add out-of-band swaps or `innerMorph` to the books list.
+
 ### HTMX 4, and what was adjusted so the books UI still works
 
 The boilerplate shipped HTMX 2.0.4. This repo now loads 4.0.0. Books markup already puts `hx-get`, `hx-target`, and `hx-swap` on the element that makes the request, so explicit inheritance does not change those buttons. These parts did change:
@@ -67,7 +69,7 @@ The browser UI is a Bootstrap 5 admin shell (navbar, sidebar, footer, colour mod
 
 `templates/layout.html` is the shell. Shared pieces are `partials/navbar.html`, `partials/sidebar.html`, and `partials/footer.html`. Operational pages extend the layout and replace only `{% block content %}`. Header and sidebar specimen pages keep their own chrome (`templates/gallery/`) because that chrome is the specimen; they still include the shared sidebar or navbar.
 
-The sidebar has two groups. **App** is the product: Tutorial (`/ui/tutorial`), Dashboard, Books, Search books, and Staff (`/ui/admin/users`, admin only). **Samples** is the Bootstrap page set kept as UI copy sources (users, forms, tables, components, cheatsheet, settings, blank, headers, sidebars). Sample pages are not the product. The Users sample stays separate from Staff. Move a link from Samples to App when that page starts reading or writing application data.
+The sidebar has two groups. **App** is the product: Tutorial (`/ui/tutorial`), Patterns (`/ui/patterns`), Dashboard, Books, Search books, and Staff (`/ui/admin/users`, admin only). **Samples** is the Bootstrap page set kept as UI copy sources (users, forms, tables, components, cheatsheet, settings, blank, headers, sidebars). Sample pages are not the product. The Users sample stays separate from Staff. Move a link from Samples to App when that page starts reading or writing application data.
 
 `app/ui/static/css/admin.css` stays the shell layout file. `app/ui/static/css/app.css` is the HTMX indicator plus the books table sort caret. `app/ui/static/js/admin.js` is the shell (theme, palette, profile, hash nav, form validation), with hash highlighting keyed off the `/ui/...` path instead of `*.html` filenames. `app/ui/static/js/app.js` is the HTMX island (Bootstrap confirm modal, toasts, CSRF header, page-size select).
 
@@ -143,6 +145,7 @@ Primary mounts:
 | Edit book page | `/ui/books/{id}/edit` — full page on a visit; the table row when `HX-Request` is set |
 | Advanced search | `/ui/books/search` (filters outside swap target) |
 | Staff | `/ui/admin/users` (admin only) |
+| Patterns | `/ui/patterns` and `/ui/patterns/1` … `/ui/patterns/6` |
 | JSON API | `/api/books` (reads: login; writes: editor+; filter query params) |
 | Root | `/` → `/ui/dashboard` |
 
@@ -154,7 +157,7 @@ Books include scalars (`category`, `isbn`, `page_count`, `available`) and `added
 
 ### HTMX patterns in use
 
-See **UI architecture** for the HTML-first contract. Patterns below are what this app actually ships (Bootstrap shell + `app.js`). Do not add Idiomorph, `hx-boost` shells, or OOB toasts unless they land in code and this file in the same change.
+See **UI architecture** for the HTML-first contract. Patterns below are what this app actually ships (Bootstrap shell + `app.js`). Do not add `hx-boost` shells or OOB toasts. `hx-swap-oob` and `innerMorph` belong on `/ui/patterns` only, as described under **What this repository is**.
 
 - **`HX-Request` dual response** — one list route returns the full page or `partials/books_table.html`.
 - **Book pages** — `/ui/books/new`, `/ui/books/{id}`, and `/ui/books/{id}/edit` are whole pages. The edit URL still returns the table row when the list sends `HX-Request`. A title link keeps the list query (`page`, `size`, `ordering`, search filters, and `return_to` for the books list or search). The book and edit pages read that query the same way the list does, and Back uses `_books_list_url`. A visit with no list query still returns to `/ui/books`. Delete from the edit page sends `redirect=1` and `HX-Redirect` to that list. These pages are not tutorial lessons.
@@ -226,7 +229,7 @@ Unless this document is updated first:
 - ORMs and sync DB drivers for the primary path
 - SPA frameworks, SPA routers, or a frontend build step (vanilla JS + HTMX + the Bootstrap admin shell)
 - Alpine.js / React / Vue / Svelte (or similar) unless a concrete widget forces an island and this doc is updated
-- HTMX out-of-band (`hx-swap-oob`) swaps, client-side i18n libraries
+- Client-side i18n libraries
 - OAuth2 / OIDC providers
 - JWT as the default API token
 - Django-style generic admin

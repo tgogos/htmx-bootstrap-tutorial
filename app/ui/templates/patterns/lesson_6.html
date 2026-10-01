@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+{% block title %}6 · Export{% endblock %}
+{% block content %}
+{% include "patterns/nav.html" %}
+<h1 class="h3">6 · Export</h1>
+<p>Export selected starts a job for the checked books. A bar asks the server again until the job is finished, the same kind of trigger as lesson 13.</p>
+{% include "patterns/stage.html" %}
+{% if can_edit %}
+<div class="d-flex flex-wrap gap-2 my-3">
+  <button
+    type="button"
+    class="btn btn-sm btn-primary"
+    hx-post="/ui/patterns/6/export"
+    hx-include="#pattern-form"
+    hx-target="#export-job"
+    hx-swap="innerHTML"
+    hx-headers='{"X-CSRF-Token": "{{ csrf_token }}"}'
+  >Export selected</button>
+</div>
+{% endif %}
+<div id="export-job" class="mb-3"></div>
+
+<h2 class="h5 mt-4">What changed</h2>
+<p>The table is not the target. The button includes <code>#pattern-form</code>, so the checked ids are sent, and the response lands in <code>#export-job</code>. That fragment has <code>hx-trigger="every 1s"</code>. Each response moves the bar one step. The server does not wait. When the bar is full, the fragment has no <code>every</code>, so the asking stops.</p>
+
+<h2 class="h5">Request, response, target, swap</h2>
+<ul>
+  <li><strong>Request</strong> — <code>POST /ui/patterns/6/export</code>, then <code>GET /ui/patterns/6/export</code> once a second</li>
+  <li><strong>Response</strong> — the bar, then the same bar a step further</li>
+  <li><strong>Target</strong> — <code>#export-job</code></li>
+  <li><strong>Swap</strong> — <code>innerHTML</code></li>
+</ul>
+
+<h2 class="h5">Try this</h2>
+<p>Check one or two books and click Export selected. Watch the bar reach 100%, then stop. The books are unchanged.</p>
+
+<p class="mt-4 mb-0"><a class="btn btn-outline-secondary" href="/ui/patterns/5">Previous</a></p>
+{% endblock %}

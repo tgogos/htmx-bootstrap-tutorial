@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block title %}2 · Mark{% endblock %}
+{% block content %}
+{% include "patterns/nav.html" %}
+<h1 class="h3">2 · Mark</h1>
+<p>The checked ids are sent together. The response is this table again, and it replaces <code>#pattern-board</code>.</p>
+{% include "patterns/stage.html" %}
+
+<h2 class="h5 mt-4">What changed</h2>
+<p>The form now has <code>hx-post</code>. Mark available sends <code>available=1</code>. Mark unavailable sends <code>available=0</code>. Every checked <code>book_id</code> goes with that.</p>
+
+<h2 class="h5">Request, response, target, swap</h2>
+<ul>
+  <li><strong>Request</strong> — <code>POST /ui/patterns/2/mark</code></li>
+  <li><strong>Response</strong> — the same table, with the badges updated</li>
+  <li><strong>Target</strong> — <code>#pattern-board</code></li>
+  <li><strong>Swap</strong> — <code>innerHTML</code></li>
+</ul>
+<p>The “available” line is outside that target, so it still shows the old number. The checks are gone too: <code>innerHTML</code> throws the old table away, and the new one arrives with empty boxes.</p>
+
+<h2 class="h5">Try this</h2>
+<p>Check a book that says Yes and click Mark unavailable. The badge becomes No. The line above does not.</p>
+
+<p class="mt-4 mb-0"><a class="btn btn-outline-secondary" href="/ui/patterns/1">Previous</a> <a class="btn btn-primary" href="/ui/patterns/3">Next</a></p>
+{% endblock %}

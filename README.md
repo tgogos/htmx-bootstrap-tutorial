@@ -15,7 +15,7 @@ make upd
 make seed     # books for the lessons
 ```
 
-Open `/ui/tutorial` after logging in (`DEMO_USERNAME` / `DEMO_PASSWORD`, defaults `admin` / `admin123`). Lessons 1–9 are small interactions. Lesson 10 puts a page in the address bar. Lesson 11 walks the books table at `/ui/books`. Lesson 12 loads a few titles when a box scrolls into view. Lesson 13 fetches the server clock every two seconds.
+Open `/ui/tutorial` after logging in (`DEMO_USERNAME` / `DEMO_PASSWORD`, defaults `admin` / `admin123`). Lessons 1–9 are small interactions. Lesson 10 puts a page in the address bar. Lesson 11 walks the books table at `/ui/books`. Lesson 12 loads a few titles when a box scrolls into view. Lesson 13 fetches the server clock every two seconds. Patterns, at `/ui/patterns`, is a second sequence on the same books.
 
 ## Lessons
 
@@ -34,6 +34,19 @@ Open `/ui/tutorial` after logging in (`DEMO_USERNAME` / `DEMO_PASSWORD`, default
 | 11 | `/ui/tutorial/11` | The books URL as a full page or a fragment, then a walkthrough |
 | 12 | `/ui/tutorial/12` | `hx-trigger="revealed"` loads the first five titles when the box reaches the screen |
 | 13 | `/ui/tutorial/13` | `hx-trigger="every 2s"` fetches the server clock, then fetches it again |
+
+## Patterns
+
+A second sequence after the lessons, at `/ui/patterns`. Same books, first eight titles. The books table does not gain checkboxes.
+
+| | Page | Idea |
+|--|------|------|
+| 1 | `/ui/patterns/1` | A checkbox on each row. Nothing is sent |
+| 2 | `/ui/patterns/2` | Checked ids are posted; `innerHTML` replaces the table |
+| 3 | `/ui/patterns/3` | The same post, plus `hx-swap-oob` for the count outside the table |
+| 4 | `/ui/patterns/4` | `innerMorph` keeps a check the new HTML does not set |
+| 5 | `/ui/patterns/5` | Delete selected, after confirm, using the count fragment and the morph swap |
+| 6 | `/ui/patterns/6` | Export selected; the bar polls and the finished fragment has no `every` |
 
 ## Primary path vs demos
 

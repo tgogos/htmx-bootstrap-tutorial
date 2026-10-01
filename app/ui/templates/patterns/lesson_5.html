@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{% block title %}5 · Delete{% endblock %}
+{% block content %}
+{% include "patterns/nav.html" %}
+<h1 class="h3">5 · Delete</h1>
+<p>Delete selected sends the checked ids, after the same confirm dialog as lesson 8. The books leave the catalog.</p>
+{% include "patterns/stage.html" %}
+
+<h2 class="h5 mt-4">What changed</h2>
+<p>The button waits for <code>confirmed-delete</code>, then posts the form. The count uses the extra fragment from pattern 3. The table uses <code>innerMorph</code> from pattern 4, so a box you left checked on a row you did not delete can stay.</p>
+
+<h2 class="h5">Request, response, target, swap</h2>
+<ul>
+  <li><strong>Request</strong> — <code>POST /ui/patterns/5/delete</code>, after you confirm</li>
+  <li><strong>Response</strong> — the table without those rows, plus the count line</li>
+  <li><strong>Target</strong> — <code>#pattern-board</code>, and <code>#available-count</code> by id</li>
+  <li><strong>Swap</strong> — <code>innerMorph</code> for the table, <code>hx-swap-oob</code> for the count</li>
+</ul>
+
+<h2 class="h5">Try this</h2>
+<p>Check one book you can spare and click Delete selected. Confirm. That row is gone, and the line above matches the table that remains.</p>
+
+<p class="mt-4 mb-0"><a class="btn btn-outline-secondary" href="/ui/patterns/4">Previous</a> <a class="btn btn-primary" href="/ui/patterns/6">Next</a></p>
+{% endblock %}

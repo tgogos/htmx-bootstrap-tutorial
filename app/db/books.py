@@ -334,6 +334,40 @@ async def delete_book(book_id: str) -> bool:
     return cursor.rowcount > 0
 
 
+def _in_clause(book_ids: list[str]) -> tuple[str, list[str]]:
+    """Placeholders for an id list. Callers must not pass an empty list."""
+    return ",".join("?" for _ in book_ids), list(book_ids)
+
+
+async def set_books_available(book_ids: list[str], available: bool) -> int:
+    """Set available on the given ids. Unknown ids are ignored."""
+    if not book_ids:
+        return 0
+    conn = get_connection()
+    placeholders, ids = _in_clause(book_ids)
+    now = datetime.now(timezone.utc).isoformat()
+    cursor = await conn.execute(
+        f"UPDATE books SET available = ?, updated_at = ? WHERE id IN ({placeholders})",
+        (1 if available else 0, now, *ids),
+    )
+    await conn.commit()
+    return cursor.rowcount
+
+
+async def delete_books(book_ids: list[str]) -> int:
+    """Delete the given ids. Unknown ids are ignored."""
+    if not book_ids:
+        return 0
+    conn = get_connection()
+    placeholders, ids = _in_clause(book_ids)
+    cursor = await conn.execute(
+        f"DELETE FROM books WHERE id IN ({placeholders})",
+        tuple(ids),
+    )
+    await conn.commit()
+    return cursor.rowcount
+
+
 async def clear_books() -> None:
     """Delete all books (test helper)."""
     conn = get_connection()
