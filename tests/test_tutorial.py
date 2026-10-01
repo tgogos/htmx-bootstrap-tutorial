@@ -1,4 +1,4 @@
-"""Tutorial landing page and lessons 1–14."""
+"""Tutorial landing page and lessons 1–15."""
 
 import re
 
@@ -46,6 +46,8 @@ class TestTutorial:
             "/ui/tutorial/13",
             "/ui/tutorial/13/clock",
             "/ui/tutorial/14",
+            "/ui/tutorial/15",
+            "/ui/tutorial/15/room",
         ):
             response = client.get(path, follow_redirects=False)
             assert response.status_code == 303
@@ -69,6 +71,7 @@ class TestTutorial:
         assert 'href="/ui/tutorial/12"' in page.text
         assert 'href="/ui/tutorial/13"' in page.text
         assert 'href="/ui/tutorial/14"' in page.text
+        assert 'href="/ui/tutorial/15"' in page.text
         assert "books table" in page.text.lower()
 
     def test_lesson_1_is_an_ordinary_link(self, auth_client: TestClient):
@@ -354,6 +357,25 @@ class TestTutorial:
         assert "Heard Fiction Title" in both.text
         assert "Heard History Title" not in both.text
         assert "in Fiction" in both.text
+
+    def test_lesson_15_boosts_the_main_region(self, auth_client: TestClient):
+        page = auth_client.get("/ui/tutorial/15")
+        assert page.status_code == 200
+        assert 'href="/ui/tutorial/15/room"' in page.text
+        assert 'hx-boost="true"' in page.text
+        assert 'hx-target="#main"' in page.text
+        assert 'hx-select="#main"' in page.text
+        assert 'hx-swap="outerHTML"' in page.text
+
+        room = auth_client.get(
+            "/ui/tutorial/15/room",
+            headers={"HX-Request": "true", "HX-Boosted": "true"},
+        )
+        assert room.status_code == 200
+        assert "<html" in room.text.lower()
+        assert 'id="main"' in room.text
+        assert "The other room" in room.text
+        assert "admin-sidebar" in room.text
 
     def test_books_history_restore_is_a_full_page(self, auth_client: TestClient):
         partial = auth_client.get("/ui/books", headers={"HX-Request": "true"})

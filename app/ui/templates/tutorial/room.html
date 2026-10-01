@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% block title %}The other room · Tutorial{% endblock %}
+{% block description %}A full page whose main region can be selected{% endblock %}
+{% block content %}
+{% include "partials/tutorial_nav.html" %}
+<h1 class="h2">The other room</h1>
+<p>This text replaced the lesson. The top bar and the sidebar were already on the page, so they stayed. The search word you typed is still in the top bar.</p>
+<p>
+  <a
+    class="btn btn-outline-primary"
+    href="/ui/tutorial/15"
+    hx-boost="true"
+    hx-target="#main"
+    hx-select="#main"
+    hx-swap="outerHTML"
+  >Back to the lesson</a>
+</p>
+<p class="mb-0"><a href="/ui/tutorial/15/room">Open this room as a full page</a></p>
+{% endblock %}

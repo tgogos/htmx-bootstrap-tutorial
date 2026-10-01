@@ -559,3 +559,28 @@ async def lesson_from(
         "tutorial/lesson_14.html",
         _lesson_ctx(request, user, 14, categories=categories),
     )
+
+
+@router.get("/tutorial/15", response_class=HTMLResponse)
+async def lesson_boost(
+    request: Request,
+    user: dict = Depends(require_user_html),
+):
+    return templates.TemplateResponse(
+        request,
+        "tutorial/lesson_15.html",
+        _lesson_ctx(request, user, 15),
+    )
+
+
+@router.get("/tutorial/15/room", response_class=HTMLResponse)
+async def lesson_boost_room(
+    request: Request,
+    user: dict = Depends(require_user_html),
+):
+    """Full page. A boosted link selects #main out of this document."""
+    return templates.TemplateResponse(
+        request,
+        "tutorial/room.html",
+        _lesson_ctx(request, user, 15),
+    )

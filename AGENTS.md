@@ -14,4 +14,4 @@ This repository is an HTMX 4 tutorial copied from the FastAPI + HTMX + Bootstrap
 
 ## Scope
 
-Only change what the task requires. Do not “improve” demo routes (`/items`, `/db-items`) toward the primary stack unless asked. Lessons 1–14 are the sequence. Do not add further lessons unless asked.
+Only change what the task requires. Do not “improve” demo routes (`/items`, `/db-items`) toward the primary stack unless asked. Lessons 1–15 are the sequence. Do not add further lessons unless asked.

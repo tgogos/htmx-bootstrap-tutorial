@@ -1,0 +1,80 @@
+{% extends "layout.html" %}
+{% block title %}Lesson 15 · Boost · Tutorial{% endblock %}
+{% block description %}A link swaps the main region and leaves the shell{% endblock %}
+{% block content %}
+{% include "partials/tutorial_nav.html" %}
+<h1 class="h2">15. A link swaps the main region and leaves the shell</h1>
+<p>Lesson 1's link loads a whole page. Lesson 2 asks for a fragment. This link asks for a whole page, then keeps only <code>#main</code>. The top bar and the sidebar stay.</p>
+
+<h2 class="h5">Try it</h2>
+<p>Type a word in the search box in the top bar. Then click the link. The word is still there. The text of this lesson is replaced by the other room.</p>
+<p>
+  <a
+    class="btn btn-primary"
+    href="/ui/tutorial/15/room"
+    hx-boost="true"
+    hx-target="#main"
+    hx-select="#main"
+    hx-swap="outerHTML"
+  >Open the other room</a>
+</p>
+
+<h2 class="h5">What changed</h2>
+<p>The new attributes are <code>hx-boost</code> and <code>hx-select</code>. <code>hx-boost="true"</code> turns the link into a request and still uses its <code>href</code>. Without JavaScript the same address loads as a normal page. A boosted link targets <code>body</code> unless you name somewhere else, which would replace the top bar and the sidebar. <code>hx-target="#main"</code> names the main region. <code>hx-select="#main"</code> takes that region out of the full page the server sent. <code>hx-swap="outerHTML"</code> replaces the <code>#main</code> element with the one from the response. The address becomes <code>/ui/tutorial/15/room</code>. Back loads this lesson again as a whole page, so the top bar is drawn again and the word is gone.</p>
+<p>The attributes sit on the link. HTMX 4 does not copy them onto a child from a parent.</p>
+
+<h2 class="h5">The markup and the page</h2>
+<pre class="bg-body-tertiary border rounded p-3 small mb-3"><code>&lt;a
+  href="/ui/tutorial/15/room"
+  hx-boost="true"
+  hx-target="#main"
+  hx-select="#main"
+  hx-swap="outerHTML"
+&gt;Open the other room&lt;/a&gt;</code></pre>
+<p><code>GET /ui/tutorial/15/room</code> is <code>lesson_boost_room</code>. It returns <code>tutorial/room.html</code> inside the same shell as this lesson: a full document, with its own <code>#main</code>. The route does not look at <code>HX-Request</code>. Lesson 11 returns a fragment when that header is set. Here the response is always the whole page, and <code>hx-select</code> is what leaves the shell alone. A boosted request also sends <code>HX-Boosted: true</code>.</p>
+
+<h2 class="h5">Request, response, target, swap</h2>
+<ul>
+  <li><strong>Request:</strong> <code>GET /ui/tutorial/15/room</code>, with <code>HX-Request</code> and <code>HX-Boosted</code>.</li>
+  <li><strong>Response:</strong> the whole other-room page, including the shell.</li>
+  <li><strong>Target:</strong> <code>#main</code>. <code>hx-select</code> keeps that element from the response.</li>
+  <li><strong>Swap:</strong> <code>outerHTML</code>, so the new <code>#main</code> replaces the old one.</li>
+</ul>
+
+<h2 class="h5">Experiment</h2>
+<p>In the inspector, delete <code>hx-select</code> and click the link again. The main region fills with a whole page, shell and all, because nothing told HTMX to keep only <code>#main</code>. Reload, then open <a href="/ui/tutorial/15/room">/ui/tutorial/15/room</a> with the normal link. The top bar is drawn again, and the word you typed is gone.</p>
+
+<h2 class="h5">Files</h2>
+<div class="table-responsive">
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th scope="col">File</th>
+        <th scope="col">Why it is here</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>app/ui/templates/tutorial/lesson_15.html</code></td>
+        <td>This page. The link boosts and selects <code>#main</code>.</td>
+      </tr>
+      <tr>
+        <td><code>app/ui/tutorial_routes.py</code></td>
+        <td><code>lesson_boost</code> renders this page. <code>lesson_boost_room</code> returns the other room as a full page.</td>
+      </tr>
+      <tr>
+        <td><code>app/ui/templates/tutorial/room.html</code></td>
+        <td>The other room. The way back uses the same boost and select.</td>
+      </tr>
+      <tr>
+        <td><code>app/ui/templates/layout.html</code></td>
+        <td>The shell. <code>#main</code> is the region the link replaces. The top bar and the sidebar sit outside it.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p class="mt-4">
+  <a class="btn btn-outline-secondary" href="/ui/tutorial/14">Previous</a>
+</p>
+{% endblock %}
