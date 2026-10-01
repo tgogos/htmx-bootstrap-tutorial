@@ -5,13 +5,13 @@
 {% include "patterns/nav.html" %}
 <div class="pb-2 mb-3 border-bottom">
   <h1 class="h2">Patterns</h1>
-  <p class="text-body-secondary mb-0">These pages come after <a href="/ui/tutorial">lessons 1–13</a>. Each one is still one idea.</p>
+  <p class="text-body-secondary mb-0">These pages come after <a href="/ui/tutorial">lessons 1–15</a>. Each one is still one idea.</p>
 </div>
 <p>They use the same books as the <a href="/ui/books">books table</a>: the first eight titles. That table does not change. Checking a row here does not check it there.</p>
 <ol>
   <li><a href="/ui/patterns/1">Select</a> — a checkbox on each row. Nothing is sent.</li>
   <li><a href="/ui/patterns/2">Mark</a> — the checked ids go to the server, and the table is replaced.</li>
-  <li><a href="/ui/patterns/3">Count</a> — the same action, and the line above the table updates too.</li>
+  <li><a href="/ui/patterns/3">Out of band</a> — the same action, and <code>hx-swap-oob</code> updates the line above the table.</li>
   <li><a href="/ui/patterns/4">Keep the selection</a> — the new table is merged in, so checks you still want can stay.</li>
   <li><a href="/ui/patterns/5">Delete</a> — confirm, then the count and the merge from the two pages before.</li>
   <li><a href="/ui/patterns/6">Export</a> — a bar that asks again until the job is finished.</li>
