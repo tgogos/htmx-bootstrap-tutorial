@@ -584,3 +584,49 @@ async def lesson_boost_room(
         "tutorial/room.html",
         _lesson_ctx(request, user, 15),
     )
+
+
+def _morph_clock() -> dict[str, str]:
+    now = datetime.now(timezone.utc)
+    return {
+        "clock": now.strftime("%H:%M:%S"),
+        "stamp": now.strftime("%Y-%m-%dT%H:%M:%SZ"),
+    }
+
+
+async def _morph_titles() -> list[dict]:
+    rows, _total = await books_repo.list_books(
+        page=1, size=SHELF_SIZE, ordering="title"
+    )
+    return rows
+
+
+@router.get("/tutorial/16", response_class=HTMLResponse)
+async def lesson_morph(
+    request: Request,
+    user: dict = Depends(require_user_html),
+):
+    return templates.TemplateResponse(
+        request,
+        "tutorial/lesson_16.html",
+        _lesson_ctx(
+            request,
+            user,
+            16,
+            books=await _morph_titles(),
+            **_morph_clock(),
+        ),
+    )
+
+
+@router.get("/tutorial/16/table", response_class=HTMLResponse)
+async def lesson_morph_table(
+    request: Request,
+    _user: dict = Depends(require_user_html),
+):
+    """HTML fragment: the note and the first five titles, for both swaps."""
+    return templates.TemplateResponse(
+        request,
+        "tutorial/morph_table.html",
+        {"books": await _morph_titles(), **_morph_clock()},
+    )

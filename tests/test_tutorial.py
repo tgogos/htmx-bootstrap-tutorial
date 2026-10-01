@@ -1,4 +1,4 @@
-"""Tutorial landing page and lessons 1–15."""
+"""Tutorial landing page and lessons 1–16."""
 
 import re
 
@@ -48,6 +48,8 @@ class TestTutorial:
             "/ui/tutorial/14",
             "/ui/tutorial/15",
             "/ui/tutorial/15/room",
+            "/ui/tutorial/16",
+            "/ui/tutorial/16/table",
         ):
             response = client.get(path, follow_redirects=False)
             assert response.status_code == 303
@@ -72,6 +74,7 @@ class TestTutorial:
         assert 'href="/ui/tutorial/13"' in page.text
         assert 'href="/ui/tutorial/14"' in page.text
         assert 'href="/ui/tutorial/15"' in page.text
+        assert 'href="/ui/tutorial/16"' in page.text
         assert "books table" in page.text.lower()
 
     def test_lesson_1_is_an_ordinary_link(self, auth_client: TestClient):
@@ -376,6 +379,28 @@ class TestTutorial:
         assert 'id="main"' in room.text
         assert "The other room" in room.text
         assert "admin-sidebar" in room.text
+
+    def test_lesson_16_morphs_the_table(self, auth_client: TestClient):
+        _create_book(auth_client, "! Morph Title", author="Morph Tutor")
+        page = auth_client.get("/ui/tutorial/16")
+        assert page.status_code == 200
+        assert page.text.count('hx-get="/ui/tutorial/16/table"') == 4
+        assert page.text.count('hx-swap="innerHTML"') == 2
+        assert page.text.count('hx-swap="innerMorph"') == 3
+        assert 'hx-ext="morph"' in page.text
+        assert "app/ui/static/js/htmx.min.js" in page.text
+        assert 'hx-target="#title-table"' in page.text
+        assert 'id="shelf-note"' in page.text
+        assert "! Morph Title" in page.text
+
+        fragment = auth_client.get("/ui/tutorial/16/table")
+        assert fragment.status_code == 200
+        assert "<html" not in fragment.text.lower()
+        assert 'id="shelf-note"' in fragment.text
+        assert 'value=""' in fragment.text
+        assert "! Morph Title" in fragment.text
+        assert "Morph Tutor" in fragment.text
+        assert re.search(r"\d{2}:\d{2}:\d{2} UTC", fragment.text)
 
     def test_books_history_restore_is_a_full_page(self, auth_client: TestClient):
         partial = auth_client.get("/ui/books", headers={"HX-Request": "true"})

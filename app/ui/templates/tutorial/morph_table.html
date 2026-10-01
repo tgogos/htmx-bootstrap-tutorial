@@ -1,0 +1,25 @@
+<label class="form-label" for="shelf-note">Note</label>
+<input id="shelf-note" class="form-control form-control-sm mb-2" type="text" name="note" value="" autocomplete="off">
+<table class="table table-sm mb-2">
+  <thead>
+    <tr>
+      <th scope="col">Title</th>
+      <th scope="col">Author</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% if books %}
+    {% for book in books %}
+    <tr>
+      <td>{{ book.title }}</td>
+      <td>{{ book.author }}</td>
+    </tr>
+    {% endfor %}
+    {% else %}
+    <tr>
+      <td colspan="2">The catalog is empty. Run <code>make seed</code>, then reload this page.</td>
+    </tr>
+    {% endif %}
+  </tbody>
+</table>
+<p class="small text-body-secondary mb-0">Built at <time datetime="{{ stamp }}">{{ clock }} UTC</time>.</p>
