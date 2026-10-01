@@ -29,6 +29,12 @@
                   </a>
                 </li>
                 <li class="nav-item">
+                  <a class="nav-link{% if active == 'patterns' %} active{% endif %}" {% if active == 'patterns' %}aria-current="page"{% endif %} href="/ui/patterns">
+                    <i class="bi bi-check2-square" aria-hidden="true"></i>
+                    Patterns
+                  </a>
+                </li>
+                <li class="nav-item">
                   <a class="nav-link{% if active == 'dashboard' %} active{% endif %}" {% if active == 'dashboard' %}aria-current="page"{% endif %} href="/ui/dashboard">
                     <i class="bi bi-speedometer2" aria-hidden="true"></i>
                     Dashboard

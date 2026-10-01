@@ -1,0 +1,68 @@
+{% if notice %}
+<p class="alert alert-warning" role="status">{{ notice }}</p>
+{% endif %}
+<form id="pattern-form"{% if lesson >= 2 and lesson <= 4 %} method="post" action="/ui/patterns/{{ lesson }}/mark" hx-post="/ui/patterns/{{ lesson }}/mark" hx-target="#pattern-board" hx-swap="{% if lesson == 4 %}innerMorph{% else %}innerHTML{% endif %}"{% endif %}>
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+  {% if can_edit and lesson >= 2 and lesson <= 4 %}
+  <div class="d-flex flex-wrap gap-2 mb-3">
+    <button type="submit" class="btn btn-sm btn-success" name="available" value="1">Mark available</button>
+    <button type="submit" class="btn btn-sm btn-outline-secondary" name="available" value="0">Mark unavailable</button>
+    {% if lesson == 4 %}
+    <button type="button" class="btn btn-sm btn-outline-primary" hx-get="/ui/patterns/4/table" hx-target="#pattern-board" hx-swap="innerMorph">Refresh</button>
+    {% endif %}
+  </div>
+  {% elif can_edit and lesson == 5 %}
+  <div class="d-flex flex-wrap gap-2 mb-3">
+    <button
+      type="button"
+      class="btn btn-sm btn-outline-danger js-confirm-delete"
+      data-confirm="Delete the selected books? This removes them from the catalog."
+      hx-post="/ui/patterns/5/delete"
+      hx-trigger="confirmed-delete"
+      hx-include="closest form"
+      hx-target="#pattern-board"
+      hx-swap="innerMorph"
+      hx-headers='{"X-CSRF-Token": "{{ csrf_token }}"}'
+    >Delete selected</button>
+  </div>
+  {% elif not can_edit and lesson >= 2 %}
+  <p class="text-body-secondary">An editor can change these books. You can still select rows.</p>
+  {% endif %}
+  <div class="table-responsive">
+    <table class="table table-sm align-middle mb-0">
+      <thead>
+        <tr>
+          <th scope="col"><span class="visually-hidden">Select</span></th>
+          <th scope="col">Title</th>
+          <th scope="col">Author</th>
+          <th scope="col">Available</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for book in books %}
+        <tr id="pattern-row-{{ book.id }}">
+          <td>
+            <input class="form-check-input" type="checkbox" name="book_id" value="{{ book.id }}" id="select-{{ book.id }}" aria-label="Select {{ book.title }}">
+          </td>
+          <td>{{ book.title }}</td>
+          <td>{{ book.author }}</td>
+          <td>
+            {% if book.available %}
+            <span class="badge text-bg-success">Yes</span>
+            {% else %}
+            <span class="badge text-bg-secondary">No</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="4" class="text-body-secondary">No books yet.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</form>
+{% if oob %}
+<p id="available-count" class="mb-2" hx-swap-oob="outerHTML"><strong>{{ available_count }}</strong> available</p>
+{% endif %}

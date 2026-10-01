@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+{% block title %}2 · Mark{% endblock %}
+{% block content %}
+{% include "patterns/nav.html" %}
+<h1 class="h3">2 · Mark</h1>
+<p>The checked ids are sent together. The response is this table again, and it replaces <code>#pattern-board</code>.</p>
+{% include "patterns/stage.html" %}
+
+<h2 class="h5 mt-4">What changed</h2>
+<p>The form owns the request. <code>hx-post</code>, <code>hx-target</code>, and <code>hx-swap</code> sit on the form. The checkboxes have no <code>hx-</code> attributes of their own. A checked box is included because it is inside that form. An unchecked box is left out.</p>
+
+<h2 class="h5">The markup</h2>
+<pre class="bg-body-tertiary border rounded p-3 small mb-3"><code>&lt;p id="available-count"&gt;8 available&lt;/p&gt;
+&lt;div id="pattern-board"&gt;
+  &lt;form
+    hx-post="/ui/patterns/2/mark"
+    hx-target="#pattern-board"
+    hx-swap="innerHTML"
+  &gt;
+    &lt;button type="submit" name="available" value="1"&gt;Mark available&lt;/button&gt;
+    &lt;button type="submit" name="available" value="0"&gt;Mark unavailable&lt;/button&gt;
+    &lt;input type="checkbox" name="book_id" value="…"&gt;
+  &lt;/form&gt;
+&lt;/div&gt;</code></pre>
+<p>The button you click is a submit button, so its <code>name</code> and <code>value</code> go too: <code>available=1</code> or <code>available=0</code>. One request carries that choice and every checked id. The response is this board again, with the badges updated and the boxes empty. <code>innerHTML</code> throws the old board away, which is why the checks clear.</p>
+<p><code>#available-count</code> sits outside <code>#pattern-board</code>. The swap never touches it, so the line still shows the old number.</p>
+
+<h2 class="h5">Request, response, target, swap</h2>
+<ul>
+  <li><strong>Request</strong> — <code>POST /ui/patterns/2/mark</code></li>
+  <li><strong>Response</strong> — the same table, with the badges updated</li>
+  <li><strong>Target</strong> — <code>#pattern-board</code></li>
+  <li><strong>Swap</strong> — <code>innerHTML</code></li>
+</ul>
+
+<h2 class="h5">Try this</h2>
+<p>Check a book that says Yes and click Mark unavailable. The badge becomes No. The line above does not.</p>
+
+<p class="mt-4 mb-0"><a class="btn btn-outline-secondary" href="/ui/patterns/1">Previous</a> <a class="btn btn-primary" href="/ui/patterns/3">Next</a></p>
+{% endblock %}

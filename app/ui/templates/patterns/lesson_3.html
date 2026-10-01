@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{% block title %}3 · Count{% endblock %}
+{% block content %}
+{% include "patterns/nav.html" %}
+<h1 class="h3">3 · Count</h1>
+<p>The same mark action. The response also carries a second fragment for the line above the table.</p>
+{% include "patterns/stage.html" %}
+
+<h2 class="h5 mt-4">What changed</h2>
+<p>Pattern 2 left that line stale because it sits outside <code>#pattern-board</code>. This response adds one element with <code>hx-swap-oob="outerHTML"</code> and <code>id="available-count"</code>. HTMX puts that element where the matching id already is, and still swaps the table into the target.</p>
+
+<h2 class="h5">Request, response, target, swap</h2>
+<ul>
+  <li><strong>Request</strong> — <code>POST /ui/patterns/3/mark</code></li>
+  <li><strong>Response</strong> — the table, plus the count line marked <code>hx-swap-oob</code></li>
+  <li><strong>Target</strong> — <code>#pattern-board</code> for the table. The count finds itself by id.</li>
+  <li><strong>Swap</strong> — <code>innerHTML</code> for the table. <code>outerHTML</code> for the count.</li>
+</ul>
+
+<h2 class="h5">Try this</h2>
+<p>Check a book that says Yes and click Mark unavailable. The badge and the line above both change. The checks still clear, for the same reason as pattern 2.</p>
+
+<p class="mt-4 mb-0"><a class="btn btn-outline-secondary" href="/ui/patterns/2">Previous</a> <a class="btn btn-primary" href="/ui/patterns/4">Next</a></p>
+{% endblock %}

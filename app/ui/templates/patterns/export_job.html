@@ -1,0 +1,17 @@
+<div id="export-progress"{% if not done %} hx-get="/ui/patterns/6/export" hx-trigger="every 1s" hx-target="#export-job" hx-swap="innerHTML"{% endif %}>
+  {% if idle %}
+  <p class="text-body-secondary mb-0">Nothing is exporting.</p>
+  {% elif titles %}
+  <div class="progress mb-2" role="progressbar" aria-valuenow="{{ percent }}" aria-valuemin="0" aria-valuemax="100" aria-label="Export progress">
+    <div class="progress-bar" style="width: {{ percent }}%">{{ percent }}%</div>
+  </div>
+  {% if done %}
+  <p class="mb-1">Export ready: {{ titles | join(", ") }}.</p>
+  <p class="text-body-secondary mb-0">Each request moved the bar one step. This page does not wait. The last response has no <code>every</code>, so the asking stops.</p>
+  {% else %}
+  <p class="text-body-secondary mb-0">Exporting {{ titles | join(", ") }}. The bar moves one step each time this box asks again.</p>
+  {% endif %}
+  {% else %}
+  <p class="alert alert-warning mb-0" role="status">Select at least one book on this page.</p>
+  {% endif %}
+</div>

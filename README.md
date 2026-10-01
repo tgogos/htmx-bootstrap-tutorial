@@ -15,7 +15,7 @@ make upd
 make seed     # books for the lessons
 ```
 
-Open `/ui/tutorial` after logging in (`DEMO_USERNAME` / `DEMO_PASSWORD`, defaults `admin` / `admin123`). Lessons 1–9 are small interactions. Lesson 10 puts a page in the address bar. Lesson 11 walks the books table at `/ui/books`. Lesson 12 loads a few titles when a box scrolls into view. Lesson 13 fetches the server clock every two seconds. Lesson 14 puts the request on a form that hears a search box and a menu. Lesson 15 boosts a link and selects `#main`, so the shell stays. Lesson 16 morphs a small table in place, so a note you typed stays.
+Open `/ui/tutorial` after logging in (`DEMO_USERNAME` / `DEMO_PASSWORD`, defaults `admin` / `admin123`). Lessons 1–9 are small interactions. Lesson 10 puts a page in the address bar. Lesson 11 walks the books table at `/ui/books`. Lesson 12 loads a few titles when a box scrolls into view. Lesson 13 fetches the server clock every two seconds. Lesson 14 puts the request on a form that hears a search box and a menu. Lesson 15 boosts a link and selects `#main`, so the shell stays. Lesson 16 morphs a small table in place, so a note you typed stays. Patterns, at `/ui/patterns`, is a second sequence on the same books.
 
 ## Lessons
 
@@ -37,6 +37,19 @@ Open `/ui/tutorial` after logging in (`DEMO_USERNAME` / `DEMO_PASSWORD`, default
 | 14 | `/ui/tutorial/14` | `from:` on `hx-trigger` lets one form hear a search box and a menu |
 | 15 | `/ui/tutorial/15` | `hx-boost` and `hx-select="#main"` swap the main region and leave the shell |
 | 16 | `/ui/tutorial/16` | `hx-swap="innerMorph"` updates a small table and keeps the note |
+
+## Patterns
+
+A second sequence after the lessons, at `/ui/patterns`. Same books, first eight titles. The books table does not gain checkboxes.
+
+| | Page | Idea |
+|--|------|------|
+| 1 | `/ui/patterns/1` | A checkbox on each row. Nothing is sent |
+| 2 | `/ui/patterns/2` | Checked ids are posted; `innerHTML` replaces the table |
+| 3 | `/ui/patterns/3` | The same post, plus `hx-swap-oob` for the count outside the table |
+| 4 | `/ui/patterns/4` | `innerMorph` keeps a check the new HTML does not set |
+| 5 | `/ui/patterns/5` | Delete selected, after confirm, using the count fragment and the morph swap |
+| 6 | `/ui/patterns/6` | Export selected; the bar polls and the finished fragment has no `every` |
 
 ## Primary path vs demos
 

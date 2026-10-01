@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block title %}4 · Keep the selection{% endblock %}
+{% block content %}
+{% include "patterns/nav.html" %}
+<h1 class="h3">4 · Keep the selection</h1>
+<p>The new table is merged into the one already on the page. A check you did not mean to clear can stay.</p>
+{% include "patterns/stage.html" %}
+
+<h2 class="h5 mt-4">What changed</h2>
+<p>Patterns 2 and 3 use <code>innerHTML</code>. That builds a new table and drops the old one, so every box comes back empty. This page uses <code>hx-swap="innerMorph"</code>. HTMX walks the old table and edits it to match the new HTML. A row, a box, and the form keep the same <code>id</code>, so the check you set in the browser is still that box.</p>
+<p>The count line is still outside the table. Refresh does not send the extra fragment from pattern 3, so that line can stay old. This page is only about the checks.</p>
+
+<h2 class="h5">Request, response, target, swap</h2>
+<ul>
+  <li><strong>Request</strong> — <code>GET /ui/patterns/4/table</code> for Refresh, or <code>POST /ui/patterns/4/mark</code> for the mark buttons</li>
+  <li><strong>Response</strong> — the same table</li>
+  <li><strong>Target</strong> — <code>#pattern-board</code></li>
+  <li><strong>Swap</strong> — <code>innerMorph</code></li>
+</ul>
+
+<h2 class="h5">Try this</h2>
+<p>Check two books and click Refresh. The badges stay as they were, and the checks stay too. On pattern 2, the same kind of replacement clears them.</p>
+
+<p class="mt-4 mb-0"><a class="btn btn-outline-secondary" href="/ui/patterns/3">Previous</a> <a class="btn btn-primary" href="/ui/patterns/5">Next</a></p>
+{% endblock %}

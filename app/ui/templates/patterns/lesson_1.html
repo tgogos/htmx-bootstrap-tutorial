@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block title %}1 · Select{% endblock %}
+{% block content %}
+{% include "patterns/nav.html" %}
+<h1 class="h3">1 · Select</h1>
+<p>The first eight titles, with a checkbox on each row. Checking a box does not send a request.</p>
+{% include "patterns/stage.html" %}
+
+<h2 class="h5 mt-4">What changed</h2>
+<p>Lessons 1–13 are done. This series starts with the same books, on its own table. <code>/ui/books</code> stays the table from lesson 11.</p>
+
+<h2 class="h5">The markup</h2>
+<p>Each box is <code>name="book_id"</code> and its <code>value</code> is that book's id. The form does not have <code>hx-post</code> yet, so a check stays in the browser.</p>
+
+<h2 class="h5">Request, response, target, swap</h2>
+<p>There is no request. The line above the table is how many of these eight are available. It sits outside <code>#pattern-board</code>, which is the piece later pages replace.</p>
+
+<h2 class="h5">Try this</h2>
+<p>Check two books. The address stays <code>/ui/patterns/1</code>, and the badges do not change.</p>
+
+<p class="mt-4 mb-0"><a class="btn btn-outline-secondary" href="/ui/patterns">Previous</a> <a class="btn btn-primary" href="/ui/patterns/2">Next</a></p>
+{% endblock %}

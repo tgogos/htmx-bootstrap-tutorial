@@ -1,0 +1,18 @@
+<nav class="mb-4" aria-label="Patterns">
+  <ol class="breadcrumb mb-2">
+    <li class="breadcrumb-item"><a href="/ui/patterns">Patterns</a></li>
+    {% if lesson == 0 %}
+    <li class="breadcrumb-item active" aria-current="page">Start</li>
+    {% else %}
+    <li class="breadcrumb-item active" aria-current="page">{{ lesson }}</li>
+    {% endif %}
+  </ol>
+  <div class="d-flex flex-wrap gap-2">
+    <a class="btn btn-sm {% if lesson == 1 %}btn-primary{% else %}btn-outline-secondary{% endif %}" href="/ui/patterns/1">1 · Select</a>
+    <a class="btn btn-sm {% if lesson == 2 %}btn-primary{% else %}btn-outline-secondary{% endif %}" href="/ui/patterns/2">2 · Mark</a>
+    <a class="btn btn-sm {% if lesson == 3 %}btn-primary{% else %}btn-outline-secondary{% endif %}" href="/ui/patterns/3">3 · Count</a>
+    <a class="btn btn-sm {% if lesson == 4 %}btn-primary{% else %}btn-outline-secondary{% endif %}" href="/ui/patterns/4">4 · Keep</a>
+    <a class="btn btn-sm {% if lesson == 5 %}btn-primary{% else %}btn-outline-secondary{% endif %}" href="/ui/patterns/5">5 · Delete</a>
+    <a class="btn btn-sm {% if lesson == 6 %}btn-primary{% else %}btn-outline-secondary{% endif %}" href="/ui/patterns/6">6 · Export</a>
+  </div>
+</nav>
