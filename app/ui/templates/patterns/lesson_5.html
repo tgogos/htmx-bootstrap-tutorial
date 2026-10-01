@@ -6,8 +6,35 @@
 <p>Delete selected sends the checked ids, after the same confirm dialog as lesson 8. The books leave the catalog.</p>
 {% include "patterns/stage.html" %}
 
-<h2 class="h5 mt-4">What changed</h2>
-<p>The button waits for <code>confirmed-delete</code>, then posts the form. The count uses the extra fragment from pattern 3. The table uses <code>innerMorph</code> from pattern 4, so a box you left checked on a row you did not delete can stay.</p>
+<div class="alert alert-warning mt-4" role="status">
+  Delete removes the book from the catalog, the same list as <a href="/ui/books">/ui/books</a>. Check a row you can spare.
+</div>
+
+<h2 class="h5">What changed</h2>
+<p>On pattern 2 the form owns the request. Here the button does. A click does not post. The button is marked <code>js-confirm-delete</code>, so the same dialog as lesson 8 opens. Confirm fires <code>confirmed-delete</code> on the button, and that is the trigger. Cancel sends nothing.</p>
+<p><code>hx-include="closest form"</code> is what still sends the checked ids. The button is not a submit, so HTMX would otherwise post an empty request. The count is the out-of-band fragment from pattern 3. The table uses <code>innerMorph</code> from pattern 4.</p>
+
+<h2 class="h5">The markup</h2>
+<pre class="bg-body-tertiary border rounded p-3 small mb-3"><code>&lt;form id="pattern-form"&gt;
+  &lt;button
+    type="button"
+    class="js-confirm-delete"
+    hx-post="/ui/patterns/5/delete"
+    hx-trigger="confirmed-delete"
+    hx-include="closest form"
+    hx-target="#pattern-board"
+    hx-swap="innerMorph"
+  &gt;Delete selected&lt;/button&gt;
+  &lt;input type="checkbox" id="select-…" name="book_id" value="…"&gt;
+&lt;/form&gt;</code></pre>
+<p>The response leaves out the rows you deleted, and marks the count out of band:</p>
+<pre class="bg-body-tertiary border rounded p-3 small mb-3"><code>&lt;form id="pattern-form"&gt;
+  &lt;tr id="pattern-row-kept"&gt;
+    &lt;input type="checkbox" id="select-kept" name="book_id" value="kept"&gt;
+  &lt;/tr&gt;
+&lt;/form&gt;
+&lt;p id="available-count" hx-swap-oob="outerHTML"&gt;&lt;strong&gt;7&lt;/strong&gt; available&lt;/p&gt;</code></pre>
+<p><code>innerMorph</code> drops a row whose <code>id</code> is no longer in the response. A box you left checked on a row that is still there keeps its <code>id</code>, so that check stays. The count line is replaced by <code>id</code>, the same way as pattern 3.</p>
 
 <h2 class="h5">Request, response, target, swap</h2>
 <ul>
