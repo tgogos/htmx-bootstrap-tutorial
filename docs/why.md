@@ -1,8 +1,12 @@
 # Why this approach
 
-This is for someone who builds interfaces with React and wants to see what changes if the server keeps owning the page.
+There are two common ways to build a screen.
 
-In React, a page is a program in the browser. It holds the data, handles the click, and draws the next screen. Here the page is HTML from the server. A click asks the server for the next piece of HTML and the browser puts that HTML on the page. You do not keep a second copy of the screen in the browser.
+In a single-page app, the browser holds a program. The server sends data, and that program draws the next screen. React is the usual example.
+
+In this approach, the server sends the screen. The response is HTML, and the browser shows it. A click asks for the next piece of HTML. HTMX belongs to this side. People call it server-side rendering: every answer is HTML, including the piece that follows a click. The browser does not take over and keep its own copy of the screen.
+
+This note is for anyone choosing between those two. Someone who already builds with React will recognize the first one.
 
 ## The pages did not need their own scripts
 
@@ -10,7 +14,7 @@ Search, forms, paging, confirm-and-delete, and a progress bar were wired in the 
 
 ## There is nothing to rebuild
 
-HTMX and Bootstrap are vendored. There is no frontend build, and neither project ships a new stack every week. A page you finished still works, because nothing has to compile it again. Moving this project from HTMX 2 to HTMX 4 renamed a few events in that one shared script. A React app more often needs someone whose job is to keep the install and the build alive. After a few months of dependency updates, a project that used to build can stop.
+HTMX and Bootstrap are vendored. There is no frontend build, and neither project ships a new stack every week. A page you finished still works, because nothing has to compile it again. Moving this project from HTMX 2 to HTMX 4 renamed a few events in that one shared script. A React app more often needs someone to keep the install and the build alive. The library is stable. The toolchain around it is not. A dependency bump, a newer Node, or a forced security upgrade can stop a project that used to build.
 
 ## The HTML that comes back is the screen
 
