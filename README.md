@@ -5,6 +5,7 @@ A runnable tutorial for HTMX 4 on the FastAPI + Jinja + Bootstrap boilerplate. T
 Browsers get HTML (Jinja + [Bootstrap 5.3](https://getbootstrap.com/) + [HTMX 4.0.0](https://four.htmx.org/docs)). Machines get `/api` with Bearer tokens.
 
 Architecture: [`docs/ENGINEERING.md`](docs/ENGINEERING.md).  
+Why this approach: [`docs/why.md`](docs/why.md).  
 Sessions, CSRF, and Bearer: [`docs/auth.md`](docs/auth.md).
 
 ## Start here
