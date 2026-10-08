@@ -168,7 +168,8 @@
       check.classList.remove('d-none')
     }
 
-    paletteSwitcher.setAttribute('aria-label', `Palette (${palette})`)
+    const paletteName = btnToActive.textContent.replace(/\s+/g, ' ').trim()
+    paletteSwitcher.setAttribute('aria-label', `Palette (${paletteName})`)
 
     if (focus) {
       paletteSwitcher.focus()
