@@ -5,7 +5,7 @@ description = "FastAPI + HTMX app with a Bootstrap admin shell, SQLite auth, and
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
-    "fastapi[standard]==0.141.1",
+    "fastapi[standard]==0.161.1",
     "pydantic-settings==2.15.0",
     "motor==3.7.1",
     "pymongo==4.17.0",
