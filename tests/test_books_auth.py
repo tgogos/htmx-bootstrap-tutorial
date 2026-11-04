@@ -245,6 +245,18 @@ class TestAuthWeb:
         assert response.status_code == 303
         assert response.headers["location"] == "/auth/login"
 
+    def test_books_hx_request_when_anonymous_uses_hx_redirect(
+        self, client: TestClient
+    ):
+        response = client.get(
+            "/ui/books",
+            headers={"HX-Request": "true"},
+            follow_redirects=False,
+        )
+        assert response.status_code == 204
+        assert response.headers["HX-Redirect"] == "/auth/login"
+        assert "Log in" not in response.text
+
     def test_books_ui_ok_when_authenticated(self, auth_client: TestClient):
         response = auth_client.get("/ui/books")
         assert response.status_code == 200
