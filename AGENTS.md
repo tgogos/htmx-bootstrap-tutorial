@@ -5,7 +5,7 @@ This repository is an HTMX 4 tutorial copied from the FastAPI + HTMX + Bootstrap
 ## Must follow
 
 - Teach from `/ui/tutorial`. Keep each new lesson to one interaction. The books table (`/ui/books`) is the advanced example for the end of the sequence, not the first page.
-- HTMX is pinned to **4.0.1** (`app/ui/static/js/htmx.min.js`). Use [four.htmx.org](https://four.htmx.org/docs). Do not reintroduce HTMX 2 event names (`htmx:configRequest`, `htmx:pushedIntoHistory`) or implicit attribute inheritance.
+- HTMX is pinned to **4.0.2** (`app/ui/static/js/htmx.min.js`). Use [four.htmx.org](https://four.htmx.org/docs). Do not reintroduce HTMX 2 event names (`htmx:configRequest`, `htmx:pushedIntoHistory`) or implicit attribute inheritance.
 - Inherited boilerplate rules still apply: async request path, no ORM, Pydantic at the edge, uv, `/api` JSON vs `/auth` session vs `/ui` HTML, session + CSRF, Bearer tokens, roles, Bootstrap shell. Do not add Alpine, React, Vue, Svelte, SPA routing, or a frontend build step.
 - An artificial delay belongs only on the tutorial card endpoint (`?delay=`), on a one-letter tutorial search (`?slow=1`), and on `GET /ui/tutorial/12/books` (1 second). The fragment must say the wait is artificial. The patterns export (`GET /ui/patterns/6/export`) advances one step per request and does not sleep.
 - Do not introduce new architectural patterns without updating `docs/ENGINEERING.md` in the same change.

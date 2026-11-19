@@ -58,7 +58,7 @@ class TestTutorial:
     def test_home_lists_first_lessons(self, auth_client: TestClient):
         page = auth_client.get("/ui/tutorial")
         assert page.status_code == 200
-        assert "HTMX 4.0.1" in page.text
+        assert "HTMX 4.0.2" in page.text
         assert 'href="/ui/tutorial/1"' in page.text
         assert 'href="/ui/tutorial/2"' in page.text
         assert 'href="/ui/tutorial/3"' in page.text
