@@ -10,6 +10,9 @@ up:
 upd:
 	docker compose -f docker-compose.dev.yml up -d
 
+ps:
+	docker compose -f docker-compose.dev.yml ps
+
 down:
 	docker compose -f docker-compose.dev.yml down
 
